@@ -88,6 +88,7 @@ class JupyterProject extends HTMLElement {
     this.title = this.getAttribute("title") || "";
     this.description = this.getAttribute("description") || "";
     this.links = this.getAttribute("links") || "";
+    this.icon = this.getAttribute("icon") || "/icons/Fire.png";
     this.render();
   }
 
@@ -111,14 +112,11 @@ class JupyterProject extends HTMLElement {
 
     this.innerHTML = `
       <div class="text-left">
-        <div class="flex items-center mb-2">
-          <div class="flex-1 border-t border-gray-600"></div>
-          <span class="px-3 text-gray-300">${this.title}</span>
-          <div class="flex-1 border-t border-gray-600"></div>
+      <div class="flex items-center align-middle justify-center mb-2 gap-2 border-b border-gray-600">
+          <img src="${this.icon}" alt="${this.title}" class="w-10 h-10 justify-self-center" />
+          <span class="text-gray-300 text-center p-3">${this.title}</span>
         </div>
-        <div class="text-gray-300 mb-4 text-center">
-          ${this.description}
-        </div>
+        <div class="text-gray-300 mb-4 text-center">${this.description}</div>
         ${linksHtml}
       </div>
     `;
