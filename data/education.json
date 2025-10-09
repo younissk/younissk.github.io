@@ -11,9 +11,19 @@
   ],
   "schools": [
     {
-      "name": "School Name",
-      "description": "Description of work with this school",
-      "period": "2025"
+      "name": "CodingForHijra",
+      "description": "A school for total beginners to learn Web Development",
+      "period": "2025 - Present"
+    },
+    {
+      "name": "BuildFast",
+      "description": "A Program for people wanting to learn how to vibe coding",
+      "period": "2025 - Present"
+    },
+    {
+      "name": "Codebender",
+      "description": "A program for people to learn all about Making and Selling LLM services.",
+      "period": "2025 - Present"
     }
   ]
 }

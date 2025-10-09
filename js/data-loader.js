@@ -17,7 +17,7 @@ function renderMLAI(data) {
   let html = `
     <jupyter-code-cell number="1" code="intro.show()"></jupyter-code-cell>
     <p class="mb-2">${data.intro.text}</p>
-    <jupyter-code-cell number="2" code="for project in projects:&#10;    print(project)"></jupyter-code-cell>
+    <jupyter-code-cell number="2" code="for project in projects:\n print(project)"></jupyter-code-cell>
   `;
   
   data.projects.forEach(project => {
@@ -31,6 +31,7 @@ function renderMLAI(data) {
   });
   
   html += `<jupyter-code-cell number="3" code="pprint.pprint(skills)"></jupyter-code-cell>`;
+  html += `<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">`;
   
   data.skills.forEach(skill => {
     html += `
@@ -41,6 +42,8 @@ function renderMLAI(data) {
       ></jupyter-skill>
     `;
   });
+  
+  html += `</div>`;
   
   return html;
 }
@@ -59,6 +62,8 @@ function renderWebDev(data) {
       ></jupyter-project>
     `;
   });
+
+  html += `<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">`;
   
   data.skills.forEach(skill => {
     html += `
@@ -69,27 +74,19 @@ function renderWebDev(data) {
       ></jupyter-skill>
     `;
   });
+
+  html += `</div>`;
   
   return html;
 }
 
 function renderEducation(data) {
   if (!data) return '';
-
-  let html = `
-    <div class="mb-8 p-6 bg-gradient-to-r from-cyan-900/20 to-purple-900/20 border border-cyan-500/30 rounded-lg backdrop-blur-sm">
-      <p class="text-cyan-200 font-mono text-lg leading-relaxed">${data.intro.text}</p>
-    </div>
-  `;
-
-  html += `
-    <div class="text-center mb-8 mt-8">
-      <div class="inline-block px-6 py-3 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-400/50 rounded-lg">
-        <span class="text-cyan-300 font-mono text-xl font-bold tracking-wider">COURSES</span>
-      </div>
-    </div>
-  `;
-
+  
+  let html = `<p>${data.intro.text}</p>`;
+  
+  html += `<div class="text-center mb-4">---------- Courses ----------</div>`;
+  
   data.courses.forEach(course => {
     html += `
       <jupyter-project
@@ -99,26 +96,20 @@ function renderEducation(data) {
       ></jupyter-project>
     `;
   });
-
-  html += `
-    <div class="text-center mb-8 mt-12">
-      <div class="inline-block px-6 py-3 bg-gradient-to-r from-green-500/20 to-cyan-500/20 border border-green-400/50 rounded-lg">
-        <span class="text-green-300 font-mono text-xl font-bold tracking-wider">SCHOOLS</span>
-      </div>
-    </div>
-  `;
-
+  
+  html += `<div class="text-center mb-4">---------- Schools I worked with ----------</div>`;
+  
   data.schools.forEach(school => {
     html += `
-      <div class="text-left mb-6">
-        <div class="bg-gradient-to-r from-gray-900/80 to-gray-800/80 border border-green-500/30 p-6 rounded-lg backdrop-blur-sm hover:border-green-400/50 transition-all duration-300">
-          <h3 class="text-xl text-green-300 mb-3 font-bold">${school.name}</h3>
-          <p class="text-gray-300 mb-3 leading-relaxed">${school.description}</p>
-          <p class="text-sm text-cyan-400 font-mono">${school.period}</p>
+      <div class="text-left mb-4">
+        <div class="border border-gray-600 p-4">
+          <h3 class="text-xl text-gray-300 mb-2">${school.name}</h3>
+          <p class="text-gray-300 mb-2">${school.description}</p>
+          <p class="text-sm text-gray-400">${school.period}</p>
         </div>
       </div>
     `;
   });
-
+  
   return html;
 }

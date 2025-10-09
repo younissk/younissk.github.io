@@ -7,6 +7,16 @@
       "title": "Falcon Fine Tuning",
       "description": "I tried to Fine tune a Falcon H1 model on Tool calling, as an attempt to boost Falcons Tool calling capabilities",
       "links": ["GitHub", "Hugging Face", "Paper"]
+    },
+    {
+      "title": "LLM-Based Recommender Systems",
+      "description": "Seminar Paper\nAs part of a course, I wrote a paper on LLM-Based Recommender Systems. I explored different approaches to incorperating LLMs into recommender systems and their advantages and disadvantages. Particularly, I was interested in the use of LLMs to generate dynamic personalized content, based on user intents and preferences.",
+      "links": ["Seminar Paper"]
+    },
+    {
+      "title": "DCASE 2025 Challenge",
+      "description": "Machine Learning Competition\nAs part of a course, I participated in the DCASE 2025 Challenge with a small Team. We tried many different approaches and were able to work on the Vienna Scientific Computing cluster. While we didn't win, we got a lot of experience with Audio ML. Our technical report was published on the DCASE website.",
+      "links": ["DCASE Technical Report"]
     }
   ],
   "skills": [
@@ -29,12 +39,6 @@
       "group": "Other",
       "items": "UV, Weights And Biases",
       "icon": "/icons/Inspection.png"
-    },
-    {
-      "group": "Web",
-      "items": "See my web dev skills",
-      "icon": "/icons/Internet.png",
-      "isLink": true
     }
   ]
 }

@@ -13,36 +13,37 @@ class SectionContainer extends HTMLElement {
     const sectionId = this.title.toLowerCase().replace(/ /g, "-");
     const data = await loadData(this.section);
 
-    let content = '';
+    let content = "";
     if (data) {
-      switch(this.section) {
-        case 'ml-ai':
+      switch (this.section) {
+        case "ml-ai":
           content = renderMLAI(data);
           break;
-        case 'web-dev':
+        case "web-dev":
           content = renderWebDev(data);
           break;
-        case 'education':
+        case "education":
           content = renderEducation(data);
           break;
       }
     }
 
     this.innerHTML = `
-      <section id="${sectionId}" class="block relative">
-        <div class="min-h-screen flex flex-col items-center bg-gradient-to-b from-[#0f1419] via-[#1a2332] to-[#2d3748]">
-          <div class="sticky top-0 w-full py-6 bg-gradient-to-r from-transparent via-[#1a2332]/90 to-transparent backdrop-blur-sm border-b border-cyan-500/20">
-            <mode-card
-              title="${this.title}"
-              icon="${this.icon}"
-              href="#${sectionId}"
-              color="${this.color}"
-              class="animate-arcade-hover"
-            ></mode-card>
+      <section id="${sectionId}" class="block">
+        <div class="min-h-screen mt-4 flex flex-col items-center">
+          <div class="sticky top-0 w-full max-w-4xl z-50">
+            <div class="relative mb-4 ">
+              <div class="absolute inset-0 opacity-70"></div>
+              <mode-card
+                title="${this.title}"
+                icon="${this.icon}"
+                href="#${sectionId}"
+                color="${this.color}"
+              ></mode-card>
+            </div>
           </div>
-          <div class="w-full max-w-5xl p-8 relative">
-            <!-- Section Background Glow -->
-            <div class="absolute inset-0 bg-gradient-radial from-cyan-500/5 via-transparent to-transparent pointer-events-none"></div>
+          <div class="w-full max-w-4xl p-8 relative">
+            <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent pointer-events-none"></div>
             <div class="relative z-10">
               ${content}
             </div>

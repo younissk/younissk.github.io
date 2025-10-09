@@ -13,7 +13,7 @@
     {
       "group": "Languages",
       "items": "TypeScript, Python, Java",
-      "icon": "/icons/Fire.png"
+      "icon": "/icons/Source Code.png"
     },
     {
       "group": "Frameworks",
@@ -23,12 +23,12 @@
     {
       "group": "Databases",
       "items": "PostgreSQL, Chroma",
-      "icon": "/icons/Fire.png"
+      "icon": "/icons/Database.png"
     },
     {
       "group": "Cloud",
       "items": "AWS, Vast.ai, TeamCity",
-      "icon": "/icons/Fire.png"
+      "icon": "/icons/Cloud.png"
     }
   ]
 }

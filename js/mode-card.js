@@ -6,39 +6,27 @@ class ModeCard extends HTMLElement {
     this.icon = this.getAttribute("icon") || "https://via.placeholder.com/150";
     this.href = this.getAttribute("href") || "/";
     this.color = this.getAttribute("color") || "white";
-    this.className = this.getAttribute("class") || "";
     this.render();
   }
 
   render() {
+    const neonColor = this.color.includes('red') ? 'var(--neon-red)' : 
+                      this.color.includes('blue') ? 'var(--neon-blue)' : 
+                      'var(--neon-green)';
+    
     this.innerHTML = `
       <a href="${this.href}"
-        class="grid grid-cols-[60px_1fr] items-center p-6 border-arcade gap-6 max-w-lg mx-auto cursor-pointer ${this.className}"
-        style="border-color: ${this.getColorValue()};"
+        class="group grid grid-cols-[60px_1fr] bg-[var(--crt-background)] items-center p-5 gap-5 mx-auto arcade-border relative overflow-hidden transition-all duration-300 hover:scale-105"
+        style="border-color: ${neonColor}; box-shadow: 0 0 5px ${neonColor}, inset 0 0 5px ${neonColor}"
+        onmouseover="this.style.boxShadow = '0 0 15px ${neonColor}, inset 0 0 10px ${neonColor}'"
+        onmouseout="this.style.boxShadow = '0 0 5px ${neonColor}, inset 0 0 5px ${neonColor}'"
       >
-        <div class="relative">
-          <img src="${this.icon}" alt="${this.title}" class="w-12 h-12 justify-self-center transition-transform duration-300 hover:scale-110" />
-          <div class="absolute inset-0 bg-current opacity-20 blur-sm animate-pulse"></div>
-        </div>
-        <h2 class="text-3xl text-left truncate font-bold drop-shadow-lg animate-pulse"
-            style="color: ${this.getColorValue()}; text-shadow: 0 0 10px ${this.getColorValue()};">
-          ${this.title}
-        </h2>
+        <div class="absolute inset-0 bg-black opacity-50 group-hover:opacity-30 transition-opacity"></div>
+        <img src="${this.icon}" alt="${this.title}" class="w-10 h-10 justify-self-center relative z-10 group-hover:scale-110 transition-transform" />
+        <h2 class="text-3xl text-left truncate tracking-wider arcade-text relative z-10" style="color: ${neonColor}">${this.title}</h2>
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-current to-transparent opacity-0 group-hover:opacity-10 blur transition-opacity" style="color: ${neonColor}"></div>
       </a>
       `;
-  }
-
-  getColorValue() {
-    const colorMap = {
-      'red-400': '#f87171',
-      'cyan-400': '#22d3ee',
-      'green-400': '#4ade80',
-      'red-300': '#fca5a5',
-      'blue-300': '#93c5fd',
-      'green-300': '#86efac',
-      'white': '#ffffff'
-    };
-    return colorMap[this.color] || colorMap['white'];
   }
 }
 
