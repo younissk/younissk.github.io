@@ -14,60 +14,172 @@
       @theme {
         --font-workbench: "Workbench", sans-serif;
       }
+
+      @layer utilities {
+        .bg-gradient-radial {
+          background: radial-gradient(circle, var(--tw-gradient-stops));
+        }
+
+        .text-shadow-neon {
+          text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 40px currentColor;
+        }
+
+        .border-arcade {
+          border: 3px solid;
+          border-image: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00) 1;
+          box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.3), 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .animate-typewriter {
+          overflow: hidden;
+          white-space: nowrap;
+          animation: typewriter 3s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typewriter {
+          from { width: 0; }
+          to { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+          from, to { border-color: transparent; }
+          50% { border-color: currentColor; }
+        }
+
+        .animate-arcade-hover {
+          transition: all 0.3s ease;
+        }
+
+        .animate-arcade-hover:hover {
+          transform: scale(1.05) rotate(1deg);
+          box-shadow: 0 0 30px currentColor;
+          filter: brightness(1.2);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+          .animate-arcade-hover:hover {
+            transform: scale(1.02) rotate(0.5deg);
+            box-shadow: 0 0 20px currentColor;
+          }
+
+          .animate-scanline::after {
+            animation-duration: 2s;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .text-5xl { font-size: 2.5rem; }
+          .text-3xl { font-size: 1.5rem; }
+
+          .animate-arcade-hover:hover {
+            transform: scale(1.01);
+            box-shadow: 0 0 15px currentColor;
+          }
+        }
+
+        .animate-glow-pulse {
+          animation: glow-pulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow-pulse {
+          from {
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+          }
+          to {
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.8), 0 0 60px rgba(0, 255, 255, 0.4);
+          }
+        }
+
+        .animate-scanline {
+          position: relative;
+          overflow: hidden;
+        }
+
+        .animate-scanline::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+          animation: scanline 3s linear infinite;
+        }
+
+        @keyframes scanline {
+          0% { left: -100%; }
+          100% { left: 100%; }
+        }
+      }
     </style>
     <title>Test</title>
   </head>
-  <body class="font-workbench bg-[#222222] text-center text-white">
+  <body class="font-workbench bg-gradient-to-b from-[#1a1a2e] via-[#16213e] to-[#0f3460] text-center text-white overflow-x-hidden relative">
+    <!-- CRT Scanlines Overlay -->
+    <div class="fixed inset-0 pointer-events-none z-50 opacity-10">
+      <div class="w-full h-full bg-gradient-to-b from-transparent via-cyan-500/20 to-transparent animate-pulse"></div>
+      <div class="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(0,255,255,0.03)_50%,transparent_51%)] bg-[length:100%_4px]"></div>
+    </div>
+
+    <!-- Neon Glow Effects -->
+    <div class="fixed inset-0 pointer-events-none z-40">
+      <div class="absolute top-0 left-0 w-full h-full bg-gradient-radial from-cyan-500/5 via-transparent to-transparent"></div>
+    </div>
+
     <section
       id="home"
-      class="h-screen flex flex-col items-center justify-center"
+      class="h-screen flex flex-col items-center justify-center relative"
     >
-      <div class="mb-8">
-        <h2 class="text-3xl">Asalamu alaykum</h2>
-        <h2 class="text-5xl tracking-wider">
-          I'm <span class="text-blue-300">Youniss</span>
+      <div class="mb-8 relative">
+        <h2 class="text-3xl text-cyan-300 tracking-wider font-bold drop-shadow-[0_0_10px_rgba(0,255,255,0.5)] animate-pulse">Asalamu alaykum</h2>
+        <h2 class="text-5xl tracking-wider font-bold bg-gradient-to-r from-cyan-300 via-blue-300 to-purple-300 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(0,255,255,0.8)]">
+          I'm <span class="text-cyan-200">Youniss</span>
         </h2>
       </div>
-      <h2 class="text-3xl mb-2">Select Mode</h2>
-      <div class="flex flex-col gap-2">
+      <h2 class="text-3xl mb-2 text-green-300 font-bold drop-shadow-[0_0_8px_rgba(0,255,0,0.6)] animate-pulse">Select Mode</h2>
+      <div class="flex flex-col gap-4 p-4">
         <mode-card
           title="ML and AI"
           icon="/icons/Brain.png"
           href="#ml-and-ai"
-          color="red-300"
+          color="red-400"
+          class="animate-arcade-hover"
         ></mode-card>
         <mode-card
           title="Web Dev"
           icon="/icons/Internet.png"
           href="#web-dev"
-          color="blue-300"
+          color="cyan-400"
+          class="animate-arcade-hover"
         ></mode-card>
         <mode-card
           title="Education"
           icon="/icons/School.png"
           href="#education"
-          color="green-300"
+          color="green-400"
+          class="animate-arcade-hover"
         ></mode-card>
       </div>
     </section>
     <section-container
       title="ML and AI"
       icon="/icons/Brain.png"
-      color="red-300"
+      color="red-400"
       section="ml-ai"
     >
     </section-container>
     <section-container
       title="Web Dev"
       icon="/icons/Internet.png"
-      color="blue-300"
+      color="cyan-400"
       section="web-dev"
     >
     </section-container>
     <section-container
       title="Education"
       icon="/icons/School.png"
-      color="green-300"
+      color="green-400"
       section="education"
     >
     </section-container>
