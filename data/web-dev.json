@@ -1,0 +1,34 @@
+{
+  "intro": {
+    "text": "I have been a self taught web developer since 2018. In 2022, after school, I got my first job as a professional Web Dev. While Traditional WebDev is still in my heart, today I'm increasingly doing more and more AI and ML in the web projects. I am a builder at heart and love creating diverse web experiences. Working with me, you can expect many rapid prototypes to explore new ideas with creative twists."
+  },
+  "projects": [
+    {
+      "title": "Shopify Search",
+      "description": "I created a Search engine across shopify stores. This includes 580k products. I added functionality for Semantic search and content based Recommender system.",
+      "links": []
+    }
+  ],
+  "skills": [
+    {
+      "group": "Languages",
+      "items": "TypeScript, Python, Java",
+      "icon": "/icons/Fire.png"
+    },
+    {
+      "group": "Frameworks",
+      "items": "Next.js, Spring, FastAPI",
+      "icon": "/icons/Internet.png"
+    },
+    {
+      "group": "Databases",
+      "items": "PostgreSQL, Chroma",
+      "icon": "/icons/Fire.png"
+    },
+    {
+      "group": "Cloud",
+      "items": "AWS, Vast.ai, TeamCity",
+      "icon": "/icons/Fire.png"
+    }
+  ]
+}

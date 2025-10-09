@@ -1,57 +1,4 @@
-// components.js
-class ModeCard extends HTMLElement {
-  constructor() {
-    super();
-    this.title = this.getAttribute("title") || "Default";
-    this.icon = this.getAttribute("icon") || "https://via.placeholder.com/150";
-    this.href = this.getAttribute("href") || "/";
-    this.color = this.getAttribute("color") || "white";
-    this.render();
-  }
-
-  render() {
-    this.innerHTML = `
-      <a href="/${this.href}"
-        class="grid grid-cols-[60px_1fr] items-center p-5 border-2 border-${this.color} gap-5 max-w-md mx-auto"
-      >
-        <img src="${this.icon}" alt="${this.title}" class="w-10 h-10 justify-self-center" />
-        <h2 class="text-3xl text-left truncate text-${this.color} tracking-wider">${this.title}</h2>
-      </a>
-      `;
-  }
-}
-
-class SectionContainer extends HTMLElement {
-  constructor() {
-    super();
-    this.title = this.getAttribute("title") || "Section";
-    this.color = this.getAttribute("color") || "white";
-    this.icon = this.getAttribute("icon") || "/icons/Brain.png";
-    this.render();
-  }
-
-  render() {
-    const sectionId = this.title.toLowerCase().replace(/ /g, "-");
-    this.innerHTML = `
-      <section id="${sectionId}" class="block">
-        <div class="min-h-screen flex flex-col items-center">
-          <div class="sticky top-0 w-full bg-[#222222] py-4">
-            <mode-card
-              title="${this.title}"
-              icon="${this.icon}"
-              href="#${sectionId}"
-              color="${this.color}"
-            ></mode-card>
-          </div>
-          <div class="w-full max-w-4xl p-8">
-            ${this.innerHTML}
-          </div>
-        </div>
-      </section>
-     `;
-  }
-}
-
+// js/jupyter-components.js
 class JupyterCodeCell extends HTMLElement {
   constructor() {
     super();
@@ -150,8 +97,6 @@ class JupyterSkill extends HTMLElement {
 }
 
 // Register the components
-customElements.define("mode-card", ModeCard);
-customElements.define("section-container", SectionContainer);
 customElements.define("jupyter-code-cell", JupyterCodeCell);
 customElements.define("jupyter-project", JupyterProject);
 customElements.define("jupyter-skill", JupyterSkill);

@@ -1,0 +1,19 @@
+{
+  "intro": {
+    "text": "Beginning early 2025, I have started teaching, as a passion. As a result, I got to teach multiple courses at different online teaching programs."
+  },
+  "courses": [
+    {
+      "title": "n8n Automations",
+      "description": "I created a Search engine across shopify stores. This includes 500k products. I added functionality for Semantic search and content based Recommender system.",
+      "links": []
+    }
+  ],
+  "schools": [
+    {
+      "name": "School Name",
+      "description": "Description of work with this school",
+      "period": "2025"
+    }
+  ]
+}

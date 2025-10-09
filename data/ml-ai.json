@@ -1,0 +1,40 @@
+{
+  "intro": {
+    "text": "I have done my Bachelors in AI at JKU and am currently doing my masters courses at JKU"
+  },
+  "projects": [
+    {
+      "title": "Falcon Fine Tuning",
+      "description": "I tried to Fine tune a Falcon H1 model on Tool calling, as an attempt to boost Falcons Tool calling capabilities",
+      "links": ["GitHub", "Hugging Face", "Paper"]
+    }
+  ],
+  "skills": [
+    {
+      "group": "ML Frameworks",
+      "items": "PyTorch, SKLearn, HF",
+      "icon": "/icons/Fire.png"
+    },
+    {
+      "group": "LLM Frameworks", 
+      "items": "LangChain, OpenAI, HF",
+      "icon": "/icons/Chain.png"
+    },
+    {
+      "group": "Analysis",
+      "items": "Pandas, WEKA",
+      "icon": "/icons/Biotech.png"
+    },
+    {
+      "group": "Other",
+      "items": "UV, Weights And Biases",
+      "icon": "/icons/Inspection.png"
+    },
+    {
+      "group": "Web",
+      "items": "See my web dev skills",
+      "icon": "/icons/Internet.png",
+      "isLink": true
+    }
+  ]
+}
