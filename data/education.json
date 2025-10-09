@@ -5,7 +5,17 @@
   "courses": [
     {
       "title": "n8n Automations",
-      "description": "I created a Search engine across shopify stores. This includes 500k products. I added functionality for Semantic search and content based Recommender system.",
+      "description": "I created a course on how to use n8n to automate your workflows, including LLM based workflows.",
+      "links": []
+    },
+    {
+      "title": "React beginners course",
+      "description": "I created a course on how to use React, teaching everything from the vdom to custom hooks.",
+      "links": []
+    },
+    {
+      "title": "Lessons on current AI trends",
+      "description": "I taught lessons on current AI trends, including What LLMs are and what they can do, and what to look out for when using them. In these lessons, I taught ReTell, Lovable and n8n.",
       "links": []
     }
   ],
