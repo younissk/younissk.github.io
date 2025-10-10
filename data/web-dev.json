@@ -6,7 +6,44 @@
     {
       "title": "Shopify Search",
       "description": "I created a Search engine across shopify stores. This includes 580k products. I added functionality for Semantic search and content based Recommender system.",
-      "links": []
+      "links": [
+        {
+          "text": "Demo",
+          "url": "https://shopify-search.up.railway.app/"
+        },
+        {
+          "text": "Code",
+          "url": "https://github.com/younissk/shopify-search"
+        }
+      ]
+    },
+    {
+      "title": "Privacy Journal",
+      "description": "For a small weekend project (Nothing professional), I created a Privacy first, journaling app with all journals stored on the users private github repo. I also added a voice to text feature using OpenAI Whisper because I was annoyed how bad Apple's text to speech was.",
+      "links": [
+        {
+          "text": "Demo",
+          "url": "https://privacy-journal.netlify.app/"
+        },
+        {
+          "text": "Code",
+          "url": "https://github.com/younissk/privacy-journal-web"
+        }
+      ]
+    },
+    {
+      "title": "JKU Exam Simulator",
+      "description": "Created a Exam Simulator for JKU students to practice for their exams. This launched a collaborative effort between students to upload and create questions for their exams.",
+      "links": [
+        {
+          "text": "Demo",
+          "url": "https://jku-exam-simulator.netlify.app/"
+        },
+        {
+          "text": "Code",
+          "url": "https://github.com/younissk/jku-exam-practice"
+        }
+      ]
     }
   ],
   "skills": [

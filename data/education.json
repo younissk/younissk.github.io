@@ -23,17 +23,20 @@
     {
       "name": "CodingForHijra",
       "description": "A school for total beginners to learn Web Development",
-      "period": "2025 - Present"
+      "period": "2025 - Present",
+      "link": "https://codingforhijrah.com/"
     },
     {
       "name": "BuildFast",
       "description": "A Program for people wanting to learn how to vibe coding",
-      "period": "2025 - Present"
+      "period": "2025 - Present",
+      "link": "https://www.skool.com/buildfast"
     },
     {
       "name": "Codebender",
       "description": "A program for people to learn all about Making and Selling LLM services.",
-      "period": "2025 - Present"
+      "period": "2025 - Present",
+      "link": "https://lastcodebender.com/"
     }
   ]
 }

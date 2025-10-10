@@ -14,12 +14,12 @@ class JupyterCodeCell extends HTMLElement {
         <div class="border-l-4 pl-2" style="border-color: var(--neon-blue)">
           <div class="flex items-start gap-4 bg-[var(--terminal-bg)] rounded-r-lg p-4">
             <!-- Prompt -->
-            <div class="flex-shrink-0 font-mono text-[var(--neon-blue)]" style="min-width: 50px">
+            <div class="flex-shrink-0 text-[var(--neon-blue)]" style="min-width: 50px">
               In [${this.number}]:
             </div>
             <!-- Code -->
             <div class="">
-              <pre class="text-[var(--terminal-text)] font-mono">${this.code}</pre>
+              <div class="text-[var(--terminal-text)]">${this.code}</div>
             </div>
           </div>
         </div>
@@ -50,7 +50,7 @@ class JupyterProject extends HTMLElement {
 
   render() {
     const linksArray = this.links
-      ? this.links.split(",").map((link) => link.trim())
+      ? JSON.parse(this.links)
       : [];
     const linksHtml =
       linksArray.length > 0
@@ -59,7 +59,7 @@ class JupyterProject extends HTMLElement {
           ${linksArray
             .map(
               (link) =>
-                `<a href="#" class="underline hover:text-blue-300">${link}</a>`
+                `<a href="${link.url}" class="underline hover:text-blue-300" target="_blank" rel="noopener noreferrer">${link.text}</a>`
             )
             .join(" - ")}
         </div>
