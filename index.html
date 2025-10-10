@@ -159,9 +159,36 @@
       section="education"
     >
     </section-container>
+    
+    <!-- Contact Section -->
+    <section id="contact" class="block">
+      <div class="min-h-screen mt-4 flex flex-col items-center">
+        <div class="sticky top-0 w-full max-w-4xl z-50">
+          <div class="relative mb-4">
+            <div class="absolute inset-0 opacity-70"></div>
+            <mode-card
+              title="Contact"
+              icon="/icons/Chain.png"
+              href="#contact"
+              color="green-300"
+            ></mode-card>
+          </div>
+        </div>
+        <div class="w-full max-w-4xl p-8 relative">
+          <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent pointer-events-none"></div>
+          <div class="relative z-10">
+            <contact-form access-key="YOUR_WEB3FORMS_ACCESS_KEY"></contact-form>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Social Links -->
+    <social-links></social-links>
   </body>
   <script src="js/data-loader.js"></script>
   <script src="js/mode-card.js"></script>
   <script src="js/section-container.js"></script>
   <script src="js/jupyter-components.js"></script>
+  <script src="js/contact-form.js"></script>
 </html>
