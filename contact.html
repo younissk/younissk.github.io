@@ -109,58 +109,27 @@
         }
       }
     </style>
-    <title>Youniss's Arcade</title>
+    <title>Contact - Youniss's Arcade</title>
   </head>
   <body class="font-workbench bg-[var(--crt-background)] text-center text-white crt-overlay">
-    <section
-      id="home"
-      class="h-screen flex flex-col items-center justify-center"
-    >
-      <div class="mb-8 arcade-text neon-glow">
-        <h2 class="text-3xl mb-2" style="color: var(--neon-green)">Hi</h2>
-        <h2 class="text-5xl tracking-wider">
-          I'm <span style="color: var(--neon-blue)">Youniss</span>
-        </h2>
+    <section id="contact" class="min-h-screen flex flex-col items-center justify-center p-8">
+      <div class="mb-8">
+        <a href="index.html" class="inline-block mb-6">
+          <h2 class="text-2xl arcade-text" style="color: var(--neon-green)">
+            ← BACK TO HOME
+          </h2>
+        </a>
       </div>
-      <div class="relative mb-8">
-        <h2 class="text-4xl mb-2 arcade-text" style="color: var(--neon-red)">CONNECT</h2>
-        <div class="absolute -inset-1 bg-gradient-to-r from-transparent via-[var(--neon-red)] to-transparent opacity-20 blur-sm"></div>
-      </div>
-      <div class="flex flex-col gap-4">
-        <mode-card
-          title="GitHub"
-          icon="/icons/github.png"
-          href="https://github.com/younissk"
-          color="blue-300"
-        ></mode-card>
-        <mode-card
-          title="LinkedIn"
-          icon="/icons/linkedin.png"
-          href="https://www.linkedin.com/in/youniss/"
-          color="blue-300"
-        ></mode-card>
-        <mode-card
-          title="Huggingface"
-          icon="/icons/Brain.png"
-          href="https://huggingface.co/younissk"
-          color="green-300"
-        ></mode-card>
-        <mode-card
-          title="YouTube"
-          icon="/icons/youtube.png"
-          href="https://www.youtube.com/channel/UChhLu6Mc16ryLA4NjlkxldA/"
-          color="red-300"
-        ></mode-card>
-        <mode-card
-          title="Contact Me"
-          icon="/icons/Chain.png"
-          href="contact.html"
-          color="green-300"
-        ></mode-card>
+      <div class="w-full max-w-4xl p-8 relative">
+        <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent pointer-events-none"></div>
+        <div class="relative z-10">
+          <contact-form access-key="YOUR_WEB3FORMS_ACCESS_KEY"></contact-form>
+        </div>
       </div>
     </section>
   </body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
   <script src="js/arcade-background.js"></script>
-  <script src="js/mode-card.js"></script>
+  <script src="js/contact-form.js"></script>
 </html>
+

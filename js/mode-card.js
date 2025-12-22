@@ -14,8 +14,12 @@ class ModeCard extends HTMLElement {
                       this.color.includes('blue') ? 'var(--neon-blue)' : 
                       'var(--neon-green)';
     
+    // Detect external links (starting with http:// or https://)
+    const isExternal = this.href.startsWith('http://') || this.href.startsWith('https://');
+    const linkAttributes = isExternal ? 'target="_blank" rel="noopener noreferrer"' : '';
+    
     this.innerHTML = `
-      <a href="${this.href}"
+      <a href="${this.href}" ${linkAttributes}
         class="group grid grid-cols-[60px_1fr] bg-[var(--crt-background)] items-center p-5 gap-5 mx-auto arcade-border relative overflow-hidden transition-all duration-300 hover:scale-105"
         style="border-color: ${neonColor}; box-shadow: 0 0 5px ${neonColor}, inset 0 0 5px ${neonColor}"
         onmouseover="this.style.boxShadow = '0 0 15px ${neonColor}, inset 0 0 10px ${neonColor}'"
