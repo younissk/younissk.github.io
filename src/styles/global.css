@@ -491,28 +491,6 @@
    --c-* vars, which the .dark class already re-points.
    --------------------------------------------------------------------------- */
 @layer components {
-  .prose {
-    --tw-prose-body: var(--c-ink-muted);
-    --tw-prose-headings: var(--c-ink);
-    --tw-prose-lead: var(--c-ink-muted);
-    --tw-prose-links: var(--c-accent);
-    --tw-prose-bold: var(--c-ink);
-    --tw-prose-counters: var(--c-ink-faint);
-    --tw-prose-bullets: var(--c-border-strong);
-    --tw-prose-hr: var(--c-border);
-    --tw-prose-quotes: var(--c-ink);
-    --tw-prose-quote-borders: var(--c-border-strong);
-    --tw-prose-captions: var(--c-ink-faint);
-    --tw-prose-code: var(--c-ink);
-    --tw-prose-pre-code: var(--c-ink);
-    --tw-prose-pre-bg: var(--c-surface);
-    --tw-prose-th-borders: var(--c-border-strong);
-    --tw-prose-td-borders: var(--c-border);
-
-    max-width: none;
-    font-size: 1rem;
-    line-height: 1.7;
-  }
 
   .prose :where(a):not(:where(.not-prose *)) {
     text-decoration-thickness: from-font;
@@ -571,9 +549,38 @@
     font-size: 0.875rem;
   }
 
+  /* Article images are mostly screenshots and diagrams on white paper. Dropped
+     straight onto a near-black page they read as a light leak, not a figure —
+     the Sudoku grids in the logic post were painful to look at. Frame them so
+     the white is intentional, then take the glare off in dark mode.
+
+     Dimming, not inverting: these diagrams carry numerals and hairline rules,
+     and an invert filter destroys both. Hover (and focus, for keyboards)
+     restores full fidelity when someone actually wants to study the image. */
   .prose :where(img):not(:where(.not-prose *)) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin-inline: auto;
+    background-color: #fff;
     border: 1px solid var(--c-border);
     border-radius: var(--radius-panel);
+    transition: filter 140ms ease;
+  }
+
+  .dark .prose :where(img):not(:where(.not-prose *)) {
+    filter: brightness(0.82) contrast(1.03);
+  }
+
+  .dark .prose :where(img):not(:where(.not-prose *)):hover,
+  .dark .prose :where(a:focus-visible img):not(:where(.not-prose *)) {
+    filter: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .prose :where(img):not(:where(.not-prose *)) {
+      transition: none;
+    }
   }
 
   /* KaTeX display blocks overflow on phones otherwise. */
@@ -600,4 +607,42 @@
 .astro-code {
   padding: 0.875rem 1rem;
   overflow-x: auto;
+}
+
+
+/* ---------------------------------------------------------------------------
+   Prose colour tokens — UNLAYERED ON PURPOSE.
+
+   @tailwindcss/typography registers `.prose` in the `utilities` layer, which
+   in Tailwind v4 cascades after `components`. Assigning these inside
+   `@layer components` looked correct and did nothing: the plugin's own
+   --tw-prose-* values won every time and the article body silently rendered in
+   the plugin default (a slate grey) instead of the site's ink.
+
+   Unlayered rules beat every layered rule regardless of order, so this block
+   is deliberately outside any @layer. Do not "tidy" it back into one.
+   --------------------------------------------------------------------------- */
+.prose {
+  /* Full ink, not muted. Muted grey is right for UI metadata and wrong for
+     something someone reads for ten minutes — it clears WCAG and still tires
+     the eye. Long-form body text gets the strongest colour available. */
+  --tw-prose-body: var(--c-ink);
+  --tw-prose-headings: var(--c-ink);
+  --tw-prose-lead: var(--c-ink);
+  --tw-prose-links: var(--c-accent);
+  --tw-prose-bold: var(--c-ink);
+  --tw-prose-counters: var(--c-ink-faint);
+  --tw-prose-bullets: var(--c-border-strong);
+  --tw-prose-hr: var(--c-border);
+  --tw-prose-quotes: var(--c-ink);
+  --tw-prose-quote-borders: var(--c-border-strong);
+  --tw-prose-captions: var(--c-ink-faint);
+  --tw-prose-code: var(--c-ink);
+  --tw-prose-pre-code: var(--c-ink);
+  --tw-prose-pre-bg: var(--c-surface);
+  --tw-prose-th-borders: var(--c-border-strong);
+  --tw-prose-td-borders: var(--c-border);
+  max-width: none;
+  font-size: 1rem;
+  line-height: 1.7;
 }
