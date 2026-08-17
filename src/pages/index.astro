@@ -12,9 +12,6 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
    not content — one page owns it, and it changes when the hero changes.
    --------------------------------------------------------------------------- */
 
-const HERO_LINE =
-  'I build production AI services — retrieval pipelines, LLM document extraction, and the backends around them — currently on AI4Emergency, an Austrian FFG-funded research project at ONDEWO.';
-
 
 /** Hand-dated so the label reflects when the note was written, not the build. */
 const NOW = {
@@ -76,7 +73,6 @@ const STACK_SHOWN = 6;
     <PageHeader
       eyebrow={AUTHOR.role}
       title={AUTHOR.name}
-      description={HERO_LINE}
       size="display"
     >
       <nav class="flex flex-wrap items-center gap-2" aria-label="Contact and profiles">

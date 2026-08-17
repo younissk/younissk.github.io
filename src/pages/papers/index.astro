@@ -23,7 +23,6 @@ const readable = (value: string) => value.replace(/-/g, ' ');
     <PageHeader
       eyebrow="Publications"
       title="Papers"
-      description="Technical reports and seminar work, mostly on retrieval, audio-text models and tool-calling LLMs. Every entry links to the PDF and carries its BibTeX."
       meta={[`${papers.length} ${papers.length === 1 ? 'entry' : 'entries'}`, span].filter(Boolean)}
     />
 
