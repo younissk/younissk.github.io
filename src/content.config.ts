@@ -27,6 +27,11 @@ const work = defineCollection({
     stack: z.array(z.string()),
     metrics: z.array(z.object({ label: z.string(), value: z.string() })).optional(),
     links: z.array(linkSchema).optional(),
+    /**
+     * Held back from the built site but kept in the repo. Used for work that
+     * may be under NDA — the file stays, the page does not get generated.
+     */
+    draft: z.boolean().default(false),
   }),
 });
 

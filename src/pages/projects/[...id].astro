@@ -21,8 +21,9 @@ const { Content } = await render(entry);
 
 /** Only links that actually exist — a missing repo is a marker, never a dead link. */
 const links = [
+  p.tool && { label: 'Open it', url: p.tool.url, external: !p.tool.internal },
   p.repo && { label: 'Repository', url: p.repo, external: true },
-  p.demo && { label: 'Live demo', url: p.demo, external: true },
+  p.demo && p.demo !== p.tool?.url && { label: 'Live demo', url: p.demo, external: true },
   p.paper && {
     label: 'Paper',
     url: p.paper,

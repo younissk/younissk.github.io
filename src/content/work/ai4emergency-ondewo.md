@@ -4,6 +4,7 @@ org: ONDEWO
 role: AI Engineer
 period: Mar 2026 – Present
 order: 1
+draft: true
 summary: "Building the retrieval, testing and agent infrastructure behind AI-driven emergency communication for disaster and large-event operations, on an Austrian funded research project."
 stack:
   - Python

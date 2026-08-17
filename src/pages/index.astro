@@ -19,7 +19,7 @@ const NOW = {
   role: 'AI Engineer',
   org: 'ONDEWO',
   period: 'Mar 2026 – Present',
-  text: "I'm at ONDEWO building the retrieval, QA and agent infrastructure for AI4Emergency — crawling and ingestion behind a gRPC facade, an automated LLM QA pipeline that enables TDD for agents, and MCP servers plus LangGraph agents for emergency-service workflows. My MSc in Artificial Intelligence at JKU is paused while I focus on that.",
+  text: "I'm at ONDEWO working on AI4Emergency, an Austrian FFG-funded research project on AI-driven communication technology for emergency operations. My MSc in Artificial Intelligence at JKU is paused while I focus on that.",
 } as const;
 
 const TEACHING = [
@@ -33,15 +33,13 @@ const TEACHING = [
 /* --- data ----------------------------------------------------------------- */
 
 const [work, projects, posts, videos, papers] = await Promise.all([
-  getCollection('work'),
+  getCollection('work', ({ data }) => !data.draft),
   getCollection('projects'),
   getCollection('posts'),
   getCollection('videos'),
   getCollection('papers'),
 ]);
 
-/* Tools are projects carrying a `tool` block, not a separate collection. */
-const tools = projects.filter((project) => project.data.tool);
 
 const selectedWork = [...work].sort((a, b) => a.data.order - b.data.order).slice(0, 4);
 
@@ -53,7 +51,6 @@ const COUNTS: Readonly<Record<string, { readonly n: number; readonly noun: strin
   '/writing/': { n: published.length, noun: 'posts' },
   '/videos/': { n: videos.length, noun: 'videos' },
   '/papers/': { n: papers.length, noun: 'papers' },
-  '/tools/': { n: tools.length, noun: 'tools' },
 };
 
 const explore = NAV.filter((item) => item.href !== '/work/').map((item) => {

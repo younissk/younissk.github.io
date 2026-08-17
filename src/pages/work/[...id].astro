@@ -8,7 +8,7 @@ import Tag from '../../components/Tag.astro';
 import ExternalLink from '../../components/ExternalLink.astro';
 
 export async function getStaticPaths() {
-  const entries = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+  const entries = (await getCollection('work', ({ data }) => !data.draft)).sort((a, b) => a.data.order - b.data.order);
 
   return entries.map((entry, index) => ({
     params: { id: entry.id },

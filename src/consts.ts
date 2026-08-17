@@ -47,7 +47,6 @@ export const NAV: readonly NavItem[] = [
   { label: 'Writing', href: '/writing/', blurb: 'Notes and essays' },
   { label: 'Videos', href: '/videos/', blurb: 'YouTube, indexed' },
   { label: 'Papers', href: '/papers/', blurb: 'Reports and publications' },
-  { label: 'Tools', href: '/tools/', blurb: 'Things you can use right now' },
   { label: 'Contact', href: '/contact/', blurb: 'Send me a message' },
 ];
 

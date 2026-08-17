@@ -29,6 +29,8 @@ const projects: ProjectRow[] = entries
     repo: entry.data.repo,
     demo: entry.data.demo,
     paper: entry.data.paper,
+    /* A tool's own URL: the thing you can open and use. */
+    open: entry.data.tool?.url ?? null,
     private: entry.data.private,
     featured: entry.data.featured,
   }))

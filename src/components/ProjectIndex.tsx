@@ -25,6 +25,7 @@ export interface ProjectRow {
   repo: string | null;
   demo: string | null;
   paper: string | null;
+  open: string | null;
   private: boolean;
   featured: boolean;
 }
@@ -497,7 +498,17 @@ export default function ProjectIndex({ projects, categories }: Props) {
                 ) : (
                   p.private && <span>private</span>
                 )}
-                {p.demo && (
+                {p.open && (
+                  <a
+                    className="link-quiet"
+                    href={p.open}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    open
+                  </a>
+                )}
+                {p.demo && p.demo !== p.open && (
                   <a
                     className="link-quiet"
                     href={p.demo}

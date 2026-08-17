@@ -6,11 +6,8 @@ import { AUTHOR } from '../consts';
 
 const LAST_UPDATED = '2026-08';
 
-const working = [
-  'A web-crawling and ingestion pipeline for retrieval-augmented generation, exposed through a gRPC facade so the rest of the system can consume it.',
-  'An automated LLM QA pipeline that tests agent changes for regressions — the piece that makes test-driven development possible for agents.',
-  'Production-grade MCP servers and LangGraph agents for emergency-service workflows.',
-];
+// Specifics withheld pending an NDA check. Full list in git history.
+const working: string[] = [];
 
 const building = [
   {
@@ -49,15 +46,15 @@ const building = [
       </div>
 
       <p class="text-ink-muted">
-        I'm at ONDEWO building the retrieval, QA and agent infrastructure for AI4Emergency, an
-        Austrian funded research project developing AI-driven communication technology for
-        safety-critical emergency operations in disaster and large-event scenarios. Concretely,
-        that means three things:
+        I'm at ONDEWO working on AI4Emergency, an Austrian FFG-funded research project on AI-driven
+        communication technology for emergency operations.
       </p>
 
-      <ul class="row-list mt-5">
-        {working.map((item) => <li class="row text-ink-muted">{item}</li>)}
-      </ul>
+      {working.length > 0 && (
+        <ul class="row-list mt-5">
+          {working.map((item) => <li class="row text-ink-muted">{item}</li>)}
+        </ul>
+      )}
     </section>
 
     <section class="section">
