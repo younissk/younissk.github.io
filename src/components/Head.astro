@@ -35,8 +35,6 @@ const personSchema = {
   name: AUTHOR.name,
   url: SITE_URL,
   jobTitle: AUTHOR.role,
-  email: `mailto:${AUTHOR.email}`,
-  address: { '@type': 'PostalAddress', addressCountry: 'AT' },
   knowsAbout: [
     'Retrieval-augmented generation',
     'Large language models',

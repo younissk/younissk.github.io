@@ -1,10 +1,10 @@
 /* TEAM */
 
   Everything: Youniss Kandah
+  Contact: https://youniss.dev/contact/
   Site: https://youniss.dev
   Mirror: https://younissk.github.io
   Source: https://github.com/younissk/younissk.github.io
-  Location: Austria
 
 /* SITE */
 

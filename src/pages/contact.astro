@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { SOCIALS } from '../consts';
+
+// Form services redirect back here with ?sent=1 after a successful POST.
+const sent = Astro.url.searchParams.get('sent') === '1';
+
+const elsewhere = SOCIALS.filter((s) => ['GitHub', 'LinkedIn', 'YouTube'].includes(s.label));
+---
+
+<BaseLayout
+  title="Contact"
+  description="Send Youniss Kandah a message."
+>
+  <div class="page">
+    <PageHeader
+      eyebrow="Get in touch"
+      title="Contact"
+      description="Write to me here. I read everything that comes through and reply to anything that is not a pitch."
+    />
+
+    {
+      sent && (
+        <p class="sent" role="status">
+          Message sent. I will get back to you.
+        </p>
+      )
+    }
+
+    <section class="section">
+      <ContactForm />
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="label">Elsewhere</h2>
+      </div>
+      <ul class="link-list">
+        {
+          elsewhere.map((s) => (
+            <li>
+              <a class="link" href={s.href} target="_blank" rel="noopener noreferrer">
+                {s.label}
+              </a>
+              {s.handle && <span class="meta"> {s.handle}</span>}
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .sent {
+    margin-top: 1.5rem;
+    max-width: 34rem;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--c-accent);
+    border-radius: var(--radius-sm, 4px);
+    color: var(--c-ink);
+  }
+
+  .link-list {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .link-list .meta {
+    margin-left: 0.5rem;
+  }
+</style>

@@ -5,11 +5,9 @@
   <channel>
     <title>Youniss Kandah — Writing</title>
     <link>https://youniss.dev/writing/</link>
-    <description>Applied AI &amp; backend engineer in Austria. Production RAG, LLM document extraction, and agent infrastructure in safety-critical and document-heavy domains.</description>
+    <description>Applied AI &amp; backend engineer. Production RAG, LLM document extraction, and agent infrastructure in safety-critical and document-heavy domains.</description>
     <language>en</language>
     <copyright>© 2026 Youniss Kandah</copyright>
-    <managingEditor>younisskandah@gmail.com (Youniss Kandah)</managingEditor>
-    <webMaster>younisskandah@gmail.com (Youniss Kandah)</webMaster>
     <lastBuildDate>Wed, 15 Nov 2023 00:00:00 GMT</lastBuildDate>
     <docs>https://www.rssboard.org/rss-specification</docs>
     <generator>Astro</generator>

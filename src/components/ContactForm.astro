@@ -1,0 +1,168 @@
+---
+/**
+ * Contact form.
+ *
+ * There is no e-mail address anywhere on this site, so this is the only way
+ * through — which makes "silently broken" the worst possible failure. Two
+ * guards against that:
+ *
+ *   1. With no CONTACT_ENDPOINT configured, this renders an honest notice
+ *      instead of a form. A form that POSTs nowhere looks like it worked and
+ *      throws the message away.
+ *   2. It is a plain HTML form. No JavaScript, no fetch, no island. It works
+ *      with scripts blocked, and there is no client-side state to get stuck in.
+ *
+ * The endpoint is the ONE third-party dependency on the site. See SUCCESSION.md
+ * for how to remove it.
+ */
+import { CONTACT_ENDPOINT, CONTACT_ACCESS_KEY, SITE_URL } from '../consts';
+
+interface Props {
+  /** Small heading above the form. Omit inside a section that already has one. */
+  heading?: string;
+  class?: string;
+}
+
+const { heading, class: className } = Astro.props;
+const configured = CONTACT_ENDPOINT.trim().length > 0;
+---
+
+<div class:list={['contact-form', className]}>
+  {heading && <h2 class="label mb-4">{heading}</h2>}
+
+  {
+    configured ? (
+      <form action={CONTACT_ENDPOINT} method="POST" class="form-grid">
+        {CONTACT_ACCESS_KEY && (
+          <input type="hidden" name="access_key" value={CONTACT_ACCESS_KEY} />
+        )}
+        {/* Come back to this page after sending. */}
+        <input type="hidden" name="_next" value={`${SITE_URL}/contact/?sent=1`} />
+        <input type="hidden" name="redirect" value={`${SITE_URL}/contact/?sent=1`} />
+        <input type="hidden" name="subject" value="Message from youniss.dev" />
+
+        {/* Honeypot. A public endpoint gets scraped; bots fill every field. */}
+        <div class="hp" aria-hidden="true">
+          <label for="company">Company</label>
+          <input id="company" type="text" name="botcheck" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="field">
+          <label for="cf-name">Name</label>
+          <input id="cf-name" name="name" type="text" required autocomplete="name" />
+        </div>
+
+        <div class="field">
+          <label for="cf-email">Your e-mail</label>
+          <input id="cf-email" name="email" type="email" required autocomplete="email" />
+          <p class="hint">So I can reply. Nothing else happens with it.</p>
+        </div>
+
+        <div class="field">
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" name="message" rows="6" required />
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+      </form>
+    ) : (
+      <div class="not-configured">
+        <p>
+          <strong>The contact form is not connected yet.</strong>
+        </p>
+        <p class="mt-2">
+          It needs a form endpoint, which is set in <code>src/consts.ts</code> as{' '}
+          <code>CONTACT_ENDPOINT</code>. Until that is filled in, this page deliberately shows
+          nothing to type into, so that no message is ever quietly thrown away.
+        </p>
+        <p class="mt-2">
+          In the meantime, my GitHub and LinkedIn are in the footer and both accept messages.
+        </p>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .form-grid {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 34rem;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  label {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--c-ink-muted);
+  }
+
+  input[type='text'],
+  input[type='email'],
+  textarea {
+    width: 100%;
+    padding: 0.6rem 0.7rem;
+    background: var(--c-bg-soft);
+    color: var(--c-ink);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-sm, 4px);
+    font: inherit;
+    transition: border-color 120ms ease;
+  }
+
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--c-accent);
+    outline-offset: 1px;
+    border-color: var(--c-accent);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 8rem;
+  }
+
+  .hint {
+    font-size: 0.8125rem;
+    color: var(--c-ink-muted);
+  }
+
+  .actions {
+    margin-top: 0.25rem;
+  }
+
+  /* Off-screen, not display:none — some bots skip hidden inputs. */
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .not-configured {
+    max-width: 42rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--c-border-strong);
+    border-radius: var(--radius-sm, 4px);
+    background: var(--c-bg-soft);
+    color: var(--c-ink-soft);
+  }
+
+  .not-configured code {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+  }
+
+  @media print {
+    .contact-form {
+      display: none;
+    }
+  }
+</style>

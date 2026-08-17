@@ -70,8 +70,6 @@ export const GET: APIRoute = async () => {
     <description>${esc(SITE_DESCRIPTION)}</description>
     <language>en</language>
     <copyright>© ${new Date().getUTCFullYear()} ${esc(AUTHOR.name)}</copyright>
-    <managingEditor>${esc(`${AUTHOR.email} (${AUTHOR.name})`)}</managingEditor>
-    <webMaster>${esc(`${AUTHOR.email} (${AUTHOR.name})`)}</webMaster>
     <lastBuildDate>${rfc822Date(lastBuild)}</lastBuildDate>
     <docs>https://www.rssboard.org/rss-specification</docs>
     <generator>Astro</generator>

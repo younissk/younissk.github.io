@@ -94,13 +94,33 @@ maintain this site and it will keep working long after the toolchain does not.
 
 ## Things that are deliberately absent
 
-No analytics. No contact form backend. No comment system. No CDN. No web fonts
-loaded from someone else's server. No tracking of any kind.
+No analytics. No comment system. No CDN. No web fonts loaded from someone
+else's server. No tracking of any kind.
 
 Every one of those would be a company that has to stay in business for this page
 to keep rendering correctly. Fonts, styles, scripts and images are all served
-from this repository. The only external requests a visitor makes are to links
-they choose to click.
+from this repository.
+
+## The one exception: the contact form
+
+There is no e-mail address anywhere on this site, by choice. That leaves the
+contact form as the only way through, and a form needs a server, which a static
+site does not have. So `/contact` POSTs to a third-party form service, set as
+`CONTACT_ENDPOINT` in `src/consts.ts`.
+
+This is the single dependency on somebody else staying in business. It is a
+deliberate trade and it is worth knowing how it fails:
+
+- If the service dies, the form silently stops delivering. **Nothing on the page
+  will look broken.** That is the dangerous failure, so if this site matters to
+  you, send yourself a test message once in a while.
+- With `CONTACT_ENDPOINT` empty, the page says plainly that it is not connected
+  instead of rendering a form that swallows messages. Keep that behaviour.
+
+To remove the dependency entirely, delete `src/components/ContactForm.astro`
+and put a plain address back on `/contact`. A `mailto:` link outlives every
+form service ever built. The only reason it is not the default here is that a
+published address gets scraped.
 
 Please keep it that way. If you are tempted to add something, ask whether the
 site still works in twenty years if that thing disappears.

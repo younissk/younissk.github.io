@@ -7,9 +7,9 @@
  * SUCCESSION.md argues against. This page is the source. Print it (Cmd/Ctrl+P)
  * and the print stylesheet at the bottom produces a clean PDF on demand.
  *
- * The phone number from the PDF is deliberately absent. A CV handed to a
- * recruiter is one thing; a CV indexed by search engines is another. E-mail is
- * the contact channel here.
+ * The phone number and address from the PDF are deliberately absent. A CV handed
+ * to a recruiter is one thing; a CV indexed by search engines is another. The
+ * contact form is the only channel.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
@@ -19,7 +19,6 @@ interface Role {
   title: string;
   org: string;
   orgUrl?: string;
-  location: string;
   period: string;
   bullets: readonly string[];
 }
@@ -29,7 +28,6 @@ const roles: readonly Role[] = [
     title: 'AI Engineer',
     org: 'ONDEWO',
     orgUrl: 'https://ondewo.com',
-    location: 'Remote, Austria',
     period: 'Mar 2026 – Present',
     bullets: [
       'Contributing to AI4Emergency, an Austrian funded research project developing AI-driven communication technologies for safety-critical emergency operations in disaster and large-event scenarios.',
@@ -42,7 +40,6 @@ const roles: readonly Role[] = [
     title: 'Software Engineer',
     org: 'ib-data',
     orgUrl: 'https://abk.at',
-    location: 'Vienna, Austria',
     period: 'Oct 2022 – Feb 2026',
     bullets: [
       'Built AI features including semantic search with PostgreSQL/pgvector + Python and a FastAPI pipeline that converted PDFs into structured data using LLM/VLM processing with human review.',
@@ -60,7 +57,6 @@ const roles: readonly Role[] = [
   {
     title: 'Freelance AI Engineer (part-time)',
     org: 'Self-employed',
-    location: 'Austria',
     period: 'Dec 2024 – Feb 2026',
     bullets: [
       'Built and deployed a LangChain-based automated grading service integrated into an LMS, optimizing for performance and memory efficiency.',
@@ -158,18 +154,18 @@ const skills = [
 
 <BaseLayout
   title="CV"
-  description="Curriculum vitae of Youniss Kandah — applied AI and backend engineer, Austria."
+  description="Curriculum vitae of Youniss Kandah, applied AI and backend engineer."
 >
   <article class="page cv">
     <PageHeader
       eyebrow="Curriculum vitae"
       title="CV"
-      description="Applied AI & Backend Engineer. Python, FastAPI, React, retrieval, document AI, production systems. Austria-based, open to relocate."
+      description="Applied AI & Backend Engineer. Python, FastAPI, React, retrieval, document AI, production systems."
       meta={['Updated August 2026', 'Print this page for a PDF']}
     />
 
     <p class="cv-contact meta-row">
-      <a class="link" href={`mailto:${AUTHOR.email}`}>{AUTHOR.email}</a>
+      <a class="link" href="/contact/">Contact form</a>
       <a class="link" href={AUTHOR.linkedin}>linkedin.com/in/youniss</a>
       <a class="link" href={AUTHOR.github}>github.com/younissk</a>
       <a class="link" href={AUTHOR.youtube}>youtube.com/@youniss-ml</a>
@@ -192,7 +188,6 @@ const skills = [
               </h3>
               <span class="cv-period">{role.period}</span>
             </div>
-            <p class="cv-where">{role.location}</p>
             <ul class="cv-bullets">
               {role.bullets.map((b) => (
                 <li>{b}</li>
@@ -277,7 +272,8 @@ const skills = [
     </section>
 
     <p class="cv-foot meta">
-      No phone number here on purpose — e-mail reaches me and does not end up in a search index.
+      No phone number and no address here on purpose. The contact form reaches me and does not
+      end up in a search index.
     </p>
   </article>
 </BaseLayout>
