@@ -14,11 +14,3 @@ paper: null
 private: false
 featured: false
 ---
-
-A deliberate practice repo with rules attached: every visualisation is built from scratch, Figma may
-only be used to stitch the final image together, each one has to be published somewhere public, and
-no LLM may write the code — questions are allowed, copy-paste and agents are not.
-
-The first entry models what a united Sahel region could look like if the current cooperation between
-its states extended to a shared currency and rail network, drawing on Wikipedia data validated
-through Pydantic models and rendered with pandas and matplotlib over a Google Earth base.

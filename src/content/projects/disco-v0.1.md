@@ -15,13 +15,7 @@ private: false
 featured: true
 ---
 
-DISCO — Detection of Implicit Suggestive Content Overlays — is an image classifier built on top of
+DISCO, Detection of Implicit Suggestive Content Overlays, is an image classifier built on top of
 `openai/clip-vit-base-patch32` for a moderation gap the large platforms handle badly: content that
 is not explicit, and therefore passes NSFW filters, but is clearly suggestive and reaches children
 on services like YouTube Kids and Roblox.
-
-The training set was assembled by hand-labelling the iMaterialist fashion dataset against written
-rules, which are checked into the repo alongside the annotations so the labelling standard is
-auditable. The code is split into a baseline, a dataset loader, the model head, a training script
-and an inference path, with EDA and processing notebooks beside them; the trained model card and
-evaluation are published on Hugging Face.

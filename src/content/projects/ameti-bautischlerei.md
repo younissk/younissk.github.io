@@ -14,4 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-A hand-written site for a carpentry firm: services pages, a ten-image carousel of completed jobs, and a full favicon and brand asset set built from the client's logo. Hosting is Firebase, wired to a GitHub Actions workflow that spins up a preview channel for every pull request.

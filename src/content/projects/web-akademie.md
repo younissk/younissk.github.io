@@ -14,5 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-Students read a lesson and write code beside it: Monaco provides the editor, resizable panels split lesson from workspace, DOMPurify sanitises rendered lesson HTML, and Zustand holds the client-side state while Firebase persists accounts and progress. Confetti on completion — the small reward loop was part of the point.

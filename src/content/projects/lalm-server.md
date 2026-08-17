@@ -14,4 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-A small serving layer for audio-language models. The model and processor load inside a FastAPI lifespan handler so the weights are paid for once at startup rather than per request, with bfloat16 on CUDA and float32 otherwise, and a supported-models enum covering NVIDIA Audio Flamingo 3 and SeaLLMs-Audio-7B. Endpoints take an audio upload plus a question. Deliberately small — a spike to find out what serving this model class actually costs.

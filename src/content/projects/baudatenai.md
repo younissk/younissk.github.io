@@ -14,12 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-Client proof of concept for ABK, working on Austrian construction tender data. The pipeline takes
-ONLV bill-of-quantities exports and supplier PDFs, reduces them to structured JSON, stores them in a
-local SQLite database, and uses GPT to generate and summarise item descriptions against that
-structured extract rather than against raw text.
-
-Mostly notebooks driving a small `abk_ai` package — the ONLV parser, the PDF-to-JSON step, the
-database layer and the generation step are each separable, which is what a POC needs to be when the
-question is which stage is actually worth productionising.

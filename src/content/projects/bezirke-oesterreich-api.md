@@ -14,5 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-A compact reference API for Austria's administrative districts, built as a clean four-file Spring slice — district entity, repository, service and controller — with an application test to keep the context loading. Small on purpose: the interest is in having the open data available behind a stable endpoint rather than in the service around it.

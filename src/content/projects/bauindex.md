@@ -14,7 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-A German-language index of construction-industry courses: a homepage listing branches and their
-courses, a branch page, and a lesson page per course, with loading skeletons for each screen and
-content read from Firestore. Deployed on Firebase Hosting.

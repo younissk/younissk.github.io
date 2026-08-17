@@ -14,5 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-An object-detection experiment on construction drawings: a labelled dataset, a training directory and the YOLO run outputs kept in-repo so results stay attached to the configuration that produced them. Exploratory rather than productionised — the value was finding out whether off-the-shelf detection transfers to line-drawing plans at all.

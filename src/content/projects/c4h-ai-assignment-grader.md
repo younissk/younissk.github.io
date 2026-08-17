@@ -14,7 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-A scheduled function checks the community's submissions space every fifteen minutes, and any post it has not seen before is handed to an LLM agent that evaluates it against predefined grading criteria and writes the result back into the community as a reply.
-
-The design constraint is that the community platform is the only interface — students never leave Circle, and there is no separate submission portal to maintain. Reference solutions live in the repo alongside the grading criteria, so the rubric is version-controlled rather than living in a prompt someone edited once.

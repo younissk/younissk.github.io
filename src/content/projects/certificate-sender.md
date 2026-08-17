@@ -14,5 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-Reads the participant list with pandas and draws each certificate with ReportLab — landscape A4, a drawn border, the German award text, the participant's name and the course period — writing one PDF per person into an output folder. Small, single-purpose, and it removed a manual step at the end of every course run.

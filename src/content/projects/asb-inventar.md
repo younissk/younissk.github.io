@@ -14,7 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-A small internal tool: an inventory page listing stock items as cards and a detail page per item,
-backed by Firestore. Four commits and no ceremony — it exists because a spreadsheet was being passed
-around, and it is here as an honest early data point rather than a showcase.

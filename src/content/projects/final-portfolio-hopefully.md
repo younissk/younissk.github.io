@@ -14,4 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-One of several attempts at a personal site, this one on Eleventy v3 from the base-blog starter. What makes it worth keeping is the content rather than the framework: illustrated write-ups on matrices and on numerical optimisation, written in Obsidian and carried over with their images, alongside experience, uses and tag pages, an Atom feed with an XSLT stylesheet so the raw feed is readable in a browser, and Python helper scripts for the content pipeline.

@@ -14,7 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-A reporting tool for agile retrospectives: `GenerateSprintData.py` fetches sprint data from Jira, notebooks do the analysis, and the output is a self-contained HTML report with charts — story point distributions, estimated versus actual time accuracy across sprints, top issues by time spent, and cross-sprint trend views.
-
-Overhead history is tracked in JSON between runs so multi-sprint comparisons hold up over time. The README is kept as a running list of what the current charts get wrong, which is a fair description of where the project stopped.

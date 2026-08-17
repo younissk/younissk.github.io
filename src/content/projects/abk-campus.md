@@ -14,5 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-An early attempt at a student-facing campus app, organised feature-first with `LessonPage` as the one feature that got built. It sits alongside a static HTML template of the same design, which is how the visual direction was settled before any of it moved into components.

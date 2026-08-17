@@ -14,5 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-A small Phaser game with its own Webpack build splitting the engine into a `vendor.js` bundle and the game into `app.js`, so the heavy dependency could be cached separately from the code that kept changing. Earliest of the game experiments in this collection.

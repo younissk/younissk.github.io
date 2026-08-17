@@ -15,8 +15,4 @@ private: false
 featured: true
 ---
 
-A privacy-first journaling app with all journals stored in the user's own private GitHub repo. I also added a voice-to-text feature using OpenAI Whisper, because I was annoyed at how bad Apple's speech-to-text was.
-
-The premise is that a journal app should not hold your journal. You log in with GitHub, the app provisions a private repo under your account, and entries, folders, chats and flow definitions are written there as files — the app keeps no server-side copy. Voice notes record in the browser and transcribe through OpenAI Whisper with your own key.
-
-Beyond the editor it grew guided journal flows (a flow editor and a runner), folders, and a chat surface over past entries.
+Created a Privacy first, journaling app with all journals stored on the users private github repo. I also added a voice to text feature using OpenAI Whisper bc I was annoyed how bad Apple’s text to speech was.

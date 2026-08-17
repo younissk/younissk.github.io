@@ -14,5 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-A hand-built landing page for a planned articles-and-courses site, with a monospace brace-heavy visual identity and a particle animation embedded as the hero background. The content model was numbered bite-sized articles ("Data Types and Variables", Java basics, five-minute reads) — the front page was built first to see whether the format looked worth writing for.

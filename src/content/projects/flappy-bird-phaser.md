@@ -14,8 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-A straight reimplementation of Flappy Bird in Phaser 3 — physics-driven flap, wall spawning and
-collision, a four-frame bird animation, and a background built from separate cloud, sun and
-near/mid/far mountain layers scrolling at different speeds. Written as a single `app.js` against the
-Phaser CDN build, which is exactly the right amount of structure for the size of the thing.

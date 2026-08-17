@@ -14,4 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-A small static site for a study circle: landing page with a countdown component, an FAQ built as its own component, and a dedicated page for the 2024 Ramadan session schedule. Eleventy with Nunjucks templates and Tailwind through PostCSS, built for GitHub Pages hosting.

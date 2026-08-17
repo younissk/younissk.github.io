@@ -14,7 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-A single-page site for a thirty-day build programme: hero, who it is for, what is included, how it
-works, team, testimonials, FAQ, and an application form split into sections. Scaffolded in Lovable
-and then edited directly, with the CTA copy rotating as the visitor scrolls through the page.

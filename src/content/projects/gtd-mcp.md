@@ -14,7 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-A personal Getting Things Done / Horizons tracker built Cloudflare-first: a Hono worker serving both the REST API and an MCP endpoint at `/mcp`, D1 for storage with SQL migrations, and a Vite React SPA on top.
-
-The structural choice worth noting is the shared package — Zod schemas and the service layer live in `packages/shared` and are consumed by the HTTP API and the MCP surface alike, so an agent calling a tool and the UI calling an endpoint go through the same validation and the same business logic.

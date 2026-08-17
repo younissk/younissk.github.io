@@ -14,5 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-Course notes organised by cohort — ABK8, ABK9 and an ABK-Web track — with a blog section for announcements. Written so students could search and deep-link a topic instead of hunting through handouts.

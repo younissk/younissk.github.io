@@ -14,5 +14,3 @@ paper: null
 private: false
 featured: false
 ---
-
-A course platform built as a single-page app: auth, a dashboard, course and lesson detail views, an in-app chat and settings, with Supabase providing auth and storage, TanStack Query for server state and TipTap for rich lesson content. Vitest is wired in from the start alongside a `src/test` directory.

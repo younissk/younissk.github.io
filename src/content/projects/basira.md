@@ -14,7 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-A personal knowledge base built as a documentation site: structured notes on mathematics, statistics and AI topics (LangChain among them) written in MDX, sitting next to a longer-form articles and blog section, with an archive directory for superseded material.
-
-Roughly eighty commits of accumulated writing. An earlier Eleventy attempt at the same idea lives in the separate `basira-11ty` repository, abandoned after a few commits in favour of the Docusaurus version kept here.

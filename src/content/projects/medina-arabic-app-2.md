@@ -14,7 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-Built on Expo Router with a tab layout, a dynamic `exercise/[exerciseId]` route and a completion screen, plus an add-friend flow and separate `state`, `hooks` and `interfaces` layers over a Firebase backend.
-
-This is the second attempt at the idea — the earlier take was restarted rather than extended once the routing and state model had been reworked.

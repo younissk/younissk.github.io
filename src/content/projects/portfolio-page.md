@@ -14,7 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-An early personal site written without a framework — plain HTML, hand-authored CSS and a small script file — with each project documented as a case-study PDF (fitness app, Ramadan, Wiesenwunder, Bauindex, Groups) linked from the project pages.
-
-The previous design is kept in the repository as `old-portfolio.html` and `old-style.css` rather than deleted, which makes the redesign readable side by side. A later attempt at rebuilding it (`portfolio_new`) was created but never committed to.

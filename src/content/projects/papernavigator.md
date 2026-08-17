@@ -14,6 +14,5 @@ paper: null
 private: false
 featured: true
 ---
-A research question goes in; the pipeline turns it into a structured query profile, augments it into several search queries for coverage, then snowball-samples outward from seed papers through citations and references. An LLM filtering pass scores the harvested papers for relevance before ranking and report generation.
 
-The backend is Azure Functions with a queue-worker split, a watchdog, telemetry and notification modules, deployed from Bicep infrastructure-as-code through GitHub Actions; the React frontend ships to GitHub Pages from the same repo. Built as a portfolio project and left free to use.
+A research question goes in; the pipeline turns it into a structured query profile, augments it into several search queries for coverage, then snowball-samples outward from seed papers through citations and references. An LLM filtering pass scores the harvested papers for relevance before ranking and report generation.

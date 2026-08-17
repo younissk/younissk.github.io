@@ -14,6 +14,3 @@ paper: null
 private: false
 featured: false
 ---
-Scaffolding to skip the first day of every LLM side project. The frontend is React + Vite with React Router, React Query, Mantine theming and Clerk auth; the backend is FastAPI managed with `uv`, using LangChain and ChromaDB for retrieval.
-
-Tool calling is built as a registry with a `base` interface and concrete tools (calculator, document list, vector search) rather than hardcoded branches, so adding a tool is one file plus a registration. The LLM client points at any OpenAI-compatible endpoint, which in practice means a local `llama-server`.

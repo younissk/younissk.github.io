@@ -14,11 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-A second front end for the Tasis al-Ilm school, this time sitting on top of a Moodle install rather
-than a custom backend. Students authenticate through Moodle's `local_oauth` plugin; a small Express
-server handles the OAuth2 exchange and proxies the Moodle web-service calls so tokens never reach
-the browser bundle.
-
-The client is a Vite + shadcn/ui dashboard with an auth context, course cards, a calendar and
-progress components, plus a light/dark toggle.

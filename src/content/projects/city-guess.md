@@ -14,4 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-A weekend build to try Spring Boot end to end: a `City` model, a controller holding the round state, one server-rendered game template, and the Maven wrapper plus a smoke test around it. Small on purpose — the point was the framework, not the game.

@@ -14,11 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-A combined learning and community app: a course area with a lesson list and navigator, a feed with
-posts and comments, profiles, and a chat with conversation list, message view and composer. The
-routing is hand-rolled on top of a Svelte router, and the whole thing is packaged through Capacitor
-so the same build runs as a mobile app.
-
-Organised strictly by feature — every screen owns its own `components/` folder — which is the part
-that still holds up; the shared surface is just a Firebase util and a store module.

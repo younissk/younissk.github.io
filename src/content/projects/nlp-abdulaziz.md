@@ -14,7 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-A set of NLP assignment notebooks worked through end to end, culminating in a fine-tuned BERT classifier over a train/val/test split with separate label mappings for two tasks (an attribute label and a performer-gender label) and trained checkpoints committed alongside.
-
-Each assignment is kept as both the executed notebook and its rendered HTML, so the runs are readable without a kernel — useful when the artifact is the analysis rather than the code.

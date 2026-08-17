@@ -14,7 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-A hand-rolled blog rather than an off-the-shelf one: articles live as files in the repository, with a drafts mechanism so unfinished pieces stay out of the build, a generated table of contents, a search bar, sitemap generation for SEO, and a contact form.
-
-Roughly seventy commits of iteration, with the README maintained as an explicit todo list of what was still unsatisfying — syntax highlighting, theme switching, article recommendations.

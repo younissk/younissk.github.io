@@ -14,5 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-A coding interview project delivered as a complete small application rather than a snippet: C# and .NET with EF Core over MS SQL running in Docker, server-rendered MVC views styled with Tailwind, and a Makefile so the reviewer can bring the whole thing up in one command. Shipped with a recorded walkthrough of the design decisions.

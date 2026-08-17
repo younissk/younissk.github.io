@@ -15,13 +15,4 @@ private: false
 featured: true
 ---
 
-I created an exam simulator for JKU students to practise for their exams. It started solo, but it is open source now.
-
-A study tool for students at JKU Linz: anyone can add exam questions, group them into decks by
-subject, and practise them as timed tests. Because the subjects are maths-heavy, questions render
-LaTeX and are edited through an HTML editor rather than a plain textarea.
-
-Built on Firebase with decks, subjects, tests, users and feedback as first-class collections, and
-deployed on Netlify with a public feedback page and open issues used as the contribution route. The
-README is refreshingly blunt about the state of the code and about not having decided yet whether
-the project is open source or merely public source.
+Created a Exam Simulator for JKU students to practice for their exams. Started solo, but now it’s open source.

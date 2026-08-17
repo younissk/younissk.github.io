@@ -14,7 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-A Python ETL layer pulls audio metadata into a `search_items` table that the Next.js app queries. The roadmap in the repo is explicit about where it was heading: full-text search via generated `search_tsv` columns and triggers, an embedding generation pipeline for transcripts, fuzzy matching, and then a hybrid ranking combining all three — plus bookmarks, collections and recommendations driven by what you are currently listening to.
-
-Two smaller siblings sit around it: `sunnah-search`, a single-file right-to-left Arabic search UI used as a visual prototype, and `SunnahSoundsApp`, an Expo shell that never got past scaffolding.

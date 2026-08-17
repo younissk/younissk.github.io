@@ -14,5 +14,3 @@ paper: null
 private: false
 featured: false
 ---
-
-A small two-screen app — an intro page and a game page — for practising row reduction by choosing operations rather than watching an animation. Deliberately tiny: the point was a drillable interaction for a single linear-algebra procedure, not a general maths platform.

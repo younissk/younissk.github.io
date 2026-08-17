@@ -31,7 +31,7 @@ export const AUTHOR: AuthorInfo = {
   linkedin: 'https://www.linkedin.com/in/youniss',
   youtube: 'https://www.youtube.com/@youniss-ml',
   githubHandle: 'younissk',
-  repoUrl: 'https://github.com/younissk/youniss.dev',
+  repoUrl: 'https://github.com/younissk/younissk.github.io',
 };
 
 export interface NavItem {

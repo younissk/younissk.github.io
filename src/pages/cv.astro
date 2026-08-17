@@ -1,0 +1,466 @@
+---
+/**
+ * CV as a page, not a PDF.
+ *
+ * The old cv.pdf was an orphan binary with no source anywhere, which made it
+ * both unmaintainable and impossible to edit — exactly the kind of artefact
+ * SUCCESSION.md argues against. This page is the source. Print it (Cmd/Ctrl+P)
+ * and the print stylesheet at the bottom produces a clean PDF on demand.
+ *
+ * The phone number from the PDF is deliberately absent. A CV handed to a
+ * recruiter is one thing; a CV indexed by search engines is another. E-mail is
+ * the contact channel here.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { AUTHOR } from '../consts';
+
+interface Role {
+  title: string;
+  org: string;
+  orgUrl?: string;
+  location: string;
+  period: string;
+  bullets: readonly string[];
+}
+
+const roles: readonly Role[] = [
+  {
+    title: 'AI Engineer',
+    org: 'ONDEWO',
+    orgUrl: 'https://ondewo.com',
+    location: 'Remote, Austria',
+    period: 'Mar 2026 – Present',
+    bullets: [
+      'Contributing to AI4Emergency, an Austrian funded research project developing AI-driven communication technologies for safety-critical emergency operations in disaster and large-event scenarios.',
+      'Built a web-crawling and ingestion pipeline for retrieval-augmented generation and exposed it through a gRPC facade for downstream integration.',
+      'Created an automated LLM QA pipeline that tests agent changes for regressions and enables TDD for agents.',
+      'Created production-grade MCP servers and LangGraph agents for emergency-service workflows.',
+    ],
+  },
+  {
+    title: 'Software Engineer',
+    org: 'ib-data',
+    orgUrl: 'https://abk.at',
+    location: 'Vienna, Austria',
+    period: 'Oct 2022 – Feb 2026',
+    bullets: [
+      'Built AI features including semantic search with PostgreSQL/pgvector + Python and a FastAPI pipeline that converted PDFs into structured data using LLM/VLM processing with human review.',
+      'Built a customer self-service portal (kundenportal.abk.at) using React, Spring Boot, MS SQL, JWT authentication, and Dockerized Ubuntu deployment.',
+      'Migrated a legacy construction platform (abk9.com) to a modern React application and established CI/CD (TeamCity), automated tests, and Linux VM deployment workflows in a Scrum team.',
+      'Replaced a paid documentation tool with an open-source stack (TinaCMS), removing its licence cost.',
+      'Trained a YOLOv8 model, with labelling pipelines in Label Studio, to detect doors, windows and stairs in construction drawings.',
+      'Prototyped a document-to-specification pipeline converting PDF and Excel sources into standardised Austrian construction descriptions.',
+      'Delivered a semantic search proof of concept on pgvector that improved both relevance and latency over the legacy full-text search.',
+      'Built a LangChain + FastAPI microservice summarising construction documents for a legacy Delphi backend, deployed on-premise with Docker and TeamCity.',
+      'Built a large enterprise UI with React, Kendo, Zustand, React Query, Storybook and Playwright for a multi-year rollout.',
+      'Automated recurring processes on Linux VMs, cutting manual operational work.',
+    ],
+  },
+  {
+    title: 'Freelance AI Engineer (part-time)',
+    org: 'Self-employed',
+    location: 'Austria',
+    period: 'Dec 2024 – Feb 2026',
+    bullets: [
+      'Built and deployed a LangChain-based automated grading service integrated into an LMS, optimizing for performance and memory efficiency.',
+      'Taught multiple AI-related programs for different coding schools (LLMs, multi-modal, frontend development).',
+    ],
+  },
+];
+
+const education = [
+  {
+    degree: 'MSc in Artificial Intelligence',
+    school: 'JKU, Linz, Austria',
+    period: 'Feb 2026 – paused',
+    note: 'Selected coursework: AI in Life Sciences, Biochemistry, Bioanalytics, Medical technology.',
+  },
+  {
+    degree: 'BSc in Artificial Intelligence',
+    school: 'JKU, Linz, Austria',
+    period: 'Oct 2023 – Feb 2026',
+    note: 'Thesis: Deep learning for language-based audio retrieval.',
+  },
+] as const;
+
+const domains = [
+  {
+    field: 'Health care',
+    detail: 'Samariterbund, Paramedic (9 months)',
+    note: 'Direct exposure to emergency-response workflows, patient-facing care, and time-critical operational environments.',
+  },
+  {
+    field: 'Construction',
+    detail: 'HTL Mödling, Student (5 years); ABK, Software Engineer (3 years)',
+    note: 'Training in construction engineering and building production software for construction management.',
+  },
+] as const;
+
+interface Recognition {
+  label: string;
+  text: string;
+  links: readonly { label: string; url: string }[];
+}
+
+const recognition: readonly Recognition[] = [
+  {
+    label: 'DCASE 2025',
+    text: 'Competed in the DCASE 2025 challenge on language-based audio retrieval and published a peer-reviewed technical report.',
+    links: [
+      {
+        label: 'results',
+        url: 'https://dcase.community/challenge2025/task-language-based-audio-retrieval',
+      },
+      { label: 'technical report', url: '/papers/dcase-2025-language-based-audio-retrieval/' },
+    ],
+  },
+  {
+    label: 'On-device LLM',
+    text: 'Trained a small language model from scratch and shipped it as an on-device iOS app — a self-directed project taken end to end.',
+    links: [{ label: 'project', url: '/work/nanobeard-on-device-llm/' }],
+  },
+  {
+    label: 'Publication',
+    text: 'Survey paper on LLM-based recommender systems.',
+    links: [{ label: 'paper', url: '/papers/llm-based-recommender-systems/' }],
+  },
+  {
+    label: 'Certification',
+    text: 'NVIDIA Certified Professional: Agentic AI.',
+    links: [
+      {
+        label: 'credential',
+        url: 'https://www.credly.com/badges/14e1a1d6-f104-4ccc-b39f-da805544c828/linked_in_profile',
+      },
+    ],
+  },
+  {
+    label: 'Degree pace',
+    text: 'Completed the BSc ahead of the standard program duration while working full-time/part-time alongside studies.',
+    links: [],
+  },
+];
+
+const skills = [
+  { heading: 'Languages', items: 'Python, TypeScript/JavaScript, Java, SQL' },
+  {
+    heading: 'Applied AI',
+    items: 'Retrieval/RAG, LLM/VLM document extraction, evaluation, guardrails, inference serving',
+  },
+  { heading: 'Backend', items: 'FastAPI, Spring Boot, REST APIs, gRPC, PostgreSQL/pgvector' },
+  { heading: 'Frontend', items: 'React, Next.js, Tailwind' },
+  { heading: 'Infra / Ops', items: 'Docker, AWS, Azure, Linux, CI/CD, Kubernetes, Airflow' },
+  { heading: 'Tools', items: 'LangChain, DSPy, NeMo, NIM, vLLM, PyTorch' },
+  { heading: 'Spoken', items: 'English (fluent), German (native), Arabic (A2)' },
+] as const;
+---
+
+<BaseLayout
+  title="CV"
+  description="Curriculum vitae of Youniss Kandah — applied AI and backend engineer, Austria."
+>
+  <article class="page cv">
+    <PageHeader
+      eyebrow="Curriculum vitae"
+      title="CV"
+      description="Applied AI & Backend Engineer. Python, FastAPI, React, retrieval, document AI, production systems. Austria-based, open to relocate."
+      meta={['Updated August 2026', 'Print this page for a PDF']}
+    />
+
+    <p class="cv-contact meta-row">
+      <a class="link" href={`mailto:${AUTHOR.email}`}>{AUTHOR.email}</a>
+      <a class="link" href={AUTHOR.linkedin}>linkedin.com/in/youniss</a>
+      <a class="link" href={AUTHOR.github}>github.com/younissk</a>
+      <a class="link" href={AUTHOR.youtube}>youtube.com/@youniss-ml</a>
+    </p>
+
+    <p class="cv-lede">
+      Building production AI services, retrieval and document-processing pipelines, and
+      safety-critical backend systems. Currently contributing to the Austrian FFG-funded
+      AI4Emergency project at ONDEWO.
+    </p>
+
+    <section class="cv-section" aria-labelledby="cv-experience">
+      <h2 id="cv-experience" class="cv-h2">Experience</h2>
+      {
+        roles.map((role) => (
+          <div class="cv-entry">
+            <div class="cv-entry-head">
+              <h3 class="cv-role">
+                {role.title}, {role.orgUrl ? <a class="link" href={role.orgUrl}>{role.org}</a> : role.org}
+              </h3>
+              <span class="cv-period">{role.period}</span>
+            </div>
+            <p class="cv-where">{role.location}</p>
+            <ul class="cv-bullets">
+              {role.bullets.map((b) => (
+                <li>{b}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </section>
+
+    <section class="cv-section" aria-labelledby="cv-education">
+      <h2 id="cv-education" class="cv-h2">Education</h2>
+      {
+        education.map((e) => (
+          <div class="cv-entry">
+            <div class="cv-entry-head">
+              <h3 class="cv-role">{e.degree}</h3>
+              <span class="cv-period">{e.period}</span>
+            </div>
+            <p class="cv-where">{e.school}</p>
+            <p class="cv-note">{e.note}</p>
+          </div>
+        ))
+      }
+    </section>
+
+    <section class="cv-section" aria-labelledby="cv-domains">
+      <h2 id="cv-domains" class="cv-h2">Domain experience</h2>
+      <p class="cv-note cv-note-lead">
+        The two fields I worked in before AI, and the reason emergency systems and construction
+        documents are not unfamiliar territory.
+      </p>
+      {
+        domains.map((d) => (
+          <div class="cv-entry">
+            <h3 class="cv-role">
+              {d.field} <span class="cv-period">{d.detail}</span>
+            </h3>
+            <p class="cv-note">{d.note}</p>
+          </div>
+        ))
+      }
+    </section>
+
+    <section class="cv-section" aria-labelledby="cv-recognition">
+      <h2 id="cv-recognition" class="cv-h2">Recognition & projects</h2>
+      <ul class="cv-bullets">
+        {
+          recognition.map((r) => (
+            <li>
+              <strong>{r.label}:</strong> {r.text}
+              {r.links.length > 0 && (
+                <span class="cv-links">
+                  {r.links.map((l, i) => (
+                    <>
+                      {i > 0 && ', '}
+                      <a class="link" href={l.url}>
+                        {l.label}
+                      </a>
+                    </>
+                  ))}
+                </span>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="cv-section" aria-labelledby="cv-skills">
+      <h2 id="cv-skills" class="cv-h2">Skills</h2>
+      <dl class="cv-skills">
+        {
+          skills.map((s) => (
+            <div class="cv-skill-row">
+              <dt>{s.heading}</dt>
+              <dd>{s.items}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <p class="cv-foot meta">
+      No phone number here on purpose — e-mail reaches me and does not end up in a search index.
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .cv-contact {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+
+  .cv-lede {
+    margin-top: 1.25rem;
+    max-width: 62ch;
+    color: var(--c-ink-soft);
+  }
+
+  .cv-section {
+    margin-top: 3rem;
+  }
+
+  .cv-h2 {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+    color: var(--c-ink-muted);
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--c-border);
+  }
+
+  .cv-entry {
+    margin-top: 1.5rem;
+  }
+
+  .cv-entry-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+  }
+
+  .cv-role {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--c-ink);
+  }
+
+  .cv-period,
+  .cv-where {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--c-ink-muted);
+  }
+
+  .cv-where {
+    margin-top: 0.15rem;
+  }
+
+  .cv-note {
+    margin-top: 0.4rem;
+    color: var(--c-ink-soft);
+    max-width: 70ch;
+  }
+
+  .cv-note-lead {
+    margin-top: 0.9rem;
+  }
+
+  .cv-bullets {
+    margin-top: 0.6rem;
+    padding-left: 1.1rem;
+    list-style: disc;
+    max-width: 78ch;
+  }
+
+  .cv-bullets li {
+    margin-top: 0.35rem;
+    color: var(--c-ink-soft);
+  }
+
+  .cv-links::before {
+    content: " (";
+  }
+
+  .cv-links::after {
+    content: ")";
+  }
+
+  .cv-skills {
+    margin-top: 1rem;
+  }
+
+  .cv-skill-row {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: 0.5rem 1rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--c-border);
+  }
+
+  .cv-skill-row dt {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--c-ink-muted);
+  }
+
+  .cv-skill-row dd {
+    color: var(--c-ink-soft);
+  }
+
+  .cv-foot {
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 34rem) {
+    .cv-skill-row {
+      grid-template-columns: 1fr;
+      gap: 0.15rem;
+    }
+  }
+
+  /* --- print: this is how the PDF gets made ------------------------------ */
+  @media print {
+    :global(header),
+    :global(footer),
+    :global(.skip-link),
+    .cv-foot {
+      display: none !important;
+    }
+
+    :global(html),
+    :global(body) {
+      background: #fff !important;
+      color: #000 !important;
+    }
+
+    .cv-lede,
+    .cv-note,
+    .cv-bullets li,
+    .cv-skill-row dd {
+      color: #000 !important;
+    }
+
+    .cv-period,
+    .cv-where,
+    .cv-h2,
+    .cv-skill-row dt {
+      color: #333 !important;
+    }
+
+    .cv-section {
+      margin-top: 1.2rem;
+      break-inside: avoid;
+    }
+
+    .cv-entry {
+      margin-top: 0.7rem;
+      break-inside: avoid;
+    }
+
+    .cv-bullets li {
+      margin-top: 0.15rem;
+    }
+
+    /* Links are dead on paper — show where they point. */
+    a[href^="http"]::after {
+      content: " (" attr(href) ")";
+      font-size: 0.7em;
+      color: #555;
+    }
+
+    a[href^="mailto"]::after,
+    .cv-links a::after {
+      content: "";
+    }
+
+    @page {
+      margin: 14mm;
+    }
+  }
+</style>

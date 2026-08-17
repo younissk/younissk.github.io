@@ -14,5 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-Two halves that meet at a CSV. A Python Wikipedia scraper builds per-continent city datasets, and a Spring Boot service exposes them through a city controller, entity, repository and service layer so a quiz frontend can pull questions from real data rather than a hardcoded list.

@@ -14,4 +14,3 @@ paper: null
 private: false
 featured: false
 ---
-An NVChad-based Neovim configuration kept as a cloneable `~/.config/nvim`. Beyond the NVChad defaults it adds JavaScript/TypeScript LSP, Prettier via conform, GitHub Copilot wired in Lua rather than vimscript, debug adapter configuration and a neotest setup.

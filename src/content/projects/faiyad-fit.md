@@ -14,5 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-Four screens — login, catalog, food tracking and dashboard — on a Svelte/Rollup setup with Firebase for auth and storage. Includes a `JsonToFB.js` importer that seeds the food database into Firebase from a JSON dump, which is the part that made the catalog usable rather than a stub.

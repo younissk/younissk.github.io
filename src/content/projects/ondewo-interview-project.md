@@ -14,7 +14,3 @@ paper: null
 private: true
 featured: false
 ---
-
-Two tasks from an AI engineering challenge, delivered together. The first migrates a project onto the uv package manager and parameterises its Docker builds into multi-stage images; the second wraps the RAGFlow retrieval engine behind a gRPC API with its own server implementation, test suite and production container setup.
-
-Each task carries its own README and Makefile, and the submission includes a recorded video walkthrough of the code.

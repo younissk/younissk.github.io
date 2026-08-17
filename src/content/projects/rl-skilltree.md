@@ -14,7 +14,3 @@ paper: null
 private: false
 featured: false
 ---
-
-Skill progressions in calisthenics are a dependency graph, not a list, so this renders them as one:
-a JSON collection of skills is turned into nodes and edges by a generator and drawn as a network
-graph you can click into. Unlocked state lives in IndexedDB, so there is no account and no server.
