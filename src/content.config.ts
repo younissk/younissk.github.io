@@ -69,6 +69,10 @@ const projects = defineCollection({
     repo: z.string().nullable(),
     demo: z.string().nullable(),
     paper: z.string().nullable(),
+    /** Full YouTube URL, when I made a video about this project. */
+    video: z.string().nullable().default(null),
+    /** Slug in the `posts` collection, when I wrote about this project. */
+    post: z.string().nullable().default(null),
     private: z.boolean(),
     featured: z.boolean().default(false),
 

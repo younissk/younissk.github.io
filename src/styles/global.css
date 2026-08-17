@@ -299,6 +299,88 @@
     color: var(--c-border-strong);
   }
 
+  /* --- project card ------------------------------------------------------
+     The archive used to be a four-column grid of 11px monospace links. It fit
+     more rows on screen and was miserable to use: the targets were too small
+     to hit, and a project's video, write-up and paper had nowhere to live.
+     This is one card per project, one column, with every related thing as a
+     real button. Fewer rows on screen, all of them usable. */
+  .pcard {
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-panel);
+    padding: 1.125rem 1.25rem 1.25rem;
+    transition: border-color 140ms ease, background-color 140ms ease;
+  }
+
+  .pcard:hover,
+  .pcard:focus-within {
+    border-color: var(--c-border-strong);
+    background-color: var(--c-surface);
+  }
+
+  .pcard-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+  }
+
+  .pcard-title {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.011em;
+    color: var(--c-ink);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color 120ms ease;
+  }
+
+  .pcard:hover .pcard-title {
+    text-decoration-color: var(--c-border-strong);
+  }
+
+  .pcard-summary {
+    margin-top: 0.5rem;
+    max-width: 62ch;
+    color: var(--c-ink-muted);
+    line-height: 1.55;
+  }
+
+  /* Actions get their own line under a hairline, so a card reads as
+     description-then-what-you-can-do instead of one wall of text. */
+  .pcard-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    padding-top: 0.875rem;
+    border-top: 1px solid var(--c-border);
+  }
+
+  .pcard-note {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    color: var(--c-ink-faint);
+  }
+
+  /* Small button. Still ~30px tall, which is the point: the links it replaces
+     were 15px and effectively untappable on a phone. */
+  .btn-sm {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    padding: 0.3rem 0.65rem;
+    gap: 0.35rem;
+    border-radius: var(--radius-hair);
+  }
+
+  .card-list {
+    display: grid;
+    gap: 0.875rem;
+  }
+
   /* --- links ------------------------------------------------------------- */
   .link {
     color: var(--c-accent);

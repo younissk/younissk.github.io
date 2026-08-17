@@ -10,9 +10,11 @@ stack: [Python, PyTorch, Transformers, Makefile]
 status: shipped
 repo: https://github.com/younissk/falcon-twig
 demo: null
-paper: /papers/Falcon_Twig_Technical_Report.pdf
+paper: /papers/falcon-twig-technical-report/
 private: false
 featured: true
+video: null
+post: null
 ---
 
 I was really interested in how people used Tools from OpenAI in the past and how LLMs have evolved. I wanted to explore how I could use tools to enhance the performance of LLMs. So I finetuned the Falcon H1 model to use tools.

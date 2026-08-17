@@ -12,7 +12,9 @@ repo: https://github.com/younissk/shopify-search
 demo: null
 paper: null
 private: false
-featured: true
+featured: false
+video: null
+post: null
 ---
 
 I created a Search engine across shopify stores. This includes 580k products. I added functionality for Semantic search and content based Recommender system.

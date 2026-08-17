@@ -13,4 +13,6 @@ demo: https://younissk.github.io/p5-projects/
 paper: null
 private: false
 featured: false
+video: null
+post: null
 ---

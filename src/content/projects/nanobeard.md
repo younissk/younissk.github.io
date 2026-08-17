@@ -1,5 +1,5 @@
 ---
-title: nanoBeard
+title: "nanoBeard — training the model"
 repoName: nanoBeard
 summary: A small pirate-themed GPT trained from scratch on a piratized TinyStories corpus and then SFT-tuned, with a versioned training codebase.
 year: 2026
@@ -18,6 +18,8 @@ tool:
   url: "https://younissk.github.io/nanoBeard/"
   internal: false
   status: "live"
+video: null
+post: null
 ---
 
 A from-scratch language model trained on a piratized version of TinyStories, then supervised

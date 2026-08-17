@@ -13,4 +13,6 @@ demo: null
 paper: null
 private: false
 featured: false
+video: null
+post: null
 ---

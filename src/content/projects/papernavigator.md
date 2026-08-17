@@ -18,6 +18,8 @@ tool:
   url: "https://papernavigator.com"
   internal: false
   status: "live"
+video: null
+post: null
 ---
 
 A research question goes in; the pipeline turns it into a structured query profile, augments it into several search queries for coverage, then snowball-samples outward from seed papers through citations and references. An LLM filtering pass scores the harvested papers for relevance before ranking and report generation.

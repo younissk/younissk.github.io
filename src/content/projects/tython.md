@@ -18,6 +18,8 @@ tool:
   url: "https://younissk.github.io/tython/"
   internal: false
   status: "wip"
+video: null
+post: null
 ---
 
 A language designed around the idea that both humans and language models read code more reliably when the syntax leaves less room for choice: everything is statically typed, `const`/`var` mutability is explicit, class methods are private unless marked `pub`, `init` fields skip the `self.x = x` boilerplate, and `this` replaces the explicit `self` parameter.

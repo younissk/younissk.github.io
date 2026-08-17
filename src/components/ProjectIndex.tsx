@@ -26,6 +26,9 @@ export interface ProjectRow {
   demo: string | null;
   paper: string | null;
   open: string | null;
+  video: string | null;
+  post: string | null;
+  hasBody: boolean;
   private: boolean;
   featured: boolean;
 }
@@ -446,89 +449,106 @@ export default function ProjectIndex({ projects, categories }: Props) {
           </button>
         </div>
       ) : (
-        <ul className="row-list">
+        <ul className="card-list">
           {visible.map((p) => (
-            <li
-              key={p.id}
-              className="row lg:grid lg:grid-cols-[14rem_12.5rem_minmax(0,1fr)_auto] lg:items-baseline lg:gap-x-5"
-            >
-              <a className="row-title link-quiet block" href={`/projects/${p.id}/`}>
-                {p.title}
-              </a>
-
-              <ul className="meta-row mt-1 lg:mt-0">
-                <li className="tabular">{p.year}</li>
-                <li>{p.category}</li>
-                <li>{p.status}</li>
-              </ul>
-
-              <div className="mt-1.5 min-w-0 lg:mt-0">
-                <p className="row-desc">{p.summary}</p>
-                {p.tags.length > 0 && (
-                  <ul className="tag-row mt-2">
-                    {p.tags.map((tag) => (
-                      <li key={tag}>
-                        <button
-                          type="button"
-                          className="tag"
-                          data-active={tags.includes(tag) ? 'true' : undefined}
-                          aria-pressed={tags.includes(tag)}
-                          title={`Filter by ${tag}`}
-                          onClick={() => toggleTag(tag)}
-                        >
-                          {tag}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+            <li key={p.id} className="pcard">
+              <div className="pcard-head">
+                <a className="pcard-title" href={`/projects/${p.id}/`}>
+                  {p.title}
+                </a>
+                <ul className="meta-row shrink-0">
+                  <li className="tabular">{p.year}</li>
+                  <li>{p.category}</li>
+                  <li>{p.status}</li>
+                </ul>
               </div>
 
-              <p className="meta mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1 lg:mt-0 lg:justify-end">
-                {p.featured && <span className="text-ink-muted">selected</span>}
-                {p.repo ? (
-                  <a
-                    className="link-quiet"
-                    href={p.repo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    repo
-                  </a>
-                ) : (
-                  p.private && <span>private</span>
-                )}
+              <p className="pcard-summary">{p.summary}</p>
+
+              {p.tags.length > 0 && (
+                <ul className="tag-row mt-3">
+                  {p.tags.map((tag) => (
+                    <li key={tag}>
+                      <button
+                        type="button"
+                        className="tag"
+                        data-active={tags.includes(tag) ? 'true' : undefined}
+                        aria-pressed={tags.includes(tag)}
+                        title={`Filter by ${tag}`}
+                        onClick={() => toggleTag(tag)}
+                      >
+                        {tag}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              <div className="pcard-actions">
                 {p.open && (
                   <a
-                    className="link-quiet"
+                    className="btn btn-sm btn-primary"
                     href={p.open}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    open
+                    Open it ↗
                   </a>
                 )}
-                {p.demo && p.demo !== p.open && (
+                {!p.open && p.demo && (
                   <a
-                    className="link-quiet"
+                    className="btn btn-sm btn-primary"
                     href={p.demo}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    demo
+                    Live demo ↗
+                  </a>
+                )}
+                {p.hasBody && (
+                  <a className="btn btn-sm" href={`/projects/${p.id}/`}>
+                    Write-up
+                  </a>
+                )}
+                {p.video && (
+                  <a
+                    className="btn btn-sm"
+                    href={p.video}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Video ↗
+                  </a>
+                )}
+                {p.post && (
+                  <a className="btn btn-sm" href={`/writing/${p.post}/`}>
+                    Blog post
                   </a>
                 )}
                 {p.paper && (
                   <a
-                    className="link-quiet"
+                    className="btn btn-sm"
                     href={p.paper}
+                    target={p.paper.startsWith('http') ? '_blank' : undefined}
+                    rel={p.paper.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  >
+                    Paper
+                  </a>
+                )}
+                {p.repo ? (
+                  <a
+                    className="btn btn-sm"
+                    href={p.repo}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    paper
+                    Code ↗
                   </a>
+                ) : (
+                  p.private && <span className="pcard-note">private repo</span>
                 )}
-              </p>
+                {p.featured && <span className="pcard-note ml-auto">selected</span>}
+              </div>
             </li>
           ))}
         </ul>

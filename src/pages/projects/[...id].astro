@@ -21,15 +21,22 @@ const { Content } = await render(entry);
 
 /** Only links that actually exist — a missing repo is a marker, never a dead link. */
 const links = [
-  p.tool && { label: 'Open it', url: p.tool.url, external: !p.tool.internal },
+  p.tool && { label: 'Open it', url: p.tool.url, external: !p.tool.internal, primary: true },
+  p.demo && p.demo !== p.tool?.url && {
+    label: 'Live demo',
+    url: p.demo,
+    external: true,
+    primary: !p.tool,
+  },
+  p.video && { label: 'Video', url: p.video, external: true },
+  p.post && { label: 'Blog post', url: `/writing/${p.post}/`, external: false },
   p.repo && { label: 'Repository', url: p.repo, external: true },
-  p.demo && p.demo !== p.tool?.url && { label: 'Live demo', url: p.demo, external: true },
   p.paper && {
     label: 'Paper',
     url: p.paper,
     external: p.paper.startsWith('http'),
   },
-].filter(Boolean) as { label: string; url: string; external: boolean }[];
+].filter(Boolean) as { label: string; url: string; external: boolean; primary?: boolean }[];
 
 const meta = [p.period, p.category, p.status, p.private ? 'private repository' : null].filter(
   Boolean,
@@ -60,11 +67,11 @@ const siblings = (await getCollection('projects'))
           <Fragment slot="actions">
             {links.map((link) =>
               link.external ? (
-                <ExternalLink href={link.url} class="btn">
+                <ExternalLink href={link.url} class={link.primary ? 'btn btn-primary' : 'btn'}>
                   {link.label}
                 </ExternalLink>
               ) : (
-                <a class="btn" href={link.url}>
+                <a class={link.primary ? 'btn btn-primary' : 'btn'} href={link.url}>
                   {link.label}
                 </a>
               ),

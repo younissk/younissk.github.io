@@ -31,6 +31,10 @@ const projects: ProjectRow[] = entries
     paper: entry.data.paper,
     /* A tool's own URL: the thing you can open and use. */
     open: entry.data.tool?.url ?? null,
+    video: entry.data.video,
+    post: entry.data.post,
+    /* Whether the detail page has prose worth opening, rather than just a stub. */
+    hasBody: (entry.body ?? '').trim().length > 0,
     private: entry.data.private,
     featured: entry.data.featured,
   }))
