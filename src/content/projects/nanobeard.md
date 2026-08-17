@@ -13,6 +13,11 @@ demo: https://younissk.github.io/nanoBeard/
 paper: null
 private: false
 featured: true
+tool:
+  tagline: A small pirate-themed GPT trained from scratch and then SFT-tuned, with the whole training pipeline documented and reusable for your own runs.
+  url: "https://younissk.github.io/nanoBeard/"
+  internal: false
+  status: "live"
 ---
 
 A from-scratch language model trained on a piratized version of TinyStories, then supervised

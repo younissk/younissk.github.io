@@ -35,14 +35,16 @@ const TEACHING = [
 
 /* --- data ----------------------------------------------------------------- */
 
-const [work, projects, posts, videos, papers, tools] = await Promise.all([
+const [work, projects, posts, videos, papers] = await Promise.all([
   getCollection('work'),
   getCollection('projects'),
   getCollection('posts'),
   getCollection('videos'),
   getCollection('papers'),
-  getCollection('tools'),
 ]);
+
+/* Tools are projects carrying a `tool` block, not a separate collection. */
+const tools = projects.filter((project) => project.data.tool);
 
 const selectedWork = [...work].sort((a, b) => a.data.order - b.data.order).slice(0, 4);
 

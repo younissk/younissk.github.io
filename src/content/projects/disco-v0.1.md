@@ -13,6 +13,11 @@ demo: https://huggingface.co/younissk/DISCO-v0.1
 paper: null
 private: false
 featured: true
+tool:
+  tagline: A CLIP-based classifier that flags suggestive imagery standard NSFW filters miss, published on Hugging Face with its labelling rules attached.
+  url: "https://huggingface.co/younissk/DISCO-v0.1"
+  internal: false
+  status: "live"
 ---
 
 DISCO, Detection of Implicit Suggestive Content Overlays, is an image classifier built on top of

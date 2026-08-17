@@ -44,6 +44,9 @@ export const PROJECT_CATEGORIES = [
 
 export const PROJECT_STATUSES = ['active', 'shipped', 'archived', 'experiment'] as const;
 
+/** Used by the optional `tool` block on a project. */
+export const TOOL_STATUSES = ['live', 'wip', 'retired'] as const;
+
 /** The complete indexed archive — one entry per repository. */
 const projects = defineCollection({
   loader: contentIn('projects'),
@@ -63,6 +66,24 @@ const projects = defineCollection({
     paper: z.string().nullable(),
     private: z.boolean(),
     featured: z.boolean().default(false),
+
+    /**
+     * Present only when this project is also something a stranger can USE.
+     * /tools is a view over projects with this field, not a second collection:
+     * every tool was already a project, and two files per thing meant the
+     * descriptions drifted apart.
+     */
+    tool: z
+      .object({
+        /** Present-tense pitch. What a visitor gets, not what I learned. */
+        tagline: z.string(),
+        /** Where to actually use it. */
+        url: z.string(),
+        /** true when hosted on this domain, e.g. /tools/foo. */
+        internal: z.boolean().default(false),
+        status: z.enum(TOOL_STATUSES),
+      })
+      .optional(),
   }),
 });
 
@@ -105,21 +126,7 @@ const papers = defineCollection({
   }),
 });
 
-export const TOOL_STATUSES = ['live', 'wip', 'retired'] as const;
 
-const tools = defineCollection({
-  loader: contentIn('tools'),
-  schema: z.object({
-    title: z.string(),
-    tagline: z.string(),
-    url: z.string(),
-    /** true when the tool is hosted on this domain (e.g. /tools/foo). */
-    internal: z.boolean(),
-    status: z.enum(TOOL_STATUSES),
-    tags: z.array(z.string()),
-    year: z.number(),
-  }),
-});
 
 /**
  * Per-video extras. The entry id is the YouTube video ID; titles, thumbnails
@@ -133,4 +140,4 @@ const videos = defineCollection({
   }),
 });
 
-export const collections = { work, projects, posts, papers, tools, videos };
+export const collections = { work, projects, posts, papers, videos };

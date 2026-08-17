@@ -13,6 +13,11 @@ demo: https://jku-exam-simulator.netlify.app
 paper: null
 private: false
 featured: true
+tool:
+  tagline: Students add, share and drill each other's exam questions — decks by subject, LaTeX rendering and timed tests.
+  url: "https://jku-exam-simulator.netlify.app"
+  internal: false
+  status: "live"
 ---
 
 Created a Exam Simulator for JKU students to practice for their exams. Started solo, but now it’s open source.
