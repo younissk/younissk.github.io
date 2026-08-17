@@ -35,8 +35,11 @@ convenience for editing, and it is allowed to rot.
 - `docs/.nojekyll` — **do not delete this.** Without it, GitHub runs Jekyll,
   which ignores folders starting with `_`, and `docs/_astro/` holds every
   stylesheet and script. The site renders as unstyled text without it.
-- `public/CNAME` → `docs/CNAME` — the custom domain. Delete this file and the
-  site simply serves at `https://younissk.github.io/` instead. Nothing breaks.
+- The custom domain is **parked**, not active. `public/CNAME.disabled` holds
+  `youniss.dev`; see `public/README-CNAME.md` for how to switch it on. A live
+  `CNAME` file makes Pages redirect `younissk.github.io` to that domain, so it
+  must not be enabled before DNS points at GitHub. Removing it at any time
+  returns the site to `https://younissk.github.io/`. Nothing else breaks.
 
 ## The two ways this dies, and what to do
 
@@ -101,6 +104,9 @@ Every one of those would be a company that has to stay in business for this page
 to keep rendering correctly. Fonts, styles, scripts and images are all served
 from this repository.
 
+If you are tempted to add something, ask whether the site still works in twenty
+years if that thing disappears.
+
 ## The one exception: the contact form
 
 There is no e-mail address anywhere on this site, by choice. That leaves the
@@ -121,9 +127,6 @@ To remove the dependency entirely, delete `src/components/ContactForm.astro`
 and put a plain address back on `/contact`. A `mailto:` link outlives every
 form service ever built. The only reason it is not the default here is that a
 published address gets scraped.
-
-Please keep it that way. If you are tempted to add something, ask whether the
-site still works in twenty years if that thing disappears.
 
 ## Archived earlier versions
 
