@@ -1,0 +1,603 @@
+@import "tailwindcss";
+@import "katex/dist/katex.min.css";
+@plugin "@tailwindcss/typography";
+
+/* Class-based dark mode. The bootstrap script in BaseLayout puts `.dark` on <html>
+   before first paint, seeded from localStorage or prefers-color-scheme. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------------------
+   Raw palette. Never reference --c-* directly in markup — use the Tailwind
+   utilities generated from the @theme block below (bg-bg, text-ink, ...).
+   These exist so a single class flip on <html> re-themes the whole document.
+   --------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  --c-bg: #ffffff;
+  --c-surface: #f6f6f4;
+  --c-surface-2: #ecece8;
+  --c-border: #e3e3de;
+  --c-border-strong: #c6c6bf;
+
+  --c-ink: #15151a;
+  --c-ink-muted: #4c4c55;
+  --c-ink-faint: #74747f;
+
+  --c-accent: #1a4fd6;
+  --c-accent-hover: #12379c;
+  --c-accent-soft: #eaf0ff;
+
+  --c-positive: #12664a;
+  --c-warning: #7d5300;
+  --c-danger: #a01b1b;
+
+  --c-focus: #1a4fd6;
+  --c-selection: #d7e2ff;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --c-bg: #0d0d0f;
+  --c-surface: #151518;
+  --c-surface-2: #1d1d22;
+  --c-border: #27272d;
+  --c-border-strong: #3d3d46;
+
+  --c-ink: #ececef;
+  --c-ink-muted: #a7a7b1;
+  --c-ink-faint: #7c7c87;
+
+  --c-accent: #8fb0ff;
+  --c-accent-hover: #b8ccff;
+  --c-accent-soft: #16203a;
+
+  --c-positive: #6fdba4;
+  --c-warning: #e0b158;
+  --c-danger: #f08a8a;
+
+  --c-focus: #8fb0ff;
+  --c-selection: #22336a;
+}
+
+/* ---------------------------------------------------------------------------
+   Design tokens. `inline` makes utilities emit var(--c-*) directly, so every
+   colour utility follows the theme without duplicated dark: variants.
+   --------------------------------------------------------------------------- */
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-surface-2: var(--c-surface-2);
+  --color-border: var(--c-border);
+  --color-border-strong: var(--c-border-strong);
+
+  --color-ink: var(--c-ink);
+  --color-ink-muted: var(--c-ink-muted);
+  --color-ink-faint: var(--c-ink-faint);
+
+  --color-accent: var(--c-accent);
+  --color-accent-hover: var(--c-accent-hover);
+  --color-accent-soft: var(--c-accent-soft);
+
+  --color-positive: var(--c-positive);
+  --color-warning: var(--c-warning);
+  --color-danger: var(--c-danger);
+}
+
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", "JetBrains Mono", Menlo,
+    Consolas, "Liberation Mono", monospace;
+
+  /* Measures. Generates max-w-text / max-w-page / max-w-wide. */
+  --container-text: 44rem;
+  --container-page: 68rem;
+  --container-wide: 84rem;
+
+  /* Rhythm. Generates p-gutter / py-section / gap-section-lg, etc. */
+  --spacing-gutter: 1.25rem;
+  --spacing-gutter-lg: 2rem;
+  --spacing-section: 3.5rem;
+  --spacing-section-lg: 5.5rem;
+
+  /* Radii. Deliberately tight — this is an editorial page, not a card UI. */
+  --radius-hair: 0.125rem;
+  --radius-panel: 0.375rem;
+
+  /* Type scale. */
+  --text-display: clamp(2.125rem, 1.45rem + 2.7vw, 3.25rem);
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.028em;
+
+  --text-title: clamp(1.5rem, 1.2rem + 1.15vw, 2rem);
+  --text-title--line-height: 1.15;
+  --text-title--letter-spacing: -0.02em;
+
+  --text-meta: 0.75rem;
+  --text-meta--line-height: 1.4;
+  --text-meta--letter-spacing: 0.02em;
+
+  --text-label: 0.6875rem;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.12em;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+   --------------------------------------------------------------------------- */
+@layer base {
+  /* Tailwind v4 defaults border-color to currentColor; we want hairlines. */
+  *,
+  ::before,
+  ::after {
+    border-color: var(--c-border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    background-color: var(--c-bg);
+    color: var(--c-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Safety net for wide content. `clip`, not `hidden`: `hidden` would make
+       the body a scroll container and break the sticky header. */
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--c-ink);
+    text-wrap: balance;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--c-selection);
+    color: var(--c-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--c-focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-hair);
+  }
+
+  /* Roman numerals etc. read badly in tables of numbers. */
+  table,
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  code,
+  kbd,
+  samp,
+  pre {
+    font-family: var(--font-mono);
+    font-feature-settings: "liga" 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Shared component classes. Documented in DESIGN.md — other pages rely on these
+   names, so rename nothing without updating that contract.
+   --------------------------------------------------------------------------- */
+@layer components {
+  /* --- layout ------------------------------------------------------------ */
+  .page {
+    width: 100%;
+    max-width: var(--container-page);
+    margin-inline: auto;
+    padding-inline: var(--spacing-gutter);
+  }
+
+  .page-narrow {
+    width: 100%;
+    max-width: var(--container-text);
+    margin-inline: auto;
+    padding-inline: var(--spacing-gutter);
+  }
+
+  @media (min-width: 48rem) {
+    .page,
+    .page-narrow {
+      padding-inline: var(--spacing-gutter-lg);
+    }
+  }
+
+  .section {
+    padding-block: var(--spacing-section);
+  }
+
+  .section + .section {
+    border-top: 1px solid var(--c-border);
+  }
+
+  .section-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--c-border);
+  }
+
+  .rule {
+    border: 0;
+    border-top: 1px solid var(--c-border);
+  }
+
+  /* --- typography -------------------------------------------------------- */
+  .label {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    line-height: 1.2;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--c-ink-faint);
+  }
+
+  .meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    line-height: 1.4;
+    color: var(--c-ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Inline run of metadata items, auto-separated by a middot. */
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.15rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    line-height: 1.4;
+    color: var(--c-ink-faint);
+    font-variant-numeric: tabular-nums;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .meta-row > *:not(:first-child)::before {
+    content: "·";
+    margin-inline-end: 0.6rem;
+    color: var(--c-border-strong);
+  }
+
+  /* --- links ------------------------------------------------------------- */
+  .link {
+    color: var(--c-accent);
+    text-decoration: underline;
+    text-decoration-thickness: from-font;
+    text-underline-offset: 0.2em;
+    transition: color 120ms ease;
+  }
+
+  .link:hover {
+    color: var(--c-accent-hover);
+  }
+
+  .link-quiet {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 120ms ease, color 120ms ease;
+  }
+
+  .link-quiet:hover {
+    color: var(--c-ink);
+    text-decoration-color: var(--c-border-strong);
+  }
+
+  /* --- list rows (projects index, papers, videos, ...) ------------------- */
+  .row-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid var(--c-border);
+  }
+
+  .row {
+    display: block;
+    border-bottom: 1px solid var(--c-border);
+    padding-block: 0.875rem;
+    padding-inline: 0.5rem;
+    margin-inline: -0.5rem;
+    transition: background-color 120ms ease;
+  }
+
+  a.row:hover,
+  .row:has(> a:hover) {
+    background-color: var(--c-surface);
+  }
+
+  .row-title {
+    font-weight: 600;
+    color: var(--c-ink);
+    letter-spacing: -0.01em;
+  }
+
+  .row-desc {
+    color: var(--c-ink-muted);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+
+  /* --- tags -------------------------------------------------------------- */
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.4;
+    padding: 0.125rem 0.375rem;
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-hair);
+    color: var(--c-ink-faint);
+    white-space: nowrap;
+    transition: color 120ms ease, border-color 120ms ease;
+  }
+
+  a.tag:hover,
+  button.tag:hover {
+    color: var(--c-ink);
+    border-color: var(--c-border-strong);
+  }
+
+  .tag[data-active="true"] {
+    color: var(--c-bg);
+    background-color: var(--c-ink);
+    border-color: var(--c-ink);
+  }
+
+  /* --- surfaces & controls ---------------------------------------------- */
+  .panel {
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-panel);
+    background-color: var(--c-bg);
+    padding: 1rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.2;
+    padding: 0.5rem 0.875rem;
+    border: 1px solid var(--c-border-strong);
+    border-radius: var(--radius-panel);
+    color: var(--c-ink);
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color 120ms ease, border-color 120ms ease,
+      color 120ms ease;
+  }
+
+  .btn:hover {
+    background-color: var(--c-surface);
+  }
+
+  .btn-primary {
+    color: var(--c-bg);
+    background-color: var(--c-ink);
+    border-color: var(--c-ink);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--c-accent);
+    border-color: var(--c-accent);
+    color: #fff;
+  }
+
+  .field {
+    width: 100%;
+    font-size: 0.9375rem;
+    font-family: var(--font-sans);
+    padding: 0.5rem 0.75rem;
+    color: var(--c-ink);
+    background-color: var(--c-bg);
+    border: 1px solid var(--c-border-strong);
+    border-radius: var(--radius-panel);
+    transition: border-color 120ms ease;
+  }
+
+  .field::placeholder {
+    color: var(--c-ink-faint);
+  }
+
+  .field:hover {
+    border-color: var(--c-ink-faint);
+  }
+
+  /* Wide content (tables, code, diagrams) scrolls in its own box. */
+  .scroll-x {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Visible only to screen readers until focused — used by the skip link. */
+  .skip-link {
+    position: absolute;
+    left: 0.5rem;
+    top: 0.5rem;
+    z-index: 100;
+    transform: translateY(-200%);
+    padding: 0.5rem 0.875rem;
+    font-size: 0.875rem;
+    background-color: var(--c-bg);
+    color: var(--c-ink);
+    border: 1px solid var(--c-border-strong);
+    border-radius: var(--radius-panel);
+    transition: transform 120ms ease;
+  }
+
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Prose. One block serves both themes because every value resolves through the
+   --c-* vars, which the .dark class already re-points.
+   --------------------------------------------------------------------------- */
+@layer components {
+  .prose {
+    --tw-prose-body: var(--c-ink-muted);
+    --tw-prose-headings: var(--c-ink);
+    --tw-prose-lead: var(--c-ink-muted);
+    --tw-prose-links: var(--c-accent);
+    --tw-prose-bold: var(--c-ink);
+    --tw-prose-counters: var(--c-ink-faint);
+    --tw-prose-bullets: var(--c-border-strong);
+    --tw-prose-hr: var(--c-border);
+    --tw-prose-quotes: var(--c-ink);
+    --tw-prose-quote-borders: var(--c-border-strong);
+    --tw-prose-captions: var(--c-ink-faint);
+    --tw-prose-code: var(--c-ink);
+    --tw-prose-pre-code: var(--c-ink);
+    --tw-prose-pre-bg: var(--c-surface);
+    --tw-prose-th-borders: var(--c-border-strong);
+    --tw-prose-td-borders: var(--c-border);
+
+    max-width: none;
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .prose :where(a):not(:where(.not-prose *)) {
+    text-decoration-thickness: from-font;
+    text-underline-offset: 0.2em;
+    transition: color 120ms ease;
+  }
+
+  .prose :where(a):hover:not(:where(.not-prose *)) {
+    color: var(--c-accent-hover);
+  }
+
+  .prose :where(h2):not(:where(.not-prose *)) {
+    letter-spacing: -0.02em;
+    margin-top: 2.25em;
+    padding-bottom: 0.3em;
+    border-bottom: 1px solid var(--c-border);
+  }
+
+  .prose :where(h3):not(:where(.not-prose *)) {
+    letter-spacing: -0.015em;
+  }
+
+  .prose :where(code):not(:where(pre *, .not-prose *)) {
+    font-size: 0.875em;
+    font-weight: 400;
+    padding: 0.1em 0.3em;
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-hair);
+    background-color: var(--c-surface);
+  }
+
+  .prose :where(code):not(:where(pre *, .not-prose *))::before,
+  .prose :where(code):not(:where(pre *, .not-prose *))::after {
+    content: none;
+  }
+
+  .prose :where(pre):not(:where(.not-prose *)) {
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-panel);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+  }
+
+  .prose :where(blockquote):not(:where(.not-prose *)) {
+    font-style: normal;
+    font-weight: 400;
+    color: var(--c-ink-muted);
+  }
+
+  .prose :where(blockquote p):not(:where(.not-prose *))::before,
+  .prose :where(blockquote p):not(:where(.not-prose *))::after {
+    content: none;
+  }
+
+  .prose :where(table):not(:where(.not-prose *)) {
+    font-size: 0.875rem;
+  }
+
+  .prose :where(img):not(:where(.not-prose *)) {
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-panel);
+  }
+
+  /* KaTeX display blocks overflow on phones otherwise. */
+  .prose :where(.katex-display):not(:where(.not-prose *)) {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-block: 0.25rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Shiki dual theme. astro.config.mjs emits both palettes; this swaps to the
+   dark one when .dark is present.
+   --------------------------------------------------------------------------- */
+.dark .astro-code,
+.dark .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+.astro-code {
+  padding: 0.875rem 1rem;
+  overflow-x: auto;
+}

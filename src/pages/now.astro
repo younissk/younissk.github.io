@@ -1,0 +1,121 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import ExternalLink from '../components/ExternalLink.astro';
+import { AUTHOR } from '../consts';
+
+const LAST_UPDATED = '2026-08';
+
+const working = [
+  'A web-crawling and ingestion pipeline for retrieval-augmented generation, exposed through a gRPC facade so the rest of the system can consume it.',
+  'An automated LLM QA pipeline that tests agent changes for regressions — the piece that makes test-driven development possible for agents.',
+  'Production-grade MCP servers and LangGraph agents for emergency-service workflows.',
+];
+
+const building = [
+  {
+    name: 'TempBench',
+    href: 'https://younissk.github.io/TempBench-Temporal-LALM-Reasoning-benchmark/',
+    what: 'whether audio-language models can answer trivial questions about event order and timing',
+  },
+  {
+    name: 'Tython',
+    href: 'https://younissk.github.io/tython/',
+    what: 'a statically typed toy language, its standard library and its toolchain',
+  },
+  {
+    name: 'nanoBeard',
+    href: 'https://younissk.github.io/nanoBeard/',
+    what: 'a small language model trained from scratch, then supervised fine-tuned',
+  },
+];
+---
+
+<BaseLayout
+  title="Now"
+  description="What Youniss Kandah is working on, studying and teaching right now. Updated 2026-08."
+>
+  <div class="page-narrow">
+    <PageHeader
+      eyebrow="Now"
+      title="What I'm doing now"
+      description="A snapshot of where my attention actually goes. It changes when the work changes, not on a schedule."
+      meta={[`Last updated: ${LAST_UPDATED}`, AUTHOR.location]}
+    />
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="label">Working on</h2>
+        <p class="meta">ONDEWO · since Mar 2026</p>
+      </div>
+
+      <p class="text-ink-muted">
+        I'm at ONDEWO building the retrieval, QA and agent infrastructure for AI4Emergency, an
+        Austrian funded research project developing AI-driven communication technology for
+        safety-critical emergency operations in disaster and large-event scenarios. Concretely,
+        that means three things:
+      </p>
+
+      <ul class="row-list mt-5">
+        {working.map((item) => <li class="row text-ink-muted">{item}</li>)}
+      </ul>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="label">Studying</h2>
+        <p class="meta">JKU Linz · paused</p>
+      </div>
+
+      <p class="text-ink-muted">
+        My MSc in Artificial Intelligence at JKU Linz is paused while I focus on the work above. I
+        finished the BSc there ahead of the standard duration, with a thesis on deep learning for
+        language-based audio retrieval.
+      </p>
+
+      <p class="mt-4 text-ink-muted">
+        The learning that is still happening happens in public, in three repositories I keep
+        pushing to:
+      </p>
+
+      <ul class="row-list mt-5">
+        {
+          building.map((item) => (
+            <li class="row">
+              <ExternalLink class="link-quiet" href={item.href}>
+                <span class="row-title">{item.name}</span>
+              </ExternalLink>
+              <p class="row-desc mt-0.5">{item.what}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="label">Teaching</h2>
+        <p class="meta">Dec 2024 – Feb 2026</p>
+      </div>
+
+      <p class="text-ink-muted">
+        I taught AI programmes at several coding schools as a freelancer — LLMs, multi-modal
+        models and frontend development. That run ended in February 2026 when I moved to ONDEWO,
+        and I am not currently teaching a cohort. Explaining things is still the part of the job I
+        enjoy most, so this is a pause rather than a full stop.
+      </p>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="label">Reaching me</h2>
+      </div>
+
+      <p class="text-ink-muted">
+        Email is the reliable channel: <a class="link" href={`mailto:${AUTHOR.email}`}>{AUTHOR.email}</a>.
+      </p>
+
+      <p class="meta mt-6">Last updated: {LAST_UPDATED}</p>
+    </section>
+  </div>
+</BaseLayout>

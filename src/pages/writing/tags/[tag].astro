@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import PostRow from '../_PostRow.astro';
+import { getPosts, tagSlug, type Post } from '../_post-utils';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+
+  // slug -> { label, posts }. The label is the first spelling encountered, so
+  // two tags that slugify the same still land on one page.
+  const bySlug = new Map<string, { label: string; posts: Post[] }>();
+
+  for (const post of posts) {
+    for (const tag of post.data.tags) {
+      const slug = tagSlug(tag);
+      if (!slug) continue;
+      const bucket = bySlug.get(slug) ?? { label: tag, posts: [] };
+      if (!bucket.posts.includes(post)) bucket.posts.push(post);
+      bySlug.set(slug, bucket);
+    }
+  }
+
+  return [...bySlug.entries()].map(([slug, { label, posts: tagged }]) => ({
+    params: { tag: slug },
+    props: { label, posts: tagged },
+  }));
+}
+
+interface Props {
+  label: string;
+  posts: Post[];
+}
+
+const { tag: slug } = Astro.params;
+const { label, posts } = Astro.props;
+const count = `${posts.length} ${posts.length === 1 ? 'post' : 'posts'}`;
+---
+
+<BaseLayout
+  title={`Writing tagged “${label}”`}
+  description={`Every post tagged ${label} — ${count}.`}
+>
+  <div class="page">
+    <PageHeader eyebrow="Writing · tag" title={label} meta={[count]}>
+      <Fragment slot="actions">
+        <a class="btn" href="/writing/">All writing</a>
+      </Fragment>
+    </PageHeader>
+
+    <section class="section" aria-label={`Posts tagged ${label}`}>
+      <ul class="row-list">
+        {posts.map((post) => <PostRow post={post} activeTagSlug={slug} />)}
+      </ul>
+    </section>
+  </div>
+</BaseLayout>

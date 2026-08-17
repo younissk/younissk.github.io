@@ -1,0 +1,20 @@
+/* TEAM */
+
+  Everything: Youniss Kandah
+  Site: https://youniss.dev
+  Mirror: https://younissk.github.io
+  Source: https://github.com/younissk/younissk.github.io
+  Location: Austria
+
+/* SITE */
+
+  Built with: Astro, Tailwind CSS
+  Served as: static HTML committed to git, published by GitHub Pages
+  Requires: no build step, no CI, no database, no third-party requests
+  Analytics: none
+  Cookies: none
+
+/* IF I'M GONE */
+
+  Read SUCCESSION.md in the repository. The content is CC BY 4.0 and the
+  code is MIT, so you may keep this site alive without asking anyone.

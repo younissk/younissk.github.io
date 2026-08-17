@@ -1,0 +1,23 @@
+---
+/**
+ * Long-form content wrapper. Put rendered Markdown (or hand-written prose)
+ * inside it; typography is already tuned for both themes in global.css.
+ *
+ *   <Prose><Content /></Prose>
+ */
+interface Props {
+  /** Extra classes, e.g. "max-w-text". */
+  class?: string;
+  /** 'base' for articles, 'sm' for sidebars and summaries. */
+  size?: 'sm' | 'base';
+}
+
+const { class: className, size = 'base' } = Astro.props;
+---
+
+<div
+  class:list={['prose', size === 'sm' && 'prose-sm', className]}
+  data-prose={size}
+>
+  <slot />
+</div>

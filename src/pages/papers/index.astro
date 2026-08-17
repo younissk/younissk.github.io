@@ -1,0 +1,90 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ExternalLink from '../../components/ExternalLink.astro';
+import Tag from '../../components/Tag.astro';
+import Bibtex from '../../components/Bibtex';
+
+const papers = (await getCollection('papers')).sort((a, b) => b.data.year - a.data.year);
+
+const years = papers.map((p) => p.data.year);
+const span = years.length > 0 ? `${Math.min(...years)}–${Math.max(...years)}` : '';
+
+const isSelf = (author: string) => /kandah/i.test(author);
+const readable = (value: string) => value.replace(/-/g, ' ');
+---
+
+<BaseLayout
+  title="Papers"
+  description="Technical reports, seminar papers and challenge submissions by Youniss Kandah, with PDFs and BibTeX."
+>
+  <div class="page">
+    <PageHeader
+      eyebrow="Publications"
+      title="Papers"
+      description="Technical reports and seminar work, mostly on retrieval, audio-text models and tool-calling LLMs. Every entry links to the PDF and carries its BibTeX."
+      meta={[`${papers.length} ${papers.length === 1 ? 'entry' : 'entries'}`, span].filter(Boolean)}
+    />
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="label">Newest first</h2>
+        <p class="meta">{papers.length} total</p>
+      </div>
+
+      {
+        papers.length === 0 ? (
+          <p class="text-ink-muted">Nothing published here yet.</p>
+        ) : (
+          <ul class="row-list">
+            {papers.map((paper) => (
+              <li class="row">
+                <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+                  <h3 class="row-title min-w-0 text-base">
+                    <a class="link-quiet" href={`/papers/${paper.id}/`}>
+                      {paper.data.title}
+                    </a>
+                  </h3>
+                  <Tag>{readable(paper.data.type)}</Tag>
+                </div>
+
+                <p class="row-desc mt-1">
+                  {paper.data.authors.map((author, index) => (
+                    <Fragment>
+                      {index > 0 && <span>, </span>}
+                      {isSelf(author) ? (
+                        <strong class="font-semibold text-ink">{author}</strong>
+                      ) : (
+                        <span>{author}</span>
+                      )}
+                    </Fragment>
+                  ))}
+                </p>
+
+                <ul class="meta-row mt-1.5">
+                  <li>{paper.data.year}</li>
+                  <li>{paper.data.venue}</li>
+                </ul>
+
+                <div class="mt-3 flex flex-wrap items-start gap-x-5 gap-y-2 text-sm">
+                  <a class="link" href={paper.data.pdf}>PDF</a>
+                  {paper.data.url && (
+                    <ExternalLink href={paper.data.url}>Official page</ExternalLink>
+                  )}
+                  {paper.data.doi && (
+                    <ExternalLink href={`https://doi.org/${paper.data.doi}`}>DOI</ExternalLink>
+                  )}
+                  <a class="link-quiet" href={`/papers/${paper.id}/`}>Abstract</a>
+                  <div class="min-w-0 basis-full">
+                    <Bibtex client:visible bibtex={paper.data.bibtex} describes={paper.data.title} />
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </section>
+  </div>
+</BaseLayout>

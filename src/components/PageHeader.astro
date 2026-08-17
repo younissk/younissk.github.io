@@ -1,0 +1,82 @@
+---
+/**
+ * Standard top-of-page block. Every index and detail page starts with one so
+ * the typographic rhythm is identical across the site.
+ *
+ *   <PageHeader
+ *     eyebrow="Archive"
+ *     title="Projects"
+ *     description="Everything I have built, indexed and searchable."
+ *     meta={['110 repositories', 'updated 2026-08']}
+ *   >
+ *     <Fragment slot="actions"><a class="btn" href="/cv.pdf">CV</a></Fragment>
+ *   </PageHeader>
+ */
+interface Props {
+  title: string;
+  /** Small monospace kicker above the title. */
+  eyebrow?: string;
+  /** One or two sentences. Rendered at reading width. */
+  description?: string;
+  /** Monospace facts, auto-separated by middots. */
+  meta?: readonly string[];
+  /** Use the large display size (home / landing pages). */
+  size?: 'title' | 'display';
+  class?: string;
+}
+
+const {
+  title,
+  eyebrow,
+  description,
+  meta = [],
+  size = 'title',
+  class: className,
+} = Astro.props;
+
+const hasActions = Astro.slots.has('actions');
+const hasBelow = Astro.slots.has('default');
+---
+
+<header class:list={['pt-10 pb-8 md:pt-14 md:pb-10', className]}>
+  <div class="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
+    <div class="min-w-0">
+      {eyebrow && <p class="label mb-2">{eyebrow}</p>}
+      <h1
+        class:list={[
+          'text-ink',
+          size === 'display' ? 'text-display font-semibold' : 'text-title font-semibold',
+        ]}
+      >
+        {title}
+      </h1>
+    </div>
+    {
+      hasActions && (
+        <div class="flex flex-wrap items-center gap-2">
+          <slot name="actions" />
+        </div>
+      )
+    }
+  </div>
+
+  {
+    description && (
+      <p class="mt-4 max-w-text text-base leading-relaxed text-ink-muted md:text-lg">
+        {description}
+      </p>
+    )
+  }
+
+  {
+    meta.length > 0 && (
+      <ul class="meta-row mt-4">
+        {meta.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    )
+  }
+
+  {hasBelow && <div class="mt-6"><slot /></div>}
+</header>

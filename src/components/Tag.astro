@@ -1,0 +1,31 @@
+---
+/**
+ * Monospace metadata chip — tech stack, category, status, filter.
+ *
+ *   <Tag>pgvector</Tag>
+ *   <Tag href="/projects/?tag=rag" active={current === 'rag'}>rag</Tag>
+ *
+ * Group several in a <ul class="tag-row"> (or any .tag-row container).
+ */
+interface Props {
+  /** Renders an <a> instead of a <span> when present. */
+  href?: string;
+  /** Filled state, for the currently selected filter. */
+  active?: boolean;
+  class?: string;
+  title?: string;
+}
+
+const { href, active = false, class: className, title } = Astro.props;
+const Element = href ? 'a' : 'span';
+---
+
+<Element
+  class:list={['tag', className]}
+  href={href}
+  title={title}
+  data-active={active ? 'true' : undefined}
+  aria-current={href && active ? 'true' : undefined}
+>
+  <slot />
+</Element>

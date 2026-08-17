@@ -1,0 +1,58 @@
+---
+/**
+ * One row in a list of posts. Used by the writing index and by every tag page,
+ * so both read identically.
+ *
+ * Underscore-prefixed: Astro skips it when building routes.
+ *
+ * The row is a `.row` containing a direct-child `<a>` (which drives the
+ * full-bleed hover fill) plus a sibling tag list — the tags are links, and a
+ * link cannot nest inside a link.
+ */
+import Tag from '../../components/Tag.astro';
+import { readingTimeLabel } from './_reading-time';
+import { isoDate, languageName, shortDate, tagSlug, type Post } from './_post-utils';
+
+interface Props {
+  post: Post;
+  /** Heading level for the title — h2 in a flat list under the page h1. */
+  headingLevel?: 'h2' | 'h3';
+  /** Slug of the tag being filtered on, so its chip renders as active. */
+  activeTagSlug?: string;
+}
+
+const { post, headingLevel: Heading = 'h2', activeTagSlug } = Astro.props;
+const { title, description, date, tags, lang } = post.data;
+---
+
+<li class="row">
+  <a class="block" href={`/writing/${post.id}/`}>
+    <ul class="meta-row">
+      <li>
+        <time datetime={isoDate(date)}>{shortDate(date)}</time>
+      </li>
+      <li>{readingTimeLabel(post.body)}</li>
+      {lang !== 'en' && <li lang={lang}>{languageName(lang)}</li>}
+    </ul>
+
+    <Heading class="row-title mt-1.5">{title}</Heading>
+    <p class="row-desc mt-1 max-w-text">{description}</p>
+  </a>
+
+  {
+    tags.length > 0 && (
+      <ul class="tag-row mt-2.5">
+        {tags.map((tag) => (
+          <li>
+            <Tag
+              href={`/writing/tags/${tagSlug(tag)}/`}
+              active={tagSlug(tag) === activeTagSlug}
+            >
+              {tag}
+            </Tag>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</li>

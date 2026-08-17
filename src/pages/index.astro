@@ -1,0 +1,240 @@
+---
+import { getCollection } from 'astro:content';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Tag from '../components/Tag.astro';
+import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
+
+/* ---------------------------------------------------------------------------
+   Page copy. Lives here rather than in a collection because it is hub prose,
+   not content — one page owns it, and it changes when the hero changes.
+   --------------------------------------------------------------------------- */
+
+const HERO_LINE =
+  'I build production AI services — retrieval pipelines, LLM document extraction, and the backends around them — currently on AI4Emergency, an Austrian FFG-funded research project at ONDEWO.';
+
+const RELOCATION = 'Open to relocate';
+
+/** Hand-dated so the label reflects when the note was written, not the build. */
+const NOW = {
+  updated: 'August 2026',
+  role: 'AI Engineer',
+  org: 'ONDEWO',
+  period: 'Mar 2026 – Present',
+  location: 'Remote, Austria',
+  text: "I'm at ONDEWO building the retrieval, QA and agent infrastructure for AI4Emergency — crawling and ingestion behind a gRPC facade, an automated LLM QA pipeline that enables TDD for agents, and MCP servers plus LangGraph agents for emergency-service workflows. My MSc in Artificial Intelligence at JKU is paused while I focus on that.",
+} as const;
+
+const TEACHING = [
+  {
+    org: 'Coding schools (freelance)',
+    period: 'Dec 2024 – Feb 2026',
+    what: 'Taught multiple AI-related programs across different coding schools, covering LLMs, multi-modal models, and frontend development.',
+  },
+] as const;
+
+/* --- data ----------------------------------------------------------------- */
+
+const [work, projects, posts, videos, papers, tools] = await Promise.all([
+  getCollection('work'),
+  getCollection('projects'),
+  getCollection('posts'),
+  getCollection('videos'),
+  getCollection('papers'),
+  getCollection('tools'),
+]);
+
+const selectedWork = [...work].sort((a, b) => a.data.order - b.data.order).slice(0, 4);
+
+const published = posts.filter((post) => !post.data.draft);
+
+/** Counts are only rendered when non-zero — an empty index says nothing useful. */
+const COUNTS: Readonly<Record<string, { readonly n: number; readonly noun: string }>> = {
+  '/projects/': { n: projects.length, noun: 'repositories' },
+  '/writing/': { n: published.length, noun: 'posts' },
+  '/videos/': { n: videos.length, noun: 'videos' },
+  '/papers/': { n: papers.length, noun: 'papers' },
+  '/tools/': { n: tools.length, noun: 'tools' },
+};
+
+const explore = NAV.filter((item) => item.href !== '/work/').map((item) => {
+  const count = COUNTS[item.href];
+  return {
+    ...item,
+    count: count && count.n > 0 ? `${count.n} ${count.noun}` : undefined,
+  };
+});
+
+/** Six chips fit one line at 375px; the rest collapse into a truthful "+N". */
+const STACK_SHOWN = 6;
+---
+
+<BaseLayout title={`${AUTHOR.name} — ${AUTHOR.role}`} description={SITE_DESCRIPTION}>
+  <div class="page">
+    <PageHeader
+      eyebrow={AUTHOR.role}
+      title={AUTHOR.name}
+      description={HERO_LINE}
+      meta={[AUTHOR.location, RELOCATION]}
+      size="display"
+    >
+      <nav class="flex flex-wrap items-center gap-2" aria-label="Contact and profiles">
+        <a class="btn btn-primary" href={`mailto:${AUTHOR.email}`}>{AUTHOR.email}</a>
+        <a class="btn" href={AUTHOR.github} target="_blank" rel="noopener noreferrer">
+          GitHub
+        </a>
+        <a class="btn" href={AUTHOR.linkedin} target="_blank" rel="noopener noreferrer">
+          LinkedIn
+        </a>
+        <a class="btn" href="/cv.pdf" target="_blank" rel="noopener noreferrer">
+          CV (PDF)
+        </a>
+      </nav>
+    </PageHeader>
+
+    <!-- Now ------------------------------------------------------------- -->
+    <section class="section" aria-labelledby="now">
+      <div class="section-head">
+        <h2 class="label" id="now">Now</h2>
+        <p class="meta">Updated {NOW.updated}</p>
+      </div>
+
+      <p class="max-w-text text-ink-muted">{NOW.text}</p>
+
+      <ul class="meta-row mt-4">
+        <li>{NOW.role}</li>
+        <li>{NOW.org}</li>
+        <li>{NOW.period}</li>
+        <li>{NOW.location}</li>
+      </ul>
+    </section>
+
+    <!-- Selected work --------------------------------------------------- -->
+    {
+      selectedWork.length > 0 && (
+        <section class="section" aria-labelledby="selected-work">
+          <div class="section-head">
+            <h2 class="label" id="selected-work">
+              Selected work
+            </h2>
+            <a class="meta link-quiet" href="/work/">
+              Case studies &rarr;
+            </a>
+          </div>
+
+          <ul class="row-list">
+            {selectedWork.map((entry) => {
+              const stack = entry.data.stack;
+              const shown = stack.slice(0, STACK_SHOWN);
+              const rest = stack.length - shown.length;
+
+              return (
+                <li>
+                  <a class="row" href={`/work/${entry.id}/`}>
+                    <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                      <h3 class="row-title min-w-0 text-base md:text-lg">
+                        {entry.data.title}
+                      </h3>
+                      <span class="meta shrink-0">{entry.data.period}</span>
+                    </div>
+
+                    <ul class="meta-row mt-1.5">
+                      <li>{entry.data.org}</li>
+                      <li>{entry.data.role}</li>
+                    </ul>
+
+                    <p class="row-desc mt-2 max-w-text">{entry.data.summary}</p>
+
+                    <ul class="tag-row mt-3">
+                      {shown.map((item) => (
+                        <li>
+                          <Tag>{item}</Tag>
+                        </li>
+                      ))}
+                      {rest > 0 && (
+                        <li>
+                          <Tag title={stack.slice(STACK_SHOWN).join(', ')}>+{rest}</Tag>
+                        </li>
+                      )}
+                    </ul>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+
+          <p class="mt-5 text-sm">
+            <a class="link" href="/projects/">
+              All projects &rarr;
+            </a>
+          </p>
+        </section>
+      )
+    }
+
+    <!-- Explore --------------------------------------------------------- -->
+    <section class="section" aria-labelledby="explore">
+      <div class="section-head">
+        <h2 class="label" id="explore">Explore</h2>
+        <p class="meta">Everything else on this site</p>
+      </div>
+
+      <ul class="row-list">
+        {
+          explore.map((item) => (
+            <li>
+              <a
+                class="row flex flex-wrap items-baseline justify-between gap-x-6 gap-y-0.5"
+                href={item.href}
+              >
+                <span class="min-w-0">
+                  <span class="row-title">{item.label}</span>
+                  <span class="row-desc"> — {item.blurb}</span>
+                </span>
+                {item.count && <span class="meta shrink-0">{item.count}</span>}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- Teaching -------------------------------------------------------- -->
+    <section class="section" aria-labelledby="teaching">
+      <div class="section-head">
+        <h2 class="label" id="teaching">Teaching</h2>
+      </div>
+
+      <ul class="max-w-text space-y-4">
+        {
+          TEACHING.map((item) => (
+            <li>
+              <ul class="meta-row">
+                <li>{item.org}</li>
+                <li>{item.period}</li>
+              </ul>
+              <p class="row-desc mt-1">{item.what}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- Contact --------------------------------------------------------- -->
+    <section class="section" aria-labelledby="contact">
+      <div class="section-head">
+        <h2 class="label" id="contact">Contact</h2>
+      </div>
+
+      <p class="text-lg">
+        <a class="link" href={`mailto:${AUTHOR.email}`}>{AUTHOR.email}</a>
+      </p>
+
+      <ul class="meta-row mt-3">
+        <li>{AUTHOR.location}</li>
+        <li>{RELOCATION}</li>
+      </ul>
+    </section>
+  </div>
+</BaseLayout>

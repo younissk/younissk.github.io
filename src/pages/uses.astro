@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Tag from '../components/Tag.astro';
+
+interface Group {
+  heading: string;
+  note: string;
+  items: readonly string[];
+}
+
+const groups: readonly Group[] = [
+  {
+    heading: 'Languages',
+    note: 'Python for anything with a model in it, TypeScript for anything with a browser in it.',
+    items: ['Python', 'TypeScript/JavaScript', 'Java', 'SQL'],
+  },
+  {
+    heading: 'AI & machine learning',
+    note: 'Retrieval and document extraction in production, plus the evaluation and guardrails that keep them honest.',
+    items: [
+      'Retrieval / RAG',
+      'LLM/VLM document extraction',
+      'Evaluation',
+      'Guardrails',
+      'Inference serving',
+      'LangChain',
+      'DSPy',
+      'NeMo',
+      'NIM',
+      'vLLM',
+      'PyTorch',
+    ],
+  },
+  {
+    heading: 'Backend',
+    note: 'FastAPI for new services, Spring Boot where the estate is Java, Postgres with pgvector underneath both.',
+    items: ['FastAPI', 'Spring Boot', 'REST APIs', 'gRPC', 'PostgreSQL/pgvector'],
+  },
+  {
+    heading: 'Frontend',
+    note: 'Enough to ship the interface a service needs without handing it to someone else.',
+    items: ['React', 'Next.js', 'Tailwind'],
+  },
+  {
+    heading: 'Infrastructure',
+    note: 'Containers, a pipeline, and a machine somewhere that has to keep running.',
+    items: ['Docker', 'Kubernetes', 'AWS', 'Azure', 'Linux', 'CI/CD', 'Airflow'],
+  },
+  {
+    heading: 'Environment',
+    note: 'One clone of my homebase repo plus make install, and a new machine behaves like the one I left. It carries the zsh, git, nvim, tmux and ghostty config, the agent skills and hooks, and per-machine module selection — with launchd units on macOS and systemd units on Linux.',
+    items: ['Neovim', 'zsh', 'tmux', 'Ghostty', 'git', 'Make', 'Claude Code', 'macOS + Linux'],
+  },
+];
+---
+
+<BaseLayout
+  title="Uses"
+  description="The languages, frameworks, infrastructure and editor setup Youniss Kandah actually works in."
+>
+  <div class="page-narrow">
+    <PageHeader
+      eyebrow="Setup"
+      title="Uses"
+      description="What I actually reach for. Nothing aspirational, nothing I have touched once — if it is on this page, I have shipped something with it."
+      meta={['Last updated: 2026-08']}
+    />
+
+    {
+      groups.map((group) => (
+        <section class="section">
+          <div class="section-head">
+            <h2 class="label">{group.heading}</h2>
+            <p class="meta">{group.items.length} entries</p>
+          </div>
+
+          <p class="max-w-text text-ink-muted">{group.note}</p>
+
+          <ul class="tag-row mt-4">
+            {group.items.map((item) => (
+              <li>
+                <Tag>{item}</Tag>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>

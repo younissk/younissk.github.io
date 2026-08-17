@@ -1,0 +1,21 @@
+---
+title: Flappy Bird (Phaser)
+repoName: flappy-bird-phaser
+summary: A Flappy Bird clone built with Phaser 3, with layered parallax mountain backgrounds and a sprite-sheet bird animation.
+year: 2021
+period: "2021"
+category: games
+tags: [phaser, game-dev, javascript, 2d]
+stack: [JavaScript, Phaser 3, HTML]
+status: archived
+repo: null
+demo: null
+paper: null
+private: true
+featured: false
+---
+
+A straight reimplementation of Flappy Bird in Phaser 3 — physics-driven flap, wall spawning and
+collision, a four-frame bird animation, and a background built from separate cloud, sun and
+near/mid/far mountain layers scrolling at different speeds. Written as a single `app.js` against the
+Phaser CDN build, which is exactly the right amount of structure for the size of the thing.

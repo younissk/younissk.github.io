@@ -1,0 +1,100 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Prose from '../../components/Prose.astro';
+import ExternalLink from '../../components/ExternalLink.astro';
+import Bibtex from '../../components/Bibtex';
+
+export async function getStaticPaths() {
+  const papers = await getCollection('papers');
+  return papers.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+
+interface Props {
+  entry: CollectionEntry<'papers'>;
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { title, authors, venue, year, type, pdf, url, doi, bibtex } = entry.data;
+
+const isSelf = (author: string) => /kandah/i.test(author);
+const readable = (value: string) => value.replace(/-/g, ' ');
+---
+
+<BaseLayout
+  title={title}
+  description={`${readable(type)}, ${venue} (${year}). By ${authors.join(', ')}.`}
+  ogType="article"
+>
+  <div class="page-narrow">
+    <PageHeader eyebrow={readable(type)} title={title} meta={[String(year), venue]}>
+      <Fragment slot="actions">
+        <a class="btn btn-primary" href={pdf}>Read the PDF</a>
+      </Fragment>
+
+      <p class="text-ink-muted">
+        {
+          authors.map((author, index) => (
+            <Fragment>
+              {index > 0 && <span>, </span>}
+              {isSelf(author) ? (
+                <strong class="font-semibold text-ink">{author}</strong>
+              ) : (
+                <span>{author}</span>
+              )}
+            </Fragment>
+          ))
+        }
+      </p>
+    </PageHeader>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="label">Abstract</h2>
+      </div>
+      <Prose><Content /></Prose>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="label">Cite</h2>
+      </div>
+      <Bibtex client:visible bibtex={bibtex} describes={title} defaultOpen />
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="label">Links</h2>
+      </div>
+      <ul class="row-list">
+        <li class="row">
+          <a class="link-quiet" href={pdf}>PDF</a>
+        </li>
+        {
+          url && (
+            <li class="row">
+              <ExternalLink class="link-quiet" href={url}>
+                Official page
+              </ExternalLink>
+            </li>
+          )
+        }
+        {
+          doi && (
+            <li class="row">
+              <ExternalLink class="link-quiet" href={`https://doi.org/${doi}`}>
+                {`doi:${doi}`}
+              </ExternalLink>
+            </li>
+          )
+        }
+        <li class="row">
+          <a class="link-quiet" href="/papers/">All papers</a>
+        </li>
+      </ul>
+    </section>
+  </div>
+</BaseLayout>

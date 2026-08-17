@@ -1,0 +1,269 @@
+---
+/**
+ * One video. The player is click-to-load: until you press play the page makes
+ * zero requests to YouTube beyond the poster image, and the iframe that gets
+ * swapped in points at youtube-nocookie.com.
+ *
+ * Optional extras (resources, notes, long-form body) come from the `videos`
+ * content collection, keyed by the YouTube video id — src/content/videos/<id>.md.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ExternalLink from '../../components/ExternalLink.astro';
+import Prose from '../../components/Prose.astro';
+import { getCollection, render } from 'astro:content';
+import videosData from '../../data/videos.json';
+
+interface Thumb {
+  url: string;
+  width: number;
+  height: number;
+}
+
+interface Video {
+  id: string;
+  title: string;
+  description: string;
+  publishedAt: string;
+  thumbnails: { default: Thumb | null; medium: Thumb | null; high: Thumb | null };
+  duration: string | null;
+  viewCount: number | null;
+  url: string;
+}
+
+export function getStaticPaths() {
+  return (videosData as unknown as Video[]).map((video) => ({
+    params: { id: video.id },
+    props: { video },
+  }));
+}
+
+const { video } = Astro.props as { video: Video };
+
+/** "PT1H2M3S" → "1:02:03"; "PT12M34S" → "12:34". */
+function formatDuration(iso: string | null): string | null {
+  if (!iso) return null;
+  const m = /^P(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/.exec(iso);
+  if (!m) return null;
+  const [days, hours, minutes, seconds] = m.slice(1).map((v) => Number(v ?? 0) || 0);
+  const h = days * 24 + hours;
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return h > 0 ? `${h}:${pad(minutes)}:${pad(seconds)}` : `${minutes}:${pad(seconds)}`;
+}
+
+function isoDate(value: string): string | null {
+  const t = Date.parse(value);
+  return Number.isFinite(t) ? new Date(t).toISOString().slice(0, 10) : null;
+}
+
+/**
+ * Split a YouTube description into text and bare-URL tokens so the URLs can be
+ * rendered as real links without ever handing raw HTML to `set:html`.
+ */
+type Token = { kind: 'text' | 'url'; value: string };
+
+function tokenize(text: string): Token[] {
+  const pattern = /https?:\/\/[^\s<>]+[^\s<>.,;:!?)'"\]]/g;
+  const tokens: Token[] = [];
+  let cursor = 0;
+
+  for (const match of text.matchAll(pattern)) {
+    const at = match.index ?? 0;
+    if (at > cursor) tokens.push({ kind: 'text', value: text.slice(cursor, at) });
+    tokens.push({ kind: 'url', value: match[0] });
+    cursor = at + match[0].length;
+  }
+  if (cursor < text.length) tokens.push({ kind: 'text', value: text.slice(cursor) });
+  return tokens;
+}
+
+/** Strip the protocol for display; keep it in the href. */
+const prettyUrl = (url: string) => url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+const date = isoDate(video.publishedAt);
+const duration = formatDuration(video.duration);
+const views =
+  video.viewCount === null
+    ? null
+    : `${new Intl.NumberFormat('en-US').format(video.viewCount)} views`;
+
+const meta = [date, duration, views].filter((v): v is string => Boolean(v));
+
+const poster = video.thumbnails.high ?? video.thumbnails.medium ?? video.thumbnails.default;
+const description = video.description.trim();
+const tokens = description ? tokenize(description) : [];
+
+// Optional hand-written extras for this video id.
+// Astro's glob loader slugifies entry ids, which lowercases them — but YouTube
+// video ids are case-sensitive ("dQw4w9WgXcQ" ≠ "dqw4w9wgxcq"). Match on the
+// filename stem, which preserves case, and only fall back to the slugified id.
+const extras = (await getCollection('videos')).find((entry) => {
+  const stem = entry.filePath?.split('/').pop()?.replace(/\.mdx?$/, '');
+  return stem === video.id || entry.id === video.id.toLowerCase();
+});
+const resources = extras?.data.resources ?? [];
+const notes = extras?.data.notes?.trim();
+const hasBody = Boolean(extras?.body?.trim());
+const Body = extras && hasBody ? (await render(extras)).Content : null;
+
+const summary = description
+  ? description.replace(/\s+/g, ' ').slice(0, 160).trim()
+  : `Watch “${video.title}” — part of the video archive on youniss.dev.`;
+---
+
+<BaseLayout
+  title={video.title}
+  description={summary}
+  ogImage={poster?.url}
+  ogType="article"
+  publishedTime={video.publishedAt || undefined}
+>
+  <div class="page">
+    <PageHeader eyebrow="Video" title={video.title} meta={meta}>
+      <Fragment slot="actions">
+        <ExternalLink href={video.url} class="btn" icon={false}>
+          Watch on YouTube
+        </ExternalLink>
+      </Fragment>
+    </PageHeader>
+
+    <div class="max-w-text">
+      <div
+        class="relative aspect-video w-full overflow-hidden rounded-panel border border-border bg-surface"
+        data-embed
+        data-video-id={video.id}
+        data-video-title={video.title}
+      >
+        {
+          poster && (
+            <img
+              src={poster.url}
+              width={poster.width}
+              height={poster.height}
+              alt=""
+              loading="eager"
+              decoding="async"
+              class="absolute inset-0 h-full w-full object-cover"
+            />
+          )
+        }
+        <button
+          type="button"
+          data-play
+          class="absolute inset-0 grid w-full place-items-center bg-bg/25 transition-colors duration-150 hover:bg-bg/10"
+        >
+          <span class="sr-only">Play “{video.title}” — loads the player from youtube-nocookie.com</span>
+          <span
+            aria-hidden="true"
+            class="grid size-16 place-items-center rounded-full border border-border-strong bg-bg/90 text-ink"
+          >
+            <svg viewBox="0 0 24 24" class="ml-0.5 size-6" fill="currentColor" aria-hidden="true">
+              <path d="M8 5.5v13l11-6.5L8 5.5Z"></path>
+            </svg>
+          </span>
+        </button>
+      </div>
+
+      <p class="meta mt-2">
+        Click to play — the player is only loaded from youtube-nocookie.com once you do.
+      </p>
+
+      {
+        tokens.length > 0 && (
+          <section class="section">
+            <div class="section-head">
+              <h2 class="label">Description</h2>
+            </div>
+            <p class="mt-5 break-words whitespace-pre-line text-[0.9375rem] leading-relaxed text-ink-muted">
+              {tokens.map((token) =>
+                token.kind === 'url' ? (
+                  <ExternalLink href={token.value} class="link break-words" icon={false}>
+                    {prettyUrl(token.value)}
+                  </ExternalLink>
+                ) : (
+                  token.value
+                ),
+              )}
+            </p>
+          </section>
+        )
+      }
+
+      {
+        resources.length > 0 && (
+          <section class="section">
+            <div class="section-head">
+              <h2 class="label">Resources</h2>
+              <p class="meta">{resources.length}</p>
+            </div>
+            <ul class="row-list">
+              {resources.map((resource) => (
+                <li class="row">
+                  <ExternalLink href={resource.url} class="link-quiet" icon={false}>
+                    <span class="row-title">{resource.label}</span>
+                  </ExternalLink>
+                  <p class="row-desc mt-1 break-words">{prettyUrl(resource.url)}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
+        notes && (
+          <section class="section">
+            <div class="section-head">
+              <h2 class="label">Notes</h2>
+            </div>
+            <p class="mt-5 break-words whitespace-pre-line text-[0.9375rem] leading-relaxed text-ink-muted">
+              {notes}
+            </p>
+          </section>
+        )
+      }
+
+      {
+        hasBody && Body && (
+          <section class="section">
+            <Prose>
+              <Body />
+            </Prose>
+          </section>
+        )
+      }
+
+      <div class="section">
+        <a class="link-quiet" href="/videos/">← All videos</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // Click-to-load: swap the poster for the real iframe only on demand.
+  for (const host of document.querySelectorAll<HTMLElement>('[data-embed]')) {
+    const button = host.querySelector<HTMLButtonElement>('[data-play]');
+    const videoId = host.dataset.videoId;
+    if (!button || !videoId) continue;
+
+    button.addEventListener(
+      'click',
+      () => {
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(
+          videoId,
+        )}?autoplay=1&rel=0`;
+        iframe.title = host.dataset.videoTitle || 'YouTube video player';
+        iframe.allow =
+          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.allowFullscreen = true;
+        iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+        iframe.className = 'absolute inset-0 h-full w-full border-0';
+        host.replaceChildren(iframe);
+        iframe.focus();
+      },
+      { once: true },
+    );
+  }
+</script>

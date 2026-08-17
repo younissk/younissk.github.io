@@ -1,0 +1,78 @@
+---
+import { AUTHOR, NAV, RSS_PATH, SITE_TITLE } from '../consts';
+
+const year = new Date().getFullYear();
+
+const elsewhere = [
+  { label: 'GitHub', href: AUTHOR.github },
+  { label: 'LinkedIn', href: AUTHOR.linkedin },
+  { label: 'YouTube', href: AUTHOR.youtube },
+  { label: 'RSS', href: RSS_PATH },
+];
+---
+
+<footer class="mt-auto border-t border-border">
+  <div class="page py-10 md:py-14">
+    <div class="grid gap-8 md:grid-cols-[1fr_auto] md:gap-16">
+      <div>
+        <p class="label">Contact</p>
+        <p class="mt-2">
+          <a class="link text-lg font-medium break-all" href={`mailto:${AUTHOR.email}`}>
+            {AUTHOR.email}
+          </a>
+        </p>
+        <p class="mt-2 max-w-text text-sm text-ink-muted">
+          {AUTHOR.role} · {AUTHOR.location}. Open to interesting problems in applied
+          AI and backend engineering — mail is the fastest way to reach me.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-8 sm:gap-12">
+        <nav aria-label="Footer">
+          <p class="label">Pages</p>
+          <ul class="mt-2 space-y-1.5 text-sm">
+            {
+              NAV.map((item) => (
+                <li>
+                  <a class="link-quiet text-ink-muted" href={item.href}>
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+
+        <nav aria-label="Elsewhere">
+          <p class="label">Elsewhere</p>
+          <ul class="mt-2 space-y-1.5 text-sm">
+            {
+              elsewhere.map((item) => (
+                <li>
+                  <a
+                    class="link-quiet text-ink-muted"
+                    href={item.href}
+                    rel={item.href.startsWith('http') ? 'me noopener' : undefined}
+                    target={item.href.startsWith('http') ? '_blank' : undefined}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <div
+      class="mt-10 flex flex-col gap-2 border-t border-border pt-5 sm:flex-row sm:items-baseline sm:justify-between"
+    >
+      <p class="meta">© {year} {SITE_TITLE}</p>
+      <p class="meta">
+        Built with <a class="link-quiet" href="https://astro.build" rel="noopener">Astro</a>.
+        <a class="link-quiet" href={AUTHOR.repoUrl} rel="noopener">Source on GitHub</a>.
+      </p>
+    </div>
+  </div>
+</footer>

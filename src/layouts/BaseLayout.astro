@@ -1,0 +1,64 @@
+---
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+
+import Head from '../components/Head.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Root-relative or absolute URL to a social preview image. */
+  ogImage?: string;
+  noindex?: boolean;
+  /** Passed through to Head — use 'article' on posts. */
+  ogType?: 'website' | 'article';
+  publishedTime?: string;
+  /** Extra classes on <main>, e.g. for a full-bleed hero page. */
+  mainClass?: string;
+}
+
+const { title, description, ogImage, noindex, ogType, publishedTime, mainClass } =
+  Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <script is:inline>
+      // Runs before first paint: no flash of the wrong theme.
+      (() => {
+        try {
+          const stored = localStorage.getItem('theme');
+          const dark =
+            stored === 'dark' ||
+            (stored !== 'light' &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.classList.toggle('dark', dark);
+          document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+        } catch (_) {
+          /* storage blocked — fall back to the light default */
+        }
+      })();
+    </script>
+
+    <Head
+      title={title}
+      description={description}
+      ogImage={ogImage}
+      noindex={noindex}
+      ogType={ogType}
+      publishedTime={publishedTime}
+    />
+  </head>
+
+  <body class="flex min-h-svh flex-col">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main" class={mainClass}>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

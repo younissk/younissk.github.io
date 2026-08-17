@@ -1,0 +1,160 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Prose from '../../components/Prose.astro';
+import Tag from '../../components/Tag.astro';
+import ExternalLink from '../../components/ExternalLink.astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const entries = await getCollection('projects');
+  return entries.map((entry) => ({
+    params: { id: entry.id },
+    props: { entry },
+  }));
+};
+
+const { entry } = Astro.props;
+const p = entry.data;
+const { Content } = await render(entry);
+
+/** Only links that actually exist — a missing repo is a marker, never a dead link. */
+const links = [
+  p.repo && { label: 'Repository', url: p.repo, external: true },
+  p.demo && { label: 'Live demo', url: p.demo, external: true },
+  p.paper && {
+    label: 'Paper',
+    url: p.paper,
+    external: p.paper.startsWith('http'),
+  },
+].filter(Boolean) as { label: string; url: string; external: boolean }[];
+
+const meta = [p.period, p.category, p.status, p.private ? 'private repository' : null].filter(
+  Boolean,
+) as string[];
+
+/** Neighbours in the same category, so a thin entry still leads somewhere. */
+const siblings = (await getCollection('projects'))
+  .filter((other) => other.id !== entry.id && other.data.category === p.category)
+  .sort((a, b) => b.data.year - a.data.year)
+  .slice(0, 4);
+---
+
+<BaseLayout title={p.title} description={p.summary} ogType="article">
+  <div class="page-narrow">
+    <p class="pt-8 md:pt-10">
+      <a class="meta link-quiet" href="/projects/">← All projects</a>
+    </p>
+
+    <PageHeader
+      class="pt-4 md:pt-5"
+      eyebrow={p.category}
+      title={p.title}
+      description={p.summary}
+      meta={meta}
+    >
+      {
+        links.length > 0 && (
+          <Fragment slot="actions">
+            {links.map((link) =>
+              link.external ? (
+                <ExternalLink href={link.url} class="btn">
+                  {link.label}
+                </ExternalLink>
+              ) : (
+                <a class="btn" href={link.url}>
+                  {link.label}
+                </a>
+              ),
+            )}
+          </Fragment>
+        )
+      }
+    </PageHeader>
+
+    <section class="section pt-0">
+      <h2 class="sr-only">About {p.title}</h2>
+      <Prose>
+        <Content />
+      </Prose>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="label">Details</h2>
+        <p class="meta">{p.repoName}</p>
+      </div>
+
+      <dl class="grid gap-x-8 gap-y-5 sm:grid-cols-[7rem_minmax(0,1fr)]">
+        <dt class="label sm:pt-1">Stack</dt>
+        <dd>
+          <ul class="tag-row">
+            {p.stack.map((item) => <li><Tag>{item}</Tag></li>)}
+          </ul>
+        </dd>
+
+        <dt class="label sm:pt-1">Tags</dt>
+        <dd>
+          <ul class="tag-row">
+            {
+              p.tags.map((tag) => (
+                <li>
+                  <Tag href={`/projects/?tags=${encodeURIComponent(tag)}`}>{tag}</Tag>
+                </li>
+              ))
+            }
+          </ul>
+        </dd>
+
+        <dt class="label sm:pt-1">Links</dt>
+        <dd class="meta flex flex-wrap gap-x-4 gap-y-1">
+          {
+            links.length > 0 ? (
+              links.map((link) =>
+                link.external ? (
+                  <ExternalLink href={link.url} class="link-quiet" icon={false}>
+                    {link.label}
+                  </ExternalLink>
+                ) : (
+                  <a class="link-quiet" href={link.url}>
+                    {link.label}
+                  </a>
+                ),
+              )
+            ) : (
+              <span>{p.private ? 'Private repository — no public code' : 'None published'}</span>
+            )
+          }
+        </dd>
+      </dl>
+    </section>
+
+    {
+      siblings.length > 0 && (
+        <section class="section">
+          <div class="section-head">
+            <h2 class="label">More in {p.category}</h2>
+            <a class="meta link-quiet" href={`/projects/?category=${p.category}`}>
+              See all
+            </a>
+          </div>
+          <ul class="row-list">
+            {siblings.map((other) => (
+              <li class="row">
+                <a class="row-title link-quiet block" href={`/projects/${other.id}/`}>
+                  {other.data.title}
+                </a>
+                <ul class="meta-row mt-1">
+                  <li class="tabular">{other.data.year}</li>
+                  <li>{other.data.status}</li>
+                </ul>
+                <p class="row-desc mt-1.5">{other.data.summary}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </div>
+</BaseLayout>

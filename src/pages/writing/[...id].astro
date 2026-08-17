@@ -1,0 +1,109 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Prose from '../../components/Prose.astro';
+import Tag from '../../components/Tag.astro';
+import { readingTimeLabel } from './_reading-time';
+import { getPosts, isoDate, languageName, longDate, tagSlug, type Post } from './_post-utils';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+
+  // `posts` is already newest-first, so index-1 is newer and index+1 is older.
+  return posts.map((post, index) => ({
+    params: { id: post.id },
+    props: {
+      post,
+      newer: posts[index - 1] ?? null,
+      older: posts[index + 1] ?? null,
+    },
+  }));
+}
+
+interface Props {
+  post: Post;
+  newer: Post | null;
+  older: Post | null;
+}
+
+const { post, newer, older } = Astro.props;
+const { title, description, date, tags, lang, hero } = post.data;
+const { Content } = await render(post);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogType="article"
+  publishedTime={date.toISOString()}
+  ogImage={hero}
+>
+  <div class="page-narrow">
+    <PageHeader eyebrow="Writing" title={title} description={description}>
+      <ul class="meta-row">
+        <li><time datetime={isoDate(date)}>{longDate(date)}</time></li>
+        <li>{readingTimeLabel(post.body)}</li>
+        {lang !== 'en' && <li lang={lang}>{languageName(lang)}</li>}
+      </ul>
+
+      {
+        tags.length > 0 && (
+          <ul class="tag-row mt-3">
+            {tags.map((tag) => (
+              <li>
+                <Tag href={`/writing/tags/${tagSlug(tag)}/`}>{tag}</Tag>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </PageHeader>
+
+    <article lang={lang}>
+      {
+        hero && (
+          <img
+            class="mb-8 w-full rounded-panel border border-border"
+            src={hero}
+            alt=""
+            loading="eager"
+          />
+        )
+      }
+      <Prose><Content /></Prose>
+    </article>
+
+    {
+      (newer || older) && (
+        <nav class="section" aria-label="More writing">
+          <div class="section-head">
+            <h2 class="label">More writing</h2>
+            <a class="meta link-quiet" href="/writing/">
+              All posts
+            </a>
+          </div>
+
+          <ul class="row-list">
+            {newer && (
+              <li class="row">
+                <a class="block" href={`/writing/${newer.id}/`}>
+                  <p class="meta">Newer</p>
+                  <span class="row-title mt-1 block">{newer.data.title}</span>
+                </a>
+              </li>
+            )}
+            {older && (
+              <li class="row">
+                <a class="block" href={`/writing/${older.id}/`}>
+                  <p class="meta">Older</p>
+                  <span class="row-title mt-1 block">{older.data.title}</span>
+                </a>
+              </li>
+            )}
+          </ul>
+        </nav>
+      )
+    }
+  </div>
+</BaseLayout>

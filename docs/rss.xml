@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+     xmlns:atom="http://www.w3.org/2005/Atom"
+     xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Youniss Kandah — Writing</title>
+    <link>https://youniss.dev/writing/</link>
+    <description>Applied AI &amp; backend engineer in Austria. Production RAG, LLM document extraction, and agent infrastructure in safety-critical and document-heavy domains.</description>
+    <language>en</language>
+    <copyright>© 2026 Youniss Kandah</copyright>
+    <managingEditor>younisskandah@gmail.com (Youniss Kandah)</managingEditor>
+    <webMaster>younisskandah@gmail.com (Youniss Kandah)</webMaster>
+    <lastBuildDate>Wed, 15 Nov 2023 00:00:00 GMT</lastBuildDate>
+    <docs>https://www.rssboard.org/rss-specification</docs>
+    <generator>Astro</generator>
+    <atom:link href="https://youniss.dev/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Solve sudoku using propositional Logic</title>
+      <link>https://youniss.dev/writing/solve-sudoku-with-logic/</link>
+      <guid isPermaLink="true">https://youniss.dev/writing/solve-sudoku-with-logic/</guid>
+      <pubDate>Wed, 15 Nov 2023 00:00:00 GMT</pubDate>
+      <description>Encoding a 4x4 Sudoku as a propositional formula — cell, row, column and 2x2 constraints — and letting the limboole SAT checker solve it.</description>
+      <dc:creator>Youniss Kandah</dc:creator>
+      <dc:language>en</dc:language>
+      <category domain="https://youniss.dev/writing/tags/logic/">logic</category>
+      <category domain="https://youniss.dev/writing/tags/propositional-logic/">propositional-logic</category>
+      <category domain="https://youniss.dev/writing/tags/sat-solver/">sat-solver</category>
+      <category domain="https://youniss.dev/writing/tags/sudoku/">sudoku</category>
+      <category domain="https://youniss.dev/writing/tags/ai/">ai</category>
+    </item>
+    <item>
+      <title>React für Nicht-Web-Entwickler</title>
+      <link>https://youniss.dev/writing/grundlagen-react/</link>
+      <guid isPermaLink="true">https://youniss.dev/writing/grundlagen-react/</guid>
+      <pubDate>Sun, 09 Jul 2023 00:00:00 GMT</pubDate>
+      <description>Workshop-Einstieg in React für Entwickler ohne Web-Hintergrund: von der statischen Webseite über Web 2.0 und Single-Page-Applications bis zum ersten React-Projekt.</description>
+      <dc:creator>Youniss Kandah</dc:creator>
+      <dc:language>de</dc:language>
+      <category domain="https://youniss.dev/writing/tags/react/">react</category>
+      <category domain="https://youniss.dev/writing/tags/javascript/">javascript</category>
+      <category domain="https://youniss.dev/writing/tags/typescript/">typescript</category>
+      <category domain="https://youniss.dev/writing/tags/web-dev/">web-dev</category>
+      <category domain="https://youniss.dev/writing/tags/frontend/">frontend</category>
+      <category domain="https://youniss.dev/writing/tags/spa/">spa</category>
+    </item>
+  </channel>
+</rss>
