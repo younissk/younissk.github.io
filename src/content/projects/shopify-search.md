@@ -8,13 +8,10 @@ category: web
 tags: [search, embeddings, web-scraping, ecommerce]
 stack: [TypeScript, Next.js, Python, Supabase, Tailwind CSS, uv]
 status: experiment
-repo: https://github.com/younissk/shopify-search
-demo: null
-paper: null
 private: false
 featured: false
-video: null
-post: null
+links:
+  - { kind: repo, label: "Code", url: "https://github.com/younissk/shopify-search" }
 ---
 
 I created a Search engine across shopify stores. This includes 580k products. I added functionality for Semantic search and content based Recommender system.

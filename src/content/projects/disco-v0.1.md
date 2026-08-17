@@ -8,18 +8,11 @@ category: ai-ml
 tags: [computer-vision, clip, content-moderation, child-safety]
 stack: [Python, PyTorch, Transformers, CLIP, Jupyter]
 status: shipped
-repo: https://github.com/younissk/DISCO-v0.1
-demo: https://huggingface.co/younissk/DISCO-v0.1
-paper: null
 private: false
 featured: false
-tool:
-  tagline: A CLIP-based classifier that flags suggestive imagery standard NSFW filters miss, published on Hugging Face with its labelling rules attached.
-  url: "https://huggingface.co/younissk/DISCO-v0.1"
-  internal: false
-  status: "live"
-video: null
-post: null
+links:
+  - { kind: model, label: "Model", url: "https://huggingface.co/younissk/DISCO-v0.1" }
+  - { kind: repo, label: "Code", url: "https://github.com/younissk/DISCO-v0.1" }
 ---
 
 DISCO, Detection of Implicit Suggestive Content Overlays, is an image classifier built on top of

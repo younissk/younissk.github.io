@@ -8,11 +8,9 @@ category: games
 tags: [creative-coding, p5js, simulation, generative-art]
 stack: [JavaScript, p5.js, HTML]
 status: archived
-repo: https://github.com/younissk/p5-projects
-demo: https://younissk.github.io/p5-projects/
-paper: null
 private: false
 featured: false
-video: null
-post: null
+links:
+  - { kind: demo, label: "Live demo", url: "https://younissk.github.io/p5-projects/" }
+  - { kind: repo, label: "Code", url: "https://github.com/younissk/p5-projects" }
 ---

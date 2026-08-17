@@ -20,23 +20,38 @@ const p = entry.data;
 const { Content } = await render(entry);
 
 /** Only links that actually exist — a missing repo is a marker, never a dead link. */
-const links = [
-  p.tool && { label: 'Open it', url: p.tool.url, external: !p.tool.internal, primary: true },
-  p.demo && p.demo !== p.tool?.url && {
-    label: 'Live demo',
-    url: p.demo,
-    external: true,
-    primary: !p.tool,
-  },
-  p.video && { label: 'Video', url: p.video, external: true },
-  p.post && { label: 'Blog post', url: `/writing/${p.post}/`, external: false },
-  p.repo && { label: 'Repository', url: p.repo, external: true },
-  p.paper && {
-    label: 'Paper',
-    url: p.paper,
-    external: p.paper.startsWith('http'),
-  },
-].filter(Boolean) as { label: string; url: string; external: boolean; primary?: boolean }[];
+const KIND_LABEL: Record<string, string> = {
+  site: 'Live',
+  demo: 'Demo',
+  post: 'Writing',
+  video: 'Video',
+  paper: 'Paper',
+  model: 'Models',
+  dataset: 'Datasets',
+  repo: 'Code',
+};
+
+/** Every link this project has, in schema order. Nothing is invented. */
+const links = p.links.map((l) => ({
+  ...l,
+  external: l.url.startsWith('http'),
+  primary: l.kind === 'site' || l.kind === 'demo',
+}));
+
+/**
+ * The header carries the few actions someone actually wants at the top; the
+ * grouped Links table further down carries every one of them. nanoBeard has
+ * nine links and rendering all nine as buttons under the title was a wall.
+ */
+const headline = links.filter((l) => l.primary || l.kind === 'repo').slice(0, 4);
+
+/** Grouped for the details table, so six model links read as one row. */
+const grouped = Object.entries(
+  links.reduce<Record<string, typeof links>>((acc, l) => {
+    (acc[l.kind] ??= []).push(l);
+    return acc;
+  }, {}),
+);
 
 const meta = [p.period, p.category, p.status, p.private ? 'private repository' : null].filter(
   Boolean,
@@ -65,7 +80,7 @@ const siblings = (await getCollection('projects'))
       {
         links.length > 0 && (
           <Fragment slot="actions">
-            {links.map((link) =>
+            {headline.map((link) =>
               link.external ? (
                 <ExternalLink href={link.url} class={link.primary ? 'btn btn-primary' : 'btn'}>
                   {link.label}
@@ -116,22 +131,31 @@ const siblings = (await getCollection('projects'))
         </dd>
 
         <dt class="label sm:pt-1">Links</dt>
-        <dd class="meta flex flex-wrap gap-x-4 gap-y-1">
+        <dd>
           {
-            links.length > 0 ? (
-              links.map((link) =>
-                link.external ? (
-                  <ExternalLink href={link.url} class="link-quiet" icon={false}>
-                    {link.label}
-                  </ExternalLink>
-                ) : (
-                  <a class="link-quiet" href={link.url}>
-                    {link.label}
-                  </a>
-                ),
-              )
+            grouped.length > 0 ? (
+              <dl class="grid gap-y-2">
+                {grouped.map(([kind, items]) => (
+                  <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <dt class="meta w-20 shrink-0">{KIND_LABEL[kind] ?? kind}</dt>
+                    <dd class="flex flex-wrap gap-x-3 gap-y-1">
+                      {items.map((link) =>
+                        link.external ? (
+                          <ExternalLink href={link.url} class="link-quiet" icon={false}>
+                            {link.label}
+                          </ExternalLink>
+                        ) : (
+                          <a class="link-quiet" href={link.url}>
+                            {link.label}
+                          </a>
+                        ),
+                      )}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
             ) : (
-              <span>{p.private ? 'Private repository — no public code' : 'None published'}</span>
+              <span class="meta">{p.private ? 'Private repository' : 'None'}</span>
             )
           }
         </dd>

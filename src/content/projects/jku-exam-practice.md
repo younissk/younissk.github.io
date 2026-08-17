@@ -8,18 +8,11 @@ category: teaching
 tags: [education, firebase, react, spaced-practice]
 stack: [TypeScript, React, Vite, Firebase, Netlify]
 status: shipped
-repo: https://github.com/younissk/jku-exam-practice
-demo: https://jku-exam-simulator.netlify.app
-paper: null
 private: false
 featured: false
-tool:
-  tagline: Students add, share and drill each other's exam questions — decks by subject, LaTeX rendering and timed tests.
-  url: "https://jku-exam-simulator.netlify.app"
-  internal: false
-  status: "live"
-video: null
-post: null
+links:
+  - { kind: site, label: "Open it", url: "https://jku-exam-simulator.netlify.app" }
+  - { kind: repo, label: "Code", url: "https://github.com/younissk/jku-exam-practice" }
 ---
 
 Created a Exam Simulator for JKU students to practice for their exams. Started solo, but now it’s open source.

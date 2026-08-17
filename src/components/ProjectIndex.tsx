@@ -22,12 +22,7 @@ export interface ProjectRow {
   status: string;
   tags: string[];
   stack: string[];
-  repo: string | null;
-  demo: string | null;
-  paper: string | null;
-  open: string | null;
-  video: string | null;
-  post: string | null;
+  links: { kind: string; label: string; url: string }[];
   hasBody: boolean;
   private: boolean;
   featured: boolean;
@@ -485,69 +480,63 @@ export default function ProjectIndex({ projects, categories }: Props) {
               )}
 
               <div className="pcard-actions">
-                {p.open && (
-                  <a
-                    className="btn btn-sm btn-primary"
-                    href={p.open}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Open it ↗
-                  </a>
-                )}
-                {!p.open && p.demo && (
-                  <a
-                    className="btn btn-sm btn-primary"
-                    href={p.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Live demo ↗
-                  </a>
-                )}
-                {p.hasBody && (
-                  <a className="btn btn-sm" href={`/projects/${p.id}/`}>
-                    Write-up
-                  </a>
-                )}
-                {p.video && (
-                  <a
-                    className="btn btn-sm"
-                    href={p.video}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Video ↗
-                  </a>
-                )}
-                {p.post && (
-                  <a className="btn btn-sm" href={`/writing/${p.post}/`}>
-                    Blog post
-                  </a>
-                )}
-                {p.paper && (
-                  <a
-                    className="btn btn-sm"
-                    href={p.paper}
-                    target={p.paper.startsWith('http') ? '_blank' : undefined}
-                    rel={p.paper.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  >
-                    Paper
-                  </a>
-                )}
-                {p.repo ? (
-                  <a
-                    className="btn btn-sm"
-                    href={p.repo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Code ↗
-                  </a>
-                ) : (
-                  p.private && <span className="pcard-note">private repo</span>
-                )}
-                {p.featured && <span className="pcard-note ml-auto">selected</span>}
+                {(() => {
+                  /* Five buttons is the most a card can carry before it stops
+                     being scannable. nanoBeard has nine links; the rest live on
+                     the detail page behind "More". */
+                  const CARD_MAX = 5;
+                  const primary = p.links.find(
+                    (l) => l.kind === 'site' || l.kind === 'demo',
+                  );
+                  const rest = p.links.filter((l) => l !== primary);
+                  const shown = rest.slice(0, CARD_MAX - (primary ? 1 : 0) - (p.hasBody ? 1 : 0));
+                  const hidden = rest.length - shown.length;
+
+                  return (
+                    <>
+                      {primary && (
+                        <a
+                          className="btn btn-sm btn-primary"
+                          href={primary.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {primary.label} ↗
+                        </a>
+                      )}
+                      {p.hasBody && (
+                        <a className="btn btn-sm" href={`/projects/${p.id}/`}>
+                          Write-up
+                        </a>
+                      )}
+                      {shown.map((l) => {
+                        const external = l.url.startsWith('http');
+                        return (
+                          <a
+                            key={l.url}
+                            className="btn btn-sm"
+                            href={l.url}
+                            title={`${l.kind}: ${l.label}`}
+                            target={external ? '_blank' : undefined}
+                            rel={external ? 'noopener noreferrer' : undefined}
+                          >
+                            {l.label}
+                            {external ? ' ↗' : ''}
+                          </a>
+                        );
+                      })}
+                      {hidden > 0 && (
+                        <a className="btn btn-sm" href={`/projects/${p.id}/`}>
+                          +{hidden} more
+                        </a>
+                      )}
+                      {p.links.length === 0 && p.private && (
+                        <span className="pcard-note">private repo</span>
+                      )}
+                      {p.featured && <span className="pcard-note ml-auto">selected</span>}
+                    </>
+                  );
+                })()}
               </div>
             </li>
           ))}

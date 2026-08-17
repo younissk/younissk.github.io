@@ -50,7 +50,20 @@ export const PROJECT_CATEGORIES = [
 export const PROJECT_STATUSES = ['active', 'shipped', 'archived', 'experiment'] as const;
 
 /** Used by the optional `tool` block on a project. */
-export const TOOL_STATUSES = ['live', 'wip', 'retired'] as const;
+/**
+ * Link kinds, in display order. `site` is the live thing itself and becomes the
+ * card's single filled button.
+ */
+export const LINK_KINDS = [
+  'site',
+  'demo',
+  'post',
+  'video',
+  'paper',
+  'model',
+  'dataset',
+  'repo',
+] as const;
 
 /** The complete indexed archive — one entry per repository. */
 const projects = defineCollection({
@@ -66,33 +79,26 @@ const projects = defineCollection({
     tags: z.array(z.string()),
     stack: z.array(z.string()),
     status: z.enum(PROJECT_STATUSES),
-    repo: z.string().nullable(),
-    demo: z.string().nullable(),
-    paper: z.string().nullable(),
-    /** Full YouTube URL, when I made a video about this project. */
-    video: z.string().nullable().default(null),
-    /** Slug in the `posts` collection, when I wrote about this project. */
-    post: z.string().nullable().default(null),
+    /**
+     * Everything this project points at, in one list.
+     *
+     * It used to be `repo` + `demo` + `paper` + `video` + `post`, one of each.
+     * That could not describe nanoBeard, which is two repositories and six
+     * published models, and it had nowhere to put a Hugging Face page at all.
+     * A project is a thing, not a repository.
+     */
+    links: z
+      .array(
+        z.object({
+          kind: z.enum(LINK_KINDS),
+          label: z.string(),
+          url: z.string(),
+        }),
+      )
+      .default([]),
     private: z.boolean(),
     featured: z.boolean().default(false),
 
-    /**
-     * Present only when this project is also something a stranger can USE.
-     * /tools is a view over projects with this field, not a second collection:
-     * every tool was already a project, and two files per thing meant the
-     * descriptions drifted apart.
-     */
-    tool: z
-      .object({
-        /** Present-tense pitch. What a visitor gets, not what I learned. */
-        tagline: z.string(),
-        /** Where to actually use it. */
-        url: z.string(),
-        /** true when hosted on this domain, e.g. /tools/foo. */
-        internal: z.boolean().default(false),
-        status: z.enum(TOOL_STATUSES),
-      })
-      .optional(),
   }),
 });
 

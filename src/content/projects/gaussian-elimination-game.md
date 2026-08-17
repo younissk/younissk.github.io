@@ -8,11 +8,8 @@ category: teaching
 tags: [linear-algebra, interactive, education, react]
 stack: [React, TypeScript, Vite]
 status: experiment
-repo: https://github.com/younissk/gaussian-elimination-game
-demo: null
-paper: null
 private: false
 featured: false
-video: null
-post: null
+links:
+  - { kind: repo, label: "Code", url: "https://github.com/younissk/gaussian-elimination-game" }
 ---

@@ -8,13 +8,12 @@ category: ai-ml
 tags: [llm, fine-tuning, tool-calling, negative-result]
 stack: [Python, PyTorch, Transformers, Makefile]
 status: shipped
-repo: https://github.com/younissk/falcon-twig
-demo: null
-paper: /papers/falcon-twig-technical-report/
 private: false
 featured: true
-video: null
-post: null
+links:
+  - { kind: paper, label: "Paper", url: "/papers/falcon-twig-technical-report/" }
+  - { kind: model, label: "Falcon-Twig-7B", url: "https://huggingface.co/younissk/Falcon-Twig-7B" }
+  - { kind: repo, label: "Code", url: "https://github.com/younissk/falcon-twig" }
 ---
 
 I was really interested in how people used Tools from OpenAI in the past and how LLMs have evolved. I wanted to explore how I could use tools to enhance the performance of LLMs. So I finetuned the Falcon H1 model to use tools.
