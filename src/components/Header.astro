@@ -39,6 +39,13 @@ const isActive = (href: string) =>
         }
       </nav>
 
+      {/* Discoverability: nobody guesses a shortcut that is never shown.
+          Hidden on touch, where there is no ⌘K to press. */}
+      <button type="button" class="cp-trigger ml-1" data-open-palette aria-label="Search this site">
+        <span>Search</span>
+        <kbd>⌘K</kbd>
+      </button>
+
       <button
         type="button"
         data-theme-toggle
@@ -167,5 +174,14 @@ const isActive = (href: string) =>
     } catch (_) {
       /* private mode — the toggle still works for this page view */
     }
+  });
+
+  // The palette hydrates on idle; this button just asks it to open. Delegated
+  // for the same reason as above, and harmless before hydration.
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    if (!target.closest('[data-open-palette]')) return;
+    window.dispatchEvent(new CustomEvent('open-command-palette'));
   });
 </script>

@@ -1,5 +1,7 @@
 ---
 import '@fontsource-variable/inter';
+import CommandPalette from '../components/CommandPalette';
+import { buildSearchIndex } from '../lib/searchIndex';
 import '../styles/global.css';
 
 import Head from '../components/Head.astro';
@@ -21,6 +23,8 @@ interface Props {
 
 const { title, description, ogImage, noindex, ogType, publishedTime, mainClass } =
   Astro.props;
+
+const searchEntries = await buildSearchIndex();
 ---
 
 <!doctype html>
@@ -60,5 +64,6 @@ const { title, description, ogImage, noindex, ogType, publishedTime, mainClass }
       <slot />
     </main>
     <Footer />
+    <CommandPalette entries={searchEntries} client:idle />
   </body>
 </html>

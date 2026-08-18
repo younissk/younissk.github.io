@@ -381,6 +381,134 @@
     gap: 0.875rem;
   }
 
+  /* --- command palette ---------------------------------------------------- */
+  .cp-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    padding: 12vh 1rem 1rem;
+    background-color: color-mix(in oklab, var(--c-bg) 72%, transparent);
+    backdrop-filter: blur(2px);
+  }
+
+  .cp-panel {
+    width: 100%;
+    max-width: 34rem;
+    max-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--c-bg);
+    border: 1px solid var(--c-border-strong);
+    border-radius: var(--radius-panel);
+    overflow: hidden;
+  }
+
+  .cp-input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--c-ink);
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--c-border);
+  }
+
+  .cp-input:focus {
+    outline: none;
+  }
+
+  .cp-results {
+    overflow-y: auto;
+    padding: 0.35rem;
+  }
+
+  .cp-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 0.65rem;
+    border-radius: var(--radius-hair);
+    color: var(--c-ink);
+  }
+
+  .cp-row[data-active='true'] {
+    background-color: var(--c-surface-2);
+  }
+
+  .cp-row-main {
+    display: grid;
+    min-width: 0;
+  }
+
+  .cp-row-title {
+    font-weight: 500;
+  }
+
+  .cp-row-detail {
+    font-size: 0.8125rem;
+    color: var(--c-ink-faint);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .cp-row-group,
+  .cp-hint,
+  .cp-empty {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    color: var(--c-ink-faint);
+  }
+
+  .cp-row-group {
+    flex-shrink: 0;
+  }
+
+  .cp-empty {
+    padding: 1.25rem 1rem;
+  }
+
+  .cp-hint {
+    padding: 0.55rem 1rem;
+    border-top: 1px solid var(--c-border);
+  }
+
+  .cp-hint kbd {
+    font-family: inherit;
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-hair);
+    padding: 0 0.25rem;
+  }
+
+  /* The trigger in the header. Hidden on touch, where there is no ⌘K. */
+  .cp-trigger {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-hair);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    color: var(--c-ink-faint);
+    transition: border-color 120ms ease, color 120ms ease;
+  }
+
+  .cp-trigger:hover {
+    border-color: var(--c-border-strong);
+    color: var(--c-ink);
+  }
+
+  @media (hover: hover) and (min-width: 48rem) {
+    .cp-trigger {
+      display: inline-flex;
+    }
+  }
+
   /* --- links ------------------------------------------------------------- */
   .link {
     color: var(--c-accent);
