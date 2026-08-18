@@ -11,6 +11,62 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Fuse from 'fuse.js';
 
+/* --- platform metrics ---------------------------------------------------- *
+ *
+ * `src/data/metrics.json` is a build-time snapshot of the public counters on
+ * the platforms that host the work — Hugging Face downloads, GitHub stars. It
+ * is fetched by scripts/sync-metrics.ts and committed. Nothing is requested
+ * from a reader's browser, which is the whole reason this site can show usage
+ * numbers while having no analytics at all.
+ *
+ * The file is keyed by the exact URL string in a project's frontmatter, so
+ * lookup is a plain index — no slug parsing, no matching, no fallbacks.
+ * `syncedAt` is the single non-URL key; no URL can collide with it.
+ * --------------------------------------------------------------------------- */
+
+export type MetricEntry =
+  | { downloads: number; likes: number }
+  | { stars: number; forks: number };
+
+/** The shape of metrics.json. Empty (`{}`) is a supported, silent state. */
+export type Metrics = Record<string, MetricEntry | string | undefined>;
+
+export interface LinkCount {
+  value: number;
+  unit: 'downloads' | 'stars';
+}
+
+/**
+ * The one number worth putting next to a link, or null.
+ *
+ * Null when there is no entry, and — deliberately — null when the number is
+ * zero. A published model with no downloads yet is not information; "0
+ * downloads" reads as failure where silence reads as "not measured". Likes and
+ * forks are carried in the JSON but not surfaced: one number per link is the
+ * point, and a second one turns a button into a dashboard.
+ */
+export function linkCount(url: string, metrics: Metrics): LinkCount | null {
+  const entry = metrics[url];
+  if (!entry || typeof entry !== 'object') return null;
+
+  if ('downloads' in entry) {
+    return entry.downloads > 0 ? { value: entry.downloads, unit: 'downloads' } : null;
+  }
+  if ('stars' in entry) {
+    return entry.stars > 0 ? { value: entry.stars, unit: 'stars' } : null;
+  }
+  return null;
+}
+
+/** Fixed locale so the server render and the hydrated render agree exactly. */
+export const formatCount = (value: number) => value.toLocaleString('en-US');
+
+/** The date the numbers were last observed to move, or null if never synced. */
+export function syncedAt(metrics: Metrics): string | null {
+  const stamp = metrics.syncedAt;
+  return typeof stamp === 'string' && stamp ? stamp : null;
+}
+
 export interface ProjectRow {
   id: string;
   title: string;
@@ -33,6 +89,8 @@ type Sort = 'newest' | 'oldest' | 'alpha';
 interface Props {
   projects: ProjectRow[];
   categories: readonly string[];
+  /** Build-time platform counters, keyed by link URL. `{}` is fine and silent. */
+  metrics?: Metrics;
 }
 
 /** How many tags the filter bar shows before "all N tags" is used. */
@@ -55,7 +113,7 @@ function sortRows(rows: ProjectRow[], sort: Sort): ProjectRow[] {
   return out;
 }
 
-export default function ProjectIndex({ projects, categories }: Props) {
+export default function ProjectIndex({ projects, categories, metrics = {} }: Props) {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<string | null>(null);
   const [tags, setTags] = useState<string[]>([]);
@@ -511,16 +569,30 @@ export default function ProjectIndex({ projects, categories }: Props) {
                       )}
                       {shown.map((l) => {
                         const external = l.url.startsWith('http');
+                        /* The button has no room to spell out the unit, so the
+                           bare number rides the label and the title attribute
+                           carries the word. Absent entirely when there is no
+                           number — see linkCount. */
+                        const count = linkCount(l.url, metrics);
                         return (
                           <a
                             key={l.url}
                             className="btn btn-sm"
                             href={l.url}
-                            title={`${l.kind}: ${l.label}`}
+                            title={
+                              count
+                                ? `${l.kind}: ${l.label} — ${formatCount(count.value)} ${count.unit}`
+                                : `${l.kind}: ${l.label}`
+                            }
                             target={external ? '_blank' : undefined}
                             rel={external ? 'noopener noreferrer' : undefined}
                           >
                             {l.label}
+                            {count && (
+                              <span className="tabular font-mono text-meta text-ink-faint">
+                                · {formatCount(count.value)}
+                              </span>
+                            )}
                             {external ? ' ↗' : ''}
                           </a>
                         );

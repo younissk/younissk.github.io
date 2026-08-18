@@ -1,0 +1,64 @@
+name: Sync platform metrics
+
+# Refreshes src/data/metrics.json — Hugging Face download counts and GitHub
+# stars for every model, dataset and repo linked from src/content/projects/ —
+# and commits it only when a number actually moved.
+#
+# WEEKLY, NOT NIGHTLY. These counters creep; a daily job would mostly commit a
+# changed timestamp and bury real movement in noise. The script deliberately
+# leaves `syncedAt` alone when the figures are identical, so an unchanged week
+# produces no commit at all.
+#
+# This does NOT publish. It only updates source data. The site is published by
+# committing the built docs/ folder (see SUCCESSION.md), so the new numbers
+# appear on the live site at the next build, not at the next run of this job.
+
+on:
+  schedule:
+    # 05:23 UTC on Mondays — off the hour so it does not pile onto the rush.
+    - cron: '23 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-metrics
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Sync metrics
+        env:
+          # The runner's own token. Unauthenticated GitHub is 60 requests/hour,
+          # which is enough by hand but not worth gambling on in CI; this raises
+          # it to 5,000. Hugging Face needs no credentials at all — every
+          # endpoint used here is public.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run sync:metrics
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- src/data/metrics.json; then
+            echo "No change to src/data/metrics.json — nothing to commit."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/metrics.json
+          git commit -m "chore(metrics): sync platform download and star counts"
+          git push

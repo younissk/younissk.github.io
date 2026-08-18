@@ -48,6 +48,7 @@ export const NAV: readonly NavItem[] = [
   { label: 'Videos', href: '/videos/', blurb: 'YouTube, indexed' },
   { label: 'Papers', href: '/papers/', blurb: 'Reports and publications' },
   { label: 'Contact', href: '/contact/', blurb: 'Send me a message' },
+  { label: 'About', href: '/about/', blurb: 'Paramedic, then construction, then AI' },
 ];
 
 export interface SocialLink {

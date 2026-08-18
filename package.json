@@ -9,7 +9,10 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "sync:youtube": "tsx scripts/sync-youtube.ts",
+    "sync:metrics": "tsx scripts/sync-metrics.ts",
+    "og": "tsx scripts/generate-og.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.5",
@@ -28,5 +31,10 @@
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
     "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "satori": "^0.29.0",
+    "tsx": "^4.23.12"
   }
 }

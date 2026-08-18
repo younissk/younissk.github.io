@@ -1,0 +1,103 @@
+{
+  "https://github.com/younissk/DISCO-v0.1": {
+    "stars": 0,
+    "forks": 0
+  },
+  "https://github.com/younissk/NanoBeard-App": {
+    "stars": 3,
+    "forks": 0
+  },
+  "https://github.com/younissk/PaperNavigator": {
+    "stars": 2,
+    "forks": 2
+  },
+  "https://github.com/younissk/TempBench-Temporal-LALM-Reasoning-benchmark": {
+    "stars": 0,
+    "forks": 0
+  },
+  "https://github.com/younissk/embed2image-contrastive-retrieval": {
+    "stars": 0,
+    "forks": 0
+  },
+  "https://github.com/younissk/falcon-twig": {
+    "stars": 0,
+    "forks": 0
+  },
+  "https://github.com/younissk/gaussian-elimination-game": {
+    "stars": 0,
+    "forks": 0
+  },
+  "https://github.com/younissk/jku-exam-practice": {
+    "stars": 0,
+    "forks": 0
+  },
+  "https://github.com/younissk/nanoBeard": {
+    "stars": 99,
+    "forks": 8
+  },
+  "https://github.com/younissk/p5-projects": {
+    "stars": 0,
+    "forks": 0
+  },
+  "https://github.com/younissk/privacy-journal": {
+    "stars": 0,
+    "forks": 0
+  },
+  "https://github.com/younissk/privacy-journal-web": {
+    "stars": 0,
+    "forks": 0
+  },
+  "https://github.com/younissk/shopify-search": {
+    "stars": 0,
+    "forks": 0
+  },
+  "https://github.com/younissk/tool-calling-mix": {
+    "stars": 0,
+    "forks": 0
+  },
+  "https://github.com/younissk/tython": {
+    "stars": 39,
+    "forks": 3
+  },
+  "https://huggingface.co/datasets/younissk/audio-text-embed-to-images": {
+    "downloads": 21,
+    "likes": 0
+  },
+  "https://huggingface.co/datasets/younissk/tool-calling-mix": {
+    "downloads": 190,
+    "likes": 4
+  },
+  "https://huggingface.co/younissk/DISCO-v0.1": {
+    "downloads": 0,
+    "likes": 0
+  },
+  "https://huggingface.co/younissk/Falcon-Twig-7B": {
+    "downloads": 3,
+    "likes": 0
+  },
+  "https://huggingface.co/younissk/nanoBeard-frigate-125M-GGUF": {
+    "downloads": 44,
+    "likes": 0
+  },
+  "https://huggingface.co/younissk/nanoBeard-frigate-360M-GGUF": {
+    "downloads": 76,
+    "likes": 4
+  },
+  "https://huggingface.co/younissk/nanoBeard-galleon-34M": {
+    "downloads": 0,
+    "likes": 0
+  },
+  "https://huggingface.co/younissk/nanoBeard-galleon-34M-GGUF": {
+    "downloads": 65,
+    "likes": 1
+  },
+  "https://huggingface.co/younissk/nanoBeard-sloop-14M": {
+    "downloads": 132,
+    "likes": 6
+  },
+  "https://huggingface.co/younissk/nanoBeard-sloop-14M-GGUF": {
+    "downloads": 37,
+    "likes": 0
+  },
+  "syncedAt": "2026-08-18"
+}

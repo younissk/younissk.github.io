@@ -6,6 +6,21 @@ import PageHeader from '../../components/PageHeader.astro';
 import Prose from '../../components/Prose.astro';
 import Tag from '../../components/Tag.astro';
 import ExternalLink from '../../components/ExternalLink.astro';
+import {
+  formatCount,
+  linkCount,
+  type Metrics,
+} from '../../components/ProjectIndex';
+import metricsData from '../../data/metrics.json';
+
+/**
+ * Same build-time snapshot the archive index uses, and the same lookup helper,
+ * imported rather than reimplemented so the rule about what counts as a number
+ * worth showing (and the rule that zero is not one) lives in exactly one place.
+ * These are plain functions used in the frontmatter, so nothing here ships any
+ * JavaScript to this page.
+ */
+const metrics = metricsData as unknown as Metrics;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const entries = await getCollection('projects');
@@ -36,6 +51,8 @@ const links = p.links.map((l) => ({
   ...l,
   external: l.url.startsWith('http'),
   primary: l.kind === 'site' || l.kind === 'demo',
+  /** null for anything unmeasured, unpublished, or sitting at zero. */
+  count: linkCount(l.url, metrics),
 }));
 
 /**
@@ -139,17 +156,26 @@ const siblings = (await getCollection('projects'))
                   <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                     <dt class="meta w-20 shrink-0">{KIND_LABEL[kind] ?? kind}</dt>
                     <dd class="flex flex-wrap gap-x-3 gap-y-1">
-                      {items.map((link) =>
-                        link.external ? (
-                          <ExternalLink href={link.url} class="link-quiet" icon={false}>
-                            {link.label}
-                          </ExternalLink>
-                        ) : (
-                          <a class="link-quiet" href={link.url}>
-                            {link.label}
-                          </a>
-                        ),
-                      )}
+                      {items.map((link) => (
+                        <span class="inline-flex items-baseline gap-1.5">
+                          {link.external ? (
+                            <ExternalLink href={link.url} class="link-quiet" icon={false}>
+                              {link.label}
+                            </ExternalLink>
+                          ) : (
+                            <a class="link-quiet" href={link.url}>
+                              {link.label}
+                            </a>
+                          )}
+                          {/* The table has room the card buttons do not, so the
+                              unit is spelled out here rather than implied. */}
+                          {link.count && (
+                            <span class="tabular font-mono text-meta text-ink-faint">
+                              {formatCount(link.count.value)} {link.count.unit}
+                            </span>
+                          )}
+                        </span>
+                      ))}
                     </dd>
                   </div>
                 ))}
