@@ -222,3 +222,133 @@ Cheap wins first, so the `/tools` page has something real on it within a day:
   must be zero, or explicitly budgeted.
 - **Every subdomain gets a link back to `youniss.dev`** in its header. That link is the
   entire funnel; without it the tool is just a tool.
+
+---
+
+# Features
+
+Bigger than the T-items above. These are things the site does not do yet, not
+chores. Ordered by how much they would change the impression the site makes.
+
+Legend — effort: `S` ≤ half a day · `M` 1–2 days · `L` 3+ days
+
+---
+
+## F-01 — Run nanoBeard in the visitor's browser
+
+**Effort:** M · **Cost:** $0 per visitor · **Status:** not started
+
+**Why:** the single most differentiated thing available here. A stranger opens
+`/projects/nanobeard/` and talks to a language model trained from scratch,
+running on their own machine, in about ten seconds. Not a video of a demo, not
+a repo to clone — the artifact, executing.
+
+It also fits the site's whole architecture: static, client-side, no server, no
+API key, no bill, works offline after first load, and it outlives everything
+the same way the rest of the site does.
+
+**Feasible because the models are small enough** — checked against the real
+files on Hugging Face:
+
+    sloop-14M.Q4_K_M.gguf      11.6 MB   ← smaller than most hero images
+    galleon-34M.Q4_K_M.gguf    24.8 MB
+    frigate-125M.Q4_K_M.gguf   79.2 MB
+
+**Approach:** `wllama` (llama.cpp compiled to WASM) loads a GGUF client-side.
+Ship `sloop-14M` Q4 as the default, offer galleon as a heavier option, do not
+offer frigate — 79 MB is too much to pull without asking.
+
+**Done when:** a load-on-click button (never auto-download 12 MB), a visible
+progress bar, a chat box, an honest note that a 14M-parameter model is a toy
+and will say ridiculous things, and a link to the training repo. Must degrade
+to a plain link on browsers without the required WASM features.
+
+---
+
+## F-02 — Semantic search over the site's own content
+
+**Effort:** M · **Cost:** $0 · **Status:** not started
+
+**Why:** the site's search is string matching, from someone whose job is
+retrieval. Embed every page at build time with `transformers.js` + MiniLM,
+commit the vectors as JSON, run cosine similarity in the browser. Someone types
+"how do you test agents" and finds the LLM QA work without those words being in
+it.
+
+The point is not better search. It is that the site demonstrates the skill
+being hired for, on itself, and a technical reader notices within one query.
+
+**Done when:** it is wired into the ⌘K palette as a second ranked group under
+the literal matches, not as a separate box. Vectors committed, nothing fetched
+at runtime, graceful fallback to the existing Fuse matching.
+
+---
+
+## F-03 — Make TempBench playable
+
+**Effort:** M · **Cost:** $0 · **Status:** not started · **Related:** T-04
+
+**Why:** there is a benchmark whose finding is "audio-language models fail at
+trivially easy temporal questions", and right now that finding is a README.
+
+Put the audio on the page. The visitor hears two tones, answers "which came
+first", *then* sees that the models scored near chance on the same item. That
+converts a benchmark into an experience people share, and benchmark pages get
+cited — the highest-quality inbound links available.
+
+**Done when:** one playable item per task family, a real leaderboard with the
+chance baseline drawn in, methodology, and a citable BibTeX block.
+
+---
+
+## F-04 — Index the video transcripts
+
+**Effort:** M · **Blocked on:** `YT_API_KEY` + `YT_CHANNEL_ID`
+
+**Why:** YouTube keeps all the search traffic from the videos. Pulling
+transcripts and rendering them as text on this domain means the words become
+findable here too, and each video page stops being a thumbnail and a title.
+
+**Done when:** transcripts fetched during the existing nightly sync, stored
+alongside `videos.json`, rendered on the video page, and included in the ⌘K
+index.
+
+---
+
+## F-05 — A three.js piece that shows something true
+
+**Effort:** M · **Status:** not started
+
+**Why not decoration:** the old site had a p5.js particle hero and it was
+deliberately deleted. Another animated backdrop would be a step backwards, and
+the design rules forbid it.
+
+**Why it could still earn a place:** the thesis is literally about rendering
+embeddings as images. There is a public dataset for it,
+`younissk/audio-text-embed-to-images`. A 3D explorer of that embedding space —
+audio and text points, hover to hear the clip and read the caption, watch the
+matched pairs pull together — is a **figure for a real paper**, not a flourish.
+It is also the only interactive thing that explains the thesis better than the
+PDF does.
+
+**Cost to be honest about:** three.js is ~600 KB gzipped on a site that
+currently ships almost no JavaScript. It must be self-hosted (no CDN) and
+loaded only on the page that needs it, `client:visible`, behind a click.
+
+**Done when:** it lives on the thesis paper page or the Embed2Image project
+page, never the home page, and the rest of the site is byte-for-byte unaffected.
+
+---
+
+## F-06 — Ask-my-site chatbot
+
+**Status: rejected, deliberately.** Recorded here so it does not get proposed
+again.
+
+It needs an API key, which means a bill that scales with strangers and a server
+this site does not have — breaking both stated constraints. Built client-side
+with a small model instead, it would be bad, and a bad chatbot is worse than
+none. Every third AI portfolio has one.
+
+**F-01 is this idea done properly**: not a wrapper around someone else's API,
+but the author's own model, running on the visitor's machine.
