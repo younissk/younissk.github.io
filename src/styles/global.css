@@ -856,3 +856,56 @@
   font-size: 1rem;
   line-height: 1.7;
 }
+
+@layer components {
+  /* --- embedding space figure (thesis page only) --------------------------- */
+  .embed-fig {
+    margin-top: 1.5rem;
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-panel);
+    overflow: hidden;
+  }
+
+  .embed-cta {
+    display: grid;
+    gap: 0.9rem;
+    justify-items: start;
+    padding: 1.25rem;
+    background-color: var(--c-surface);
+  }
+
+  .embed-cta-text {
+    max-width: 54ch;
+    color: var(--c-ink-muted);
+  }
+
+  .embed-canvas {
+    width: 100%;
+    line-height: 0;
+  }
+
+  .embed-canvas canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    touch-action: none;
+  }
+
+  .embed-cap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+    padding: 0.6rem 0.9rem;
+    border-top: 1px solid var(--c-border);
+    background-color: var(--c-surface);
+  }
+
+  .embed-hover {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    color: var(--c-ink);
+    min-height: 1.2em;
+  }
+}
