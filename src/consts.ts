@@ -44,13 +44,9 @@ export interface NavItem {
  * so the form is the only way through and it needs to be findable.
  */
 export const NAV: readonly NavItem[] = [
-  { label: 'Work', href: '/work/', blurb: 'Case studies from shipped roles' },
   { label: 'Projects', href: '/projects/', blurb: 'The complete project archive' },
-  { label: 'Writing', href: '/writing/', blurb: 'Notes and essays' },
-  { label: 'Videos', href: '/videos/', blurb: 'YouTube, indexed' },
-  { label: 'Papers', href: '/papers/', blurb: 'Reports and publications' },
+  { label: 'Library', href: '/library/', blurb: 'Writing, papers and videos' },
   { label: 'Contact', href: '/contact/', blurb: 'Send me a message' },
-  { label: 'About', href: '/about/', blurb: 'Paramedic, then construction, then AI' },
 ];
 
 export interface SocialLink {

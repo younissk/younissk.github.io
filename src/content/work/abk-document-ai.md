@@ -3,6 +3,7 @@ title: "Document AI and semantic search for Austrian construction software"
 org: ib-data (ABK)
 role: Software Engineer
 period: Oct 2022 – Feb 2026
+draft: true
 order: 3
 summary: "Turned construction PDFs into structured data with LLM/VLM extraction and human review, and replaced legacy full-text search with semantic search on pgvector — in production, on-premise."
 stack:

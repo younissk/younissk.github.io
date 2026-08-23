@@ -3,6 +3,7 @@ title: "nanoBeard: a small language model trained from scratch, shipped on the A
 org: Self-directed project
 role: Sole developer
 period: "2026"
+draft: true
 order: 2
 summary: "I trained a small language model from scratch and shipped it as an on-device iOS app — training, packaging and App Store release taken end to end by one person."
 stack:

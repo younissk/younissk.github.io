@@ -370,12 +370,8 @@ function blurb(href: string): string {
 function allCards(): Card[] {
   return [
     { name: 'index', eyebrow: AUTHOR.role, title: AUTHOR.name },
-
-    { name: 'work', eyebrow: 'Work', title: blurb('/work/') },
+    { name: 'library', eyebrow: 'Library', title: 'Writing, papers and videos' },
     { name: 'projects', eyebrow: 'Projects', title: blurb('/projects/') },
-    { name: 'writing', eyebrow: 'Writing', title: blurb('/writing/') },
-    { name: 'videos', eyebrow: 'Videos', title: blurb('/videos/') },
-    { name: 'papers', eyebrow: 'Papers', title: blurb('/papers/') },
     { name: 'contact', eyebrow: 'Contact', title: blurb('/contact/') },
     { name: 'now', eyebrow: 'Now', title: 'What I am working on right now' },
     { name: 'uses', eyebrow: 'Uses', title: 'The tools I actually work in' },

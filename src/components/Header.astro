@@ -12,10 +12,19 @@ const isActive = (href: string) =>
   <div class="page flex h-14 items-center justify-between gap-4">
     <a
       href="/"
-      class="font-semibold tracking-tight text-ink transition-colors hover:text-accent"
+      class="flex items-center gap-2.5 font-semibold tracking-tight text-ink transition-colors hover:text-accent"
       aria-label={`${SITE_TITLE} — home`}
     >
-      {SITE_TITLE}
+      <img
+        src="/img/avatar.jpg"
+        alt=""
+        width="28"
+        height="28"
+        class="logo-mark"
+        loading="eager"
+        decoding="async"
+      />
+      <span>{SITE_TITLE}</span>
     </a>
 
     <div class="flex items-center gap-1">
@@ -106,6 +115,13 @@ const isActive = (href: string) =>
 </header>
 
 <style>
+  /* The mark is black-on-white square Kufic; the site is white-on-black, so it
+     is inverted rather than re-drawn. Pure monochrome, so inversion is exact. */
+  .logo-mark {
+    filter: invert(1);
+    display: block;
+  }
+
   /* CSS-only disclosure menu — no island, no hydration. */
   .menu > summary {
     list-style: none;

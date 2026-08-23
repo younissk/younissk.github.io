@@ -15,15 +15,11 @@ export interface SearchEntry {
 /** Static routes that have no collection behind them. */
 const PAGES: SearchEntry[] = [
   { href: '/', title: 'Home', detail: 'Start here', group: 'page', keywords: 'youniss kandah' },
-  { href: '/about/', title: 'About', detail: 'Paramedic, construction, AI', group: 'page', keywords: 'bio background story' },
   { href: '/now/', title: 'Now', detail: 'What I am doing at the moment', group: 'page', keywords: 'current' },
   { href: '/uses/', title: 'Uses', detail: 'The stack I actually work in', group: 'page', keywords: 'setup tools stack' },
   { href: '/contact/', title: 'Contact', detail: 'Send me a message', group: 'page', keywords: 'email get in touch hire' },
-  { href: '/work/', title: 'Work', detail: 'Case studies', group: 'page', keywords: 'experience' },
   { href: '/projects/', title: 'Projects', detail: 'The full archive', group: 'page', keywords: 'repositories github' },
-  { href: '/papers/', title: 'Papers', detail: 'Publications and reports', group: 'page', keywords: 'research publications bibtex' },
-  { href: '/writing/', title: 'Writing', detail: 'Notes and essays', group: 'page', keywords: 'blog posts' },
-  { href: '/videos/', title: 'Videos', detail: 'YouTube, indexed', group: 'page', keywords: 'youtube' },
+  { href: '/library/', title: 'Library', detail: 'Writing, papers and videos', group: 'page', keywords: 'blog posts publications youtube' },
 ];
 
 /**
@@ -34,8 +30,7 @@ const PAGES: SearchEntry[] = [
  * runtime. It costs a few KB in the page and works offline.
  */
 export async function buildSearchIndex(): Promise<SearchEntry[]> {
-  const [work, projects, papers, posts, videos] = await Promise.all([
-    getCollection('work', ({ data }) => !data.draft),
+  const [projects, papers, posts, videos] = await Promise.all([
     getCollection('projects'),
     getCollection('papers'),
     getCollection('posts', ({ data }) => !data.draft),
@@ -44,13 +39,6 @@ export async function buildSearchIndex(): Promise<SearchEntry[]> {
 
   return [
     ...PAGES,
-    ...work.map((e) => ({
-      href: `/work/${e.id}/`,
-      title: e.data.title,
-      detail: `${e.data.org} · ${e.data.period}`,
-      group: 'work',
-      keywords: [e.data.role, e.data.summary, ...e.data.stack].join(' '),
-    })),
     ...projects.map((e) => ({
       href: `/projects/${e.id}/`,
       title: e.data.title,

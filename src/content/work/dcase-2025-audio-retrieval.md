@@ -3,6 +3,7 @@ title: "DCASE 2025 Task 6: language-based audio retrieval"
 org: JKU Linz
 role: Team member
 period: "2025"
+draft: true
 order: 4
 summary: "Placed 5th in the DCASE 2025 language-based audio retrieval challenge and published a peer-reviewed technical report on the official DCASE site."
 stack:

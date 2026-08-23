@@ -1,0 +1,134 @@
+---
+/**
+ * Writing, papers and videos, in one place.
+ *
+ * They were three nav entries and three index pages, which made the site look
+ * like it had three publishing programmes rather than one person who writes
+ * things down in whatever form fits. A paper and a post about the same run are
+ * the same artifact at different lengths, so they belong in the same list.
+ *
+ * The detail routes are untouched: /writing/x, /papers/x and /videos/x all
+ * still resolve, and the RSS feed and the tag pages still point at them. Only
+ * the three index pages collapsed into this one.
+ */
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Tag from '../components/Tag.astro';
+import videosData from '../data/videos.json';
+
+const [posts, papers] = await Promise.all([
+  getCollection('posts', ({ data }) => !data.draft),
+  getCollection('papers'),
+]);
+
+interface Row {
+  href: string;
+  title: string;
+  detail: string;
+  kind: 'post' | 'paper' | 'video';
+  year: number;
+  date: string;
+  tags: readonly string[];
+}
+
+/** Reading time from the real body, not a guess. */
+function minutes(body: string): number {
+  return Math.max(1, Math.round(body.trim().split(/\s+/).length / 220));
+}
+
+const rows: Row[] = [
+  ...(await Promise.all(
+    posts.map(async (e) => {
+      const d = new Date(e.data.date);
+      return {
+        href: `/writing/${e.id}/`,
+        title: e.data.title,
+        detail: `${minutes(e.body ?? '')} min read${e.data.lang === 'de' ? ' · Deutsch' : ''}`,
+        kind: 'post' as const,
+        year: d.getFullYear(),
+        date: d.toISOString().slice(0, 10),
+        tags: e.data.tags,
+      };
+    }),
+  )),
+  ...papers.map((e) => ({
+    href: `/papers/${e.id}/`,
+    title: e.data.title,
+    detail: e.data.venue,
+    kind: 'paper' as const,
+    year: e.data.year,
+    date: `${e.data.year}-01-01`,
+    tags: [e.data.type],
+  })),
+  ...(videosData as { id: string; title: string; publishedAt: string }[]).map((v) => ({
+    href: `/videos/${v.id}/`,
+    title: v.title,
+    detail: 'YouTube',
+    kind: 'video' as const,
+    year: new Date(v.publishedAt).getFullYear(),
+    date: v.publishedAt.slice(0, 10),
+    tags: [] as string[],
+  })),
+].sort((a, b) => b.date.localeCompare(a.date));
+
+const counts = {
+  post: rows.filter((r) => r.kind === 'post').length,
+  paper: rows.filter((r) => r.kind === 'paper').length,
+  video: rows.filter((r) => r.kind === 'video').length,
+};
+
+const meta = [
+  `${rows.length} entries`,
+  `${counts.post} written`,
+  `${counts.paper} papers`,
+  ...(counts.video > 0 ? [`${counts.video} videos`] : []),
+];
+---
+
+<BaseLayout
+  title="Library"
+  description="Everything Youniss has written or published: posts, papers and videos, newest first."
+>
+  <div class="page">
+    <PageHeader eyebrow="Everything I've published" title="Library" meta={meta} />
+
+    <section class="section">
+      <ul class="row-list">
+        {
+          rows.map((r) => (
+            <li class="row">
+              <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <h2 class="row-title min-w-0 text-base">
+                  <a class="link-quiet" href={r.href}>
+                    {r.title}
+                  </a>
+                </h2>
+                <span class="tag shrink-0">{r.kind}</span>
+              </div>
+
+              <ul class="meta-row mt-1.5">
+                <li class="tabular">{r.year}</li>
+                <li>{r.detail}</li>
+              </ul>
+
+              {r.tags.length > 0 && (
+                <ul class="tag-row mt-2.5">
+                  {r.tags.map((t) => (
+                    <li>
+                      <Tag>{t}</Tag>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="meta mt-6">
+        <a class="link" href="/rss.xml">RSS</a> for the written ones.
+      </p>
+    </section>
+  </div>
+</BaseLayout>
