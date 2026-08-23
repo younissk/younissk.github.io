@@ -108,10 +108,10 @@ const configured = CONTACT_ENDPOINT.trim().length > 0;
   textarea {
     width: 100%;
     padding: 0.6rem 0.7rem;
-    background: var(--c-bg-soft);
+    background: var(--c-surface);
     color: var(--c-ink);
-    border: 1px solid var(--c-border);
-    border-radius: var(--radius-sm, 4px);
+    border: 2px solid var(--c-border-strong);
+    border-radius: 0;
     font: inherit;
     transition: border-color 120ms ease;
   }
@@ -149,10 +149,10 @@ const configured = CONTACT_ENDPOINT.trim().length > 0;
   .not-configured {
     max-width: 42rem;
     padding: 1rem 1.1rem;
-    border: 1px solid var(--c-border-strong);
-    border-radius: var(--radius-sm, 4px);
-    background: var(--c-bg-soft);
-    color: var(--c-ink-soft);
+    border: 2px solid var(--c-border-strong);
+    border-radius: 0;
+    background: var(--c-surface);
+    color: var(--c-ink-muted);
   }
 
   .not-configured code {

@@ -14,26 +14,28 @@
 :root {
   color-scheme: dark;
 
-  --c-bg: #0d0d0f;
-  --c-surface: #151518;
-  --c-surface-2: #1d1d22;
-  --c-border: #27272d;
-  --c-border-strong: #3d3d46;
+  /* Brutalist: pure black ground, pure white ink, one loud accent. Contrast is
+     the whole palette — there are no mid-tones doing decorative work. */
+  --c-bg: #000000;
+  --c-surface: #0a0a0a;
+  --c-surface-2: #161616;
+  --c-border: #333333;
+  --c-border-strong: #ffffff;
 
-  --c-ink: #ececef;
-  --c-ink-muted: #a7a7b1;
-  --c-ink-faint: #7c7c87;
+  --c-ink: #ffffff;
+  --c-ink-muted: #b4b4b4;
+  --c-ink-faint: #8a8a8a;
 
-  --c-accent: #8fb0ff;
-  --c-accent-hover: #b8ccff;
-  --c-accent-soft: #16203a;
+  --c-accent: #ffe400;
+  --c-accent-hover: #ffffff;
+  --c-accent-soft: #262200;
 
-  --c-positive: #6fdba4;
-  --c-warning: #e0b158;
-  --c-danger: #f08a8a;
+  --c-positive: #00e07a;
+  --c-warning: #ffe400;
+  --c-danger: #ff4d4d;
 
-  --c-focus: #8fb0ff;
-  --c-selection: #22336a;
+  --c-focus: #ffe400;
+  --c-selection: #ffe400;
 }
 
 /* ---------------------------------------------------------------------------
@@ -77,9 +79,19 @@
   --spacing-section: 3.5rem;
   --spacing-section-lg: 5.5rem;
 
-  /* Radii. Deliberately tight — this is an editorial page, not a card UI. */
-  --radius-hair: 0.125rem;
-  --radius-panel: 0.375rem;
+  /* No radii. Every corner is square — the single most load-bearing decision
+     in this style, so it is enforced at the token level and the Tailwind
+     radius scale is zeroed with it rather than left to individual utilities. */
+  --radius-hair: 0;
+  --radius-panel: 0;
+  --radius-xs: 0;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-2xl: 0;
+  --radius-3xl: 0;
+  --radius-4xl: 0;
 
   /* Type scale. */
   --text-display: clamp(2.125rem, 1.45rem + 2.7vw, 3.25rem);
@@ -890,5 +902,238 @@
   .btn-icon {
     width: 2.5rem;
     padding-inline: 0;
+  }
+}
+
+
+/* ===========================================================================
+   BRUTALIST
+   ===========================================================================
+   One block, appended last, so the whole style can be read in one place and
+   reverted in one commit. It overrides the editorial defaults above rather
+   than replacing them, which keeps every class name in DESIGN.md valid.
+
+   The rules: square corners, structural borders you can see, type that is
+   uppercase and tight where it labels and huge where it titles, hard offset
+   shadows instead of blurred ones, and inversion instead of tint on hover.
+   Nothing here is decorative — every border marks a real boundary.
+   =========================================================================== */
+@layer components {
+  /* Selection: yellow ground needs black text, not the inherited white. */
+  ::selection {
+    background-color: var(--c-accent);
+    color: #000000;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--c-accent);
+    outline-offset: 2px;
+  }
+
+  /* --- type ---------------------------------------------------------------- */
+  .text-display,
+  h1.text-display {
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+  }
+
+  .text-title {
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .label {
+    color: var(--c-ink);
+    font-weight: 700;
+  }
+
+  /* --- structure ----------------------------------------------------------- */
+  .section-head {
+    border-bottom: 2px solid var(--c-border-strong);
+    padding-bottom: 0.5rem;
+  }
+
+  /* --- controls ------------------------------------------------------------ */
+  .btn {
+    border: 2px solid var(--c-border-strong);
+    border-radius: 0;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.8125rem;
+    transition: none;
+  }
+
+  /* Inversion, not tint. */
+  .btn:hover,
+  .btn:focus-visible {
+    background-color: var(--c-ink);
+    color: #000000;
+  }
+
+  .btn-primary {
+    background-color: var(--c-accent);
+    border-color: var(--c-accent);
+    color: #000000;
+  }
+
+  .btn-primary:hover,
+  .btn-primary:focus-visible {
+    background-color: #000000;
+    color: var(--c-accent);
+    border-color: var(--c-accent);
+  }
+
+  .btn-sm {
+    border-width: 2px;
+    font-size: 0.75rem;
+  }
+
+  .btn-icon {
+    width: 2.75rem;
+  }
+
+  /* --- tags ---------------------------------------------------------------- */
+  .tag {
+    border: 1px solid var(--c-ink-faint);
+    border-radius: 0;
+    color: var(--c-ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+  }
+
+  .tag:hover,
+  .tag[data-active='true'] {
+    background-color: var(--c-accent);
+    border-color: var(--c-accent);
+    color: #000000;
+  }
+
+  /* --- cards --------------------------------------------------------------- */
+  /* A hard offset shadow, not a blur. It reads as a second physical edge —
+     structure rather than gloss, which is why it is allowed here. */
+  .pcard {
+    border: 2px solid var(--c-border-strong);
+    border-radius: 0;
+    box-shadow: 6px 6px 0 0 var(--c-surface-2);
+    transition: none;
+  }
+
+  .pcard:hover,
+  .pcard:focus-within {
+    background-color: var(--c-bg);
+    box-shadow: 6px 6px 0 0 var(--c-accent);
+  }
+
+  .pcard-title {
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .pcard-actions {
+    border-top: 2px solid var(--c-border-strong);
+  }
+
+  .panel,
+  .embed-fig {
+    border: 2px solid var(--c-border-strong);
+    border-radius: 0;
+  }
+
+  /* --- links --------------------------------------------------------------- */
+  .link {
+    color: var(--c-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.18em;
+  }
+
+  .link:hover {
+    background-color: var(--c-accent);
+    color: #000000;
+  }
+
+  .link-quiet:hover {
+    background-color: var(--c-accent);
+    color: #000000;
+    text-decoration-color: transparent;
+  }
+
+  /* --- rows ---------------------------------------------------------------- */
+  .row {
+    border-bottom: 2px solid var(--c-border);
+  }
+
+  .row:hover {
+    background-color: var(--c-surface-2);
+  }
+
+  .row-title {
+    font-weight: 700;
+  }
+
+  /* --- command palette ----------------------------------------------------- */
+  .cp-panel {
+    border: 3px solid var(--c-border-strong);
+    border-radius: 0;
+  }
+
+  .cp-backdrop {
+    backdrop-filter: none;
+    background-color: rgb(0 0 0 / 0.85);
+  }
+
+  .cp-input {
+    font-family: var(--font-mono);
+    border-bottom: 2px solid var(--c-border-strong);
+  }
+
+  .cp-row {
+    border-radius: 0;
+  }
+
+  .cp-row[data-active='true'] {
+    background-color: var(--c-accent);
+    color: #000000;
+  }
+
+  .cp-row[data-active='true'] .cp-row-detail,
+  .cp-row[data-active='true'] .cp-row-group {
+    color: #000000;
+  }
+
+  .cp-trigger {
+    border: 2px solid var(--c-border);
+    border-radius: 0;
+    text-transform: uppercase;
+  }
+
+  /* --- forms --------------------------------------------------------------- */
+  input[type='text'],
+  input[type='email'],
+  textarea {
+    border: 2px solid var(--c-border-strong) !important;
+    border-radius: 0 !important;
+    font-family: var(--font-mono);
+  }
+
+  /* Native controls do not inherit any of the above, so they are named. */
+  select {
+    border: 2px solid var(--c-border-strong);
+    border-radius: 0;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    font-size: 0.8125rem;
+  }
+
+  /* --- code ---------------------------------------------------------------- */
+  .astro-code {
+    border: 2px solid var(--c-border-strong);
+    border-radius: 0;
   }
 }
