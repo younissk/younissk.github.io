@@ -1,0 +1,81 @@
+---
+/**
+ * Every profile, everywhere, always with its mark.
+ *
+ * The hero, the footer and /contact each used to keep their own hand-written
+ * list, so they drifted: the hero had three, the footer four in a different
+ * order, /contact three and no Hugging Face. This renders SOCIALS from
+ * consts.ts, so adding a profile there adds it in all three places at once.
+ *
+ * Two shapes:
+ *   variant="icon" — square icon buttons, label on the aria-label and title
+ *   variant="list" — icon plus name plus handle, for a footer or a page column
+ */
+import SocialIcon from './SocialIcon.astro';
+import { SOCIALS } from '../consts';
+
+interface Props {
+  variant?: 'icon' | 'list';
+  class?: string;
+}
+
+const { variant = 'icon', class: className } = Astro.props;
+---
+
+{
+  variant === 'icon' ? (
+    <nav class:list={['flex flex-wrap items-center gap-2', className]} aria-label="Profiles">
+      {SOCIALS.map((s) => (
+        <a
+          class="btn btn-icon"
+          href={s.href}
+          aria-label={s.label}
+          title={`${s.label} ${s.handle}`}
+          target="_blank"
+          rel="me noopener noreferrer"
+        >
+          <SocialIcon name={s.icon} />
+        </a>
+      ))}
+    </nav>
+  ) : (
+    <ul class:list={['social-list', className]}>
+      {SOCIALS.map((s) => (
+        <li>
+          <a
+            class="social-row link-quiet"
+            href={s.href}
+            target="_blank"
+            rel="me noopener noreferrer"
+          >
+            <SocialIcon name={s.icon} class="size-4 shrink-0" />
+            <span class="social-name">{s.label}</span>
+            <span class="meta social-handle">{s.handle}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .social-list {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .social-row {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--c-ink-muted);
+  }
+
+  .social-row:hover {
+    color: var(--c-ink);
+  }
+
+  .social-handle {
+    margin-left: auto;
+  }
+</style>

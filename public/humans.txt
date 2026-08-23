@@ -1,6 +1,6 @@
 /* TEAM */
 
-  Everything: Youniss Kandah
+  Everything: Youniss
   Contact: https://youniss.dev/contact/
   Site: https://youniss.dev
   Mirror: https://younissk.github.io

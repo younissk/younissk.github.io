@@ -1,0 +1,307 @@
+---
+title: "Falcon Twig: a tool-calling fine-tune that lost to the base model"
+description: "I fine-tuned Falcon-H1-7B-Instruct on a tool-calling mix with QLoRA and re-ran BFCL. It scored 24.50% live accuracy against the base model's 67.21%."
+date: 2025-09-28
+tags: ["llm", "fine-tuning", "tool-calling", "qlora", "bfcl", "negative-result"]
+lang: "en"
+draft: false
+---
+
+![Banner reading "Falcon Twig", with the word Twig drawn from branches and leaves, next to a purple cartoon falcon wearing sunglasses and holding a twig in its beak](./falcon-twig-banner.png)
+
+I fine-tuned Falcon-H1-7B-Instruct on a custom tool-calling dataset with QLoRA and re-ran the Berkeley Function Calling Leaderboard against it. The fine-tuned model, which I called Falcon Twig, scored 24.50% live accuracy. The plain Falcon-H1-7B-Instruct scored 67.21% on the same harness. It lost on the exact task I tuned it for, and it lost by a wide margin.
+
+The one thing that moved in the right direction was parallel tool calling. Every Falcon-H1 baseline scored 0.00% there. Falcon Twig scored 18.75%. That is the entire improvement.
+
+This is the write-up of that run: the setup, the data, the numbers, and what the failure cases say about where it went wrong.
+
+Code: [github.com/younissk/falcon-twig](https://github.com/younissk/falcon-twig). Dataset: [github.com/younissk/tool-calling-mix](https://github.com/younissk/tool-calling-mix) and [huggingface.co/datasets/younissk/tool-calling-mix](https://huggingface.co/datasets/younissk/tool-calling-mix). Model: [huggingface.co/younissk/Falcon-Twig-7B](https://huggingface.co/younissk/Falcon-Twig-7B).
+
+## What I tried and why
+
+Tool calling is what turns natural language into real automation, so it is becoming an important capability for LLMs. TII, the company behind the Falcon series, deploys its models for the Government of the UAE. I suspected tool calling would matter a lot for that, and I wanted to contribute to better open-source tool-calling models, so I picked Falcon-H1 and set out to improve it on that task.
+
+I used BFCL and its GitHub repository as the measurement. I curated a custom dataset mixing several public tool-calling corpora, synthetic data, and deliberately non-tool-calling data, and fine-tuned Falcon-H1 with QLoRA.
+
+## The baseline, before any fine-tuning
+
+I ran the full BFCL suite against Falcon-H1-0.5B-Instruct in function-calling mode, hosted on Hugging Face Inference.
+
+| Metric | Value |
+| --- | --- |
+| Overall Accuracy | 10.68% |
+| Non-Live AST Accuracy | 32.31% |
+| Live Accuracy | 36.79% |
+| Multi-Turn Accuracy | 0.00% |
+| Web Search Accuracy | 0.50% |
+| Memory Accuracy | 11.40% |
+| Relevance Detection | 87.50% |
+| Irrelevance Detection | 13.94% |
+
+Web search accuracy is weak and multi-turn accuracy is a flat 0.00%. Both are low enough that I could not rule out a bug in my own code rather than a failure of the model.
+
+I then ran a smaller subset of the tests across all Falcon-H1 sizes.
+
+| Model | Live Simple AST | Live Multiple AST | Live Parallel AST |
+| --- | --- | --- | --- |
+| Falcon-H1-0.5B-Instruct (FC) | 34.50% | 38.75% | 0.00% |
+| Falcon-H1-7B-Instruct (FC) | 70.54% | 68.95% | 0.00% |
+| Falcon-H1-1.5B-Instruct (FC) | 0.00% | 14.91% | 0.00% |
+| Falcon-H1-34B-Instruct (FC) | 74.81% | N/A | N/A |
+
+Falcon-H1-7B was only minimally worse than the 34B on live simple AST, 70.54% against 74.81%, which is a clear cost-benefit advantage for the 7B. None of the sizes handled parallel tool calls at all. That could also be a software bug.
+
+## The harness is part of the result
+
+BFCL had no Falcon-H1 handlers, so I wrote my own. Broadly it works like this:
+
+- It reads the endpoint base URL and API key from environment variables, clamps the temperature to 0.01 or below for stability, and guesses whether to use an OpenAI-style `/v1/chat/completions` API or a raw llama.cpp-style `/completions` API.
+- It builds a flat prompt containing all prior messages, any previous tool calls, the `<tools>` block, and a strong instruction to return only tool calls as JSON inside `<tool_call></tool_call>`. That instruction uses a singular example, even though Falcon-H1's own template says you may call one or more functions.
+- If the endpoint supports OpenAI's API it sends messages with the tools schema and sets `tool_choice='auto'`. Otherwise it falls back to `/completions` with a stop list including `</tool_call>` and `</tools>`, and builds a mock response object so BFCL can handle it as if it were an OpenAI response.
+- If the response has a `tool_calls` field it extracts the calls. Otherwise it treats the content as a string, detects `<tool_call></tool_call>` blocks, parses the JSON inside, and converts a list of calls into the BFCL AST format. It stores tool-call IDs when present.
+- It adds system, user, assistant and tool messages into the message list at each turn. When sending tool results it zips `execution_results` with `tool_call_ids` and appends each result with its ID.
+
+There are three places in that harness where parallel or multiple calls can get blocked.
+
+**Prompting.** The prompt builder only gives a one-call example. Adding a couple of parallel and multiple-call examples might help the model pick up on it.
+
+**Stop tokens.** I set stop tokens to `</tool_call>` and `</tools>`. If the model generates multiple calls wrapped inside a single tag, the closing tag appears only once at the end, so stopping there still works. If the model wanted to emit two separate `<tool_call>` tags, the first closing tag would end generation prematurely.
+
+**Low temperature and limited max tokens.** I clamp the temperature to 0.01 and limit max tokens to 1024. An extremely low temperature may cause the model to follow the singular example and never explore making multiple calls.
+
+### Failure case: wrong number of functions
+
+Test `live_parallel_1-0-1`, error type `parallel_function_checker_no_order:wrong_count`, checker message "Wrong number of functions."
+
+The user asked: "Could you tell me the current weather conditions for Boston, MA and also for San Francisco?" The tool `get_current_weather` takes `location` (string, required) and `unit` ("celsius" or "fahrenheit", default "fahrenheit"). Two parallel calls were expected.
+
+```json
+// Model output (1 call)
+[
+  {
+    "get_current_weather": {
+      "location": "Boston, MA",
+      "unit": "fahrenheit"
+    }
+  }
+]
+```
+
+```json
+// Accepted answer (2 calls)
+[
+  { "get_current_weather": {
+      "location": "Boston, MA",
+      "unit": "fahrenheit" | ""
+  }},
+  { "get_current_weather": {
+      "location": "San Francisco, CA",
+      "unit": "fahrenheit" | ""
+  }}
+]
+```
+
+The call for San Francisco, CA is simply missing.
+
+### Failure case: invalid parameter value
+
+Test `live_simple_18-3-14`, error type `value_error:string`. Checker message: "Invalid value for parameter 'location': 'Moscow, CO'. Expected one of ['Moscow, Russia']. Case insensitive."
+
+The user asked: "Can you tell me the current weather in Moscow, specifying the temperature in Celsius?" The schema notes that if a state exists, use `City, ST`, otherwise `City, Country`.
+
+```json
+// Model output
+[
+  {
+    "get_current_weather": {
+      "location": "Moscow, CO"
+    }
+  }
+]
+```
+
+```json
+// Accepted answer
+[
+  {
+    "get_current_weather": {
+      "location": "Moscow, Russia",
+      "unit": "celsius"
+    }
+  }
+]
+```
+
+The model hallucinated a country for Moscow. I read CO as short for "Colorado". There are small towns in the USA called Moscow, but none of them are in Colorado, so even under the wrong-Moscow reading the state is still wrong. It also omitted the unit, despite the user explicitly asking for Celsius, and the default is Fahrenheit.
+
+To check quickly whether this was a model bug or a handler bug, I gave the same prompt to three models on [chat.falconllm.tii.ae](https://chat.falconllm.tii.ae/).
+
+![Three chat responses to the Moscow weather prompt. falcon-h1-0.5b-instruct invents a temperature of -5C in prose and calls no tool. falcon-h1-7b-instruct writes get_current_weather(location="Moscow, Russia", unit="celsius") but says it cannot execute it. falcon-h1-34b-instruct returns the same call as a JSON object with name get_current_weather and parameters location "Moscow, Russia" and unit "celsius"](./quick-test.png)
+
+That somewhat confirms the suspicion: the lower-complexity models are not fit for tool calling, while the 34B solved the problem well. I do concede that using the models through that chat interface is not comparable to using them raw, since the creators probably have a system prompt set up.
+
+## Model and data
+
+For the best cost-benefit I fine-tuned `tiiuae/Falcon-H1-7B-Instruct`.
+
+The data is a custom dataset, `younissk/tool-calling-mix`. It mixes several tool-calling datasets with synthetic data and non-tool-calling data, the last of which is there to target catastrophic forgetting. It splits into 60,600 train, 7,580 test and 7,580 eval rows, with a consistent percentage split of each category.
+
+The source mixture, as stated in the report, totals 78,000 examples:
+
+| Source | Rationale / coverage | Count | Share |
+| --- | --- | --- | --- |
+| XLAM/APIGen data | Verified function-calling (single and multi) | 20,000 | 25.6% |
+| Gorilla OpenFunctions | Tool-call schemas and arguments | 15,000 | 19.2% |
+| ToolBench | Multi-tool (rich multi-call trajectories) | 20,000 | 25.6% |
+| Dolly 15k (no-call) | Instruction following without tools | 8,000 | 10.3% |
+| WikiText (no-call) | General language understanding/modeling | 8,000 | 10.3% |
+| Synthetic Parallel (mine) | Parallel function-calling supervision | 7,000 | 9.0% |
+
+### The synthetic set
+
+The 7,000 synthetic examples are parallel tool-call trajectories, generated to strengthen multi-tool execution. The generator:
+
+1. Samples 2 to 3 tools from distinct categories, to force parallelism.
+2. Queries a local `falcon-h1-34b` through a llama.cpp-compatible endpoint at temperature 0.7 and top-p 0.9, asking for a natural user request that requires all of the selected tools in parallel, plus draft calls. If the response is missing or malformed, it falls back to deterministic templates.
+3. Emits a record with `id`, `question` (chat-style messages), `function` (the available tools and schemas), `ground_truth` (a list of canonical call strings such as `calculate_mean(numbers=[...])`), and `execution_result_type`.
+4. Validates required fields, structure, and at least two distinct tool names in `ground_truth`, dropping failures.
+5. Saves partial output every 60 seconds and a final JSON on completion.
+
+Here is an example as generated, before post-validation:
+
+```json
+{
+  "tools_json": [
+    {
+      "name": "calculate_variance",
+      "description": "Calculates variance of a dataset.",
+      "parameters": {
+        "type": "dict",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {"type": "float"},
+            "description": "The dataset."
+          }
+        },
+        "required": ["data"]
+      }
+    },
+    {
+      "name": "calculate_standard_deviation",
+      "description": "Calculates the standard deviation of a list of numbers.",
+      "parameters": {
+        "type": "dict",
+        "properties": {
+          "numbers": {
+            "type": "array",
+            "items": {"type": "float"},
+            "description": "The list of numbers."
+          }
+        },
+        "required": ["numbers"]
+      }
+    }
+  ],
+
+  "messages_json": [
+    {
+      "role": "user",
+      "content": "For my project, I need to calculate variance and calculate standard deviation. Can you help with these calculations?"
+    }
+  ],
+
+  "target_json": {
+    "tool_calls": [
+      {
+        "name": "calculate_variance",
+        "arguments": { "data": "[24.4" }
+      },
+      {
+        "name": "calculate_standard_deviation",
+        "arguments": { "numbers": "[1.6" }
+      }
+    ]
+  }
+}
+```
+
+Note the truncated arrays. The validator rejects malformed items like that or auto-repairs them with the template fallback.
+
+## Training setup
+
+The training was parameter-efficient and conservative with memory.
+
+- Tokenizer and base checkpoint are loaded once. Training runs either in a memory-efficient 4-bit configuration or in standard precision, depending on environment settings. On Ampere-class GPUs, TF32 is enabled for large matrix multiplies. Mixed precision matches the model dtype, bfloat16 or float16, when available. The CUDA allocator favours expandable segments to reduce fragmentation.
+- LoRA is applied to a set of target modules, inferred automatically when not specified. Rank, scaling factor and dropout come from the experiment configuration.
+- Conversational samples are formatted for next-token prediction. Inputs and labels are right-padded, labels on padding positions are masked with an ignore index, and attention masks are derived from non-pad tokens. Batches are formed with sequence-length grouping to stabilise step times and cut padding waste. Gradient checkpointing is on.
+- AdamW is the default optimizer, with a cosine schedule with warmup, weight decay and gradient clipping. Effective batch size is set through per-device batch size and gradient accumulation.
+- Training runs for a fixed number of epochs with step-based validation, checkpoints at fixed intervals with a cap on retained checkpoints, selects the best model by validation loss, and restores it at the end. Early stopping halts training when the validation metric plateaus beyond a configured patience.
+- When enabled, a WiSE-FT style step linearly interpolates the adapter-merged model with the original base weights using a scalar coefficient, saved as an additional blended checkpoint.
+
+## Results
+
+Falcon Twig was trained on the 7B variant, so the Falcon-H1-7B-Instruct row is the direct comparison.
+
+| Model | Live Acc | Live Simple AST | Live Multiple AST | Live Parallel AST |
+| --- | --- | --- | --- | --- |
+| Falcon-H1-0.5B-Instruct (FC) | 36.79% | 34.50% | 38.75% | 0.00% |
+| Falcon-H1-7B-Instruct (FC) | 67.21% | 70.54% | 68.95% | 0.00% |
+| Falcon-H1-1.5B-Instruct (FC) | 11.62% | 0.00% | 14.91% | 0.00% |
+| Falcon-H1-34B-Instruct (FC) | 14.29% | 74.81% | N/A | N/A |
+| GPT-4o-2024-11-20 (FC) | 13.47% | 70.54% | N/A | N/A |
+| Falcon Twig | 24.50% | 46.51% | 19.75% | 18.75% |
+
+Against the 7B it started from, Falcon Twig dropped live accuracy from 67.21% to 24.50%, live simple AST from 70.54% to 46.51%, and live multiple AST from 68.95% to 19.75%. It gained live parallel AST from 0.00% to 18.75%. The 34B and GPT-4o rows only ran the subset, which is why their live accuracy columns are not comparable to the rest.
+
+Here is a parallel call it still got wrong. Test `live_parallel_0-0-0`, error type `parallel_function_checker_no_order:cannot_find_match`, checker message "Could not find a matching function among index [0, 1] of model output", with the required parameter `location` missing from both calls.
+
+The user asked, in Chinese: 请问北京的当前天气状况如何？还有，上海的天气情况是怎样的？ The schema states that if no state exists, use "City, Country", for example "Beijing, China".
+
+```json
+// Model output (2 calls, wrong schema)
+[
+  {
+    "get_current_weather": {
+      "city": "Beijing",
+      "unit": "Celsius"
+    }
+  },
+  {
+    "get_current_weather": {
+      "city": "Shanghai",
+      "unit": "Celsius"
+    }
+  }
+]
+```
+
+```json
+// Accepted answer (2 calls)
+[
+  { "get_current_weather": {
+      "location": "Beijing, China",
+      "unit": "fahrenheit" | ""
+  }},
+  { "get_current_weather": {
+      "location": "Shanghai, China",
+      "unit": "fahrenheit" | ""
+  }}
+]
+```
+
+It produced two calls, which is what I trained it to do. It used `city` instead of the required `location`, dropped the country, and passed "Celsius" where the schema wanted the default or "fahrenheit". The training moved the count and broke the schema.
+
+## Why it lost
+
+Looking at the synthetic parallel data, some of it is wrong. Garbage in, garbage out. It is also English only, where multiple languages would have been better, and the BFCL case above is a Chinese prompt. The outputs the generator model produced are not the best either. To truly fine-tune for parallel tool calling, data quality is the thing that matters, and that needs a thorough analysis of the data rather than a validator that checks structure.
+
+The training process was optimised for efficiency, not for results, because of budget constraints.
+
+## What I would do differently
+
+Beyond QLoRA, I would use a form of reinforcement learning specifically for tool calling, though that requires sufficient funds.
+
+A meaningful test would be to fine-tune a different LLM on the exact same data with the exact same methodology, to rule out problems in the training data or the method.
+
+The handler also needs fixing before any of that is worth measuring: multiple and parallel examples in the prompt builder, a stop-token list that does not cut generation at the first `</tool_call>`, and a temperature that is not pinned at 0.01.

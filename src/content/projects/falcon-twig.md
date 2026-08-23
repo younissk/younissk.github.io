@@ -1,7 +1,7 @@
 ---
 title: Falcon-Twig
 repoName: falcon-twig
-summary: Fine-tuning run for Falcon H1 7B on tool calling that underperformed the base instruct model, written up as a technical report.
+summary: Fine-tuning run for Falcon H1 7B on tool calling that underperformed the base instruct model, written up in a post.
 year: 2025
 period: "2025"
 category: ai-ml
@@ -11,7 +11,7 @@ status: shipped
 private: false
 featured: true
 links:
-  - { kind: paper, label: "Paper", url: "/papers/falcon-twig-technical-report/" }
+  - { kind: post, label: "Write-up", url: "/writing/falcon-twig/" }
   - { kind: model, label: "Falcon-Twig-7B", url: "https://huggingface.co/younissk/Falcon-Twig-7B" }
   - { kind: repo, label: "Code", url: "https://github.com/younissk/falcon-twig" }
 ---

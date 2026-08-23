@@ -13,11 +13,12 @@
 import github from '../icons/github.svg?raw';
 import linkedin from '../icons/linkedin.svg?raw';
 import huggingface from '../icons/huggingface.svg?raw';
+import youtube from '../icons/youtube.svg?raw';
 
-const ICONS: Record<string, string> = { github, linkedin, huggingface };
+const ICONS: Record<string, string> = { github, linkedin, youtube, huggingface };
 
 interface Props {
-  name: 'github' | 'linkedin' | 'huggingface';
+  name: 'github' | 'linkedin' | 'youtube' | 'huggingface';
   class?: string;
 }
 

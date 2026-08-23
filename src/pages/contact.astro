@@ -2,17 +2,16 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import ContactForm from '../components/ContactForm.astro';
-import { SOCIALS } from '../consts';
+import SocialLinks from '../components/SocialLinks.astro';
 
 // Form services redirect back here with ?sent=1 after a successful POST.
 const sent = Astro.url.searchParams.get('sent') === '1';
 
-const elsewhere = SOCIALS.filter((s) => ['GitHub', 'LinkedIn', 'YouTube'].includes(s.label));
 ---
 
 <BaseLayout
   title="Contact"
-  description="Send Youniss Kandah a message."
+  description="Send Youniss a message."
 >
   <div class="page">
     <PageHeader
@@ -36,18 +35,7 @@ const elsewhere = SOCIALS.filter((s) => ['GitHub', 'LinkedIn', 'YouTube'].includ
       <div class="section-head">
         <h2 class="label">Elsewhere</h2>
       </div>
-      <ul class="link-list">
-        {
-          elsewhere.map((s) => (
-            <li>
-              <a class="link" href={s.href} target="_blank" rel="noopener noreferrer">
-                {s.label}
-              </a>
-              {s.handle && <span class="meta"> {s.handle}</span>}
-            </li>
-          ))
-        }
-      </ul>
+      <SocialLinks variant="list" class="max-w-sm" />
     </section>
   </div>
 </BaseLayout>

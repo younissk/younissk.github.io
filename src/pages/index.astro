@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import Tag from '../components/Tag.astro';
-import SocialIcon from '../components/SocialIcon.astro';
+import SocialLinks from '../components/SocialLinks.astro';
 import ContactForm from '../components/ContactForm.astro';
 import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
 
@@ -64,17 +64,7 @@ const STACK_SHOWN = 6;
       title={AUTHOR.name}
       size="display"
     >
-      <nav class="flex flex-wrap items-center gap-2" aria-label="Profiles">
-        <a class="btn btn-icon" href={AUTHOR.github} aria-label="GitHub" title="GitHub" target="_blank" rel="noopener noreferrer">
-          <SocialIcon name="github" />
-        </a>
-        <a class="btn btn-icon" href={AUTHOR.linkedin} aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener noreferrer">
-          <SocialIcon name="linkedin" />
-        </a>
-        <a class="btn btn-icon" href={AUTHOR.huggingface} aria-label="Hugging Face" title="Hugging Face" target="_blank" rel="noopener noreferrer">
-          <SocialIcon name="huggingface" />
-        </a>
-      </nav>
+      <SocialLinks />
     </PageHeader>
 
     <!-- Selected work --------------------------------------------------- -->

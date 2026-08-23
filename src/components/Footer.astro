@@ -1,14 +1,9 @@
 ---
+import SocialLinks from './SocialLinks.astro';
 import { AUTHOR, NAV, RSS_PATH, SITE_TITLE } from '../consts';
 
 const year = new Date().getFullYear();
 
-const elsewhere = [
-  { label: 'GitHub', href: AUTHOR.github },
-  { label: 'LinkedIn', href: AUTHOR.linkedin },
-  { label: 'YouTube', href: AUTHOR.youtube },
-  { label: 'RSS', href: RSS_PATH },
-];
 ---
 
 <footer class="mt-auto border-t border-border">
@@ -20,8 +15,7 @@ const elsewhere = [
           <a class="link text-lg font-medium" href="/contact/">Send me a message</a>
         </p>
         <p class="mt-2 max-w-text text-sm text-ink-muted">
-          {AUTHOR.role}. Open to interesting problems in applied AI and backend
-          engineering.
+          {AUTHOR.role}. Open to interesting problems in applied AI.
         </p>
       </div>
 
@@ -43,22 +37,10 @@ const elsewhere = [
 
         <nav aria-label="Elsewhere">
           <p class="label">Elsewhere</p>
-          <ul class="mt-2 space-y-1.5 text-sm">
-            {
-              elsewhere.map((item) => (
-                <li>
-                  <a
-                    class="link-quiet text-ink-muted"
-                    href={item.href}
-                    rel={item.href.startsWith('http') ? 'me noopener' : undefined}
-                    target={item.href.startsWith('http') ? '_blank' : undefined}
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))
-            }
-          </ul>
+          <SocialLinks variant="list" class="mt-2 text-sm" />
+          <p class="mt-3 text-sm">
+            <a class="link-quiet text-ink-muted" href={RSS_PATH}>RSS</a>
+          </p>
         </nav>
       </div>
     </div>
@@ -68,8 +50,7 @@ const elsewhere = [
     >
       <p class="meta">© {year} {SITE_TITLE}</p>
       <p class="meta">
-        Built with <a class="link-quiet" href="https://astro.build" rel="noopener">Astro</a>.
-        <a class="link-quiet" href={AUTHOR.repoUrl} rel="noopener">Source on GitHub</a>.
+        <a class="link-quiet" href={AUTHOR.repoUrl} rel="noopener">Source on GitHub</a>
       </p>
     </div>
   </div>

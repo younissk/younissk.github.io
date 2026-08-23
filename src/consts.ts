@@ -5,7 +5,7 @@
 
 export const SITE_URL = 'https://youniss.dev';
 
-export const SITE_TITLE = 'Youniss Kandah';
+export const SITE_TITLE = 'Youniss';
 
 export const SITE_DESCRIPTION =
   'Applied AI engineer. Production RAG, LLM document extraction, and agent infrastructure in safety-critical and document-heavy domains.';
@@ -22,7 +22,7 @@ export interface AuthorInfo {
 }
 
 export const AUTHOR: AuthorInfo = {
-  name: 'Youniss Kandah',
+  name: 'Youniss',
   role: 'Applied AI Engineer',
   github: 'https://github.com/younissk',
   linkedin: 'https://www.linkedin.com/in/youniss',
@@ -56,17 +56,22 @@ export const NAV: readonly NavItem[] = [
 export interface SocialLink {
   readonly label: string;
   readonly href: string;
-  /** Displayed handle, e.g. `@younissk`. Omitted for RSS/e-mail. */
-  readonly handle?: string;
+  /** Displayed handle, e.g. `@younissk`. */
+  readonly handle: string;
+  /** Key into SocialIcon. Every profile has a mark; none render bare. */
+  readonly icon: 'github' | 'linkedin' | 'youtube' | 'huggingface';
 }
 
+/**
+ * Every profile, in one order, used by every place that shows profiles: the
+ * hero, the footer and /contact. Adding one here adds it everywhere, which is
+ * the point — they used to drift apart.
+ */
 export const SOCIALS: readonly SocialLink[] = [
-  { label: 'GitHub', href: AUTHOR.github, handle: '@younissk' },
-  { label: 'LinkedIn', href: AUTHOR.linkedin, handle: '/in/youniss' },
-  { label: 'YouTube', href: AUTHOR.youtube, handle: '@youniss-ml' },
-  { label: 'Hugging Face', href: AUTHOR.huggingface, handle: '@younissk' },
-  { label: 'Contact', href: '/contact/' },
-  { label: 'RSS', href: '/rss.xml' },
+  { label: 'GitHub', href: AUTHOR.github, handle: '@younissk', icon: 'github' },
+  { label: 'LinkedIn', href: AUTHOR.linkedin, handle: '/in/youniss', icon: 'linkedin' },
+  { label: 'YouTube', href: AUTHOR.youtube, handle: '@youniss-ml', icon: 'youtube' },
+  { label: 'Hugging Face', href: AUTHOR.huggingface, handle: '@younissk', icon: 'huggingface' },
 ];
 
 /** Where the RSS feed is published. Referenced by Head.astro and the footer. */
