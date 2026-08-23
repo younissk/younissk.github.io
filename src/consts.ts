@@ -8,7 +8,7 @@ export const SITE_URL = 'https://youniss.dev';
 export const SITE_TITLE = 'Youniss Kandah';
 
 export const SITE_DESCRIPTION =
-  'Applied AI & backend engineer. Production RAG, LLM document extraction, and agent infrastructure in safety-critical and document-heavy domains.';
+  'Applied AI engineer. Production RAG, LLM document extraction, and agent infrastructure in safety-critical and document-heavy domains.';
 
 export interface AuthorInfo {
   readonly name: string;
@@ -23,7 +23,7 @@ export interface AuthorInfo {
 
 export const AUTHOR: AuthorInfo = {
   name: 'Youniss Kandah',
-  role: 'Applied AI & Backend Engineer',
+  role: 'Applied AI Engineer',
   github: 'https://github.com/younissk',
   linkedin: 'https://www.linkedin.com/in/youniss',
   youtube: 'https://www.youtube.com/@youniss-ml',

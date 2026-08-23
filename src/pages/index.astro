@@ -4,6 +4,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import Tag from '../components/Tag.astro';
+import SocialIcon from '../components/SocialIcon.astro';
 import ContactForm from '../components/ContactForm.astro';
 import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
 
@@ -12,15 +13,6 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
    not content — one page owns it, and it changes when the hero changes.
    --------------------------------------------------------------------------- */
 
-
-/** Hand-dated so the label reflects when the note was written, not the build. */
-const NOW = {
-  updated: 'August 2026',
-  role: 'AI Engineer',
-  org: 'ONDEWO',
-  period: 'Mar 2026 – Present',
-  text: "I'm at ONDEWO working on AI4Emergency, an Austrian FFG-funded research project on AI-driven communication technology for emergency operations.",
-} as const;
 
 const TEACHING = [
   {
@@ -72,34 +64,18 @@ const STACK_SHOWN = 6;
       title={AUTHOR.name}
       size="display"
     >
-      <nav class="flex flex-wrap items-center gap-2" aria-label="Contact and profiles">
-        <a class="btn" href={AUTHOR.github} target="_blank" rel="noopener noreferrer">
-          GitHub
+      <nav class="flex flex-wrap items-center gap-2" aria-label="Profiles">
+        <a class="btn btn-icon" href={AUTHOR.github} aria-label="GitHub" title="GitHub" target="_blank" rel="noopener noreferrer">
+          <SocialIcon name="github" />
         </a>
-        <a class="btn" href={AUTHOR.linkedin} target="_blank" rel="noopener noreferrer">
-          LinkedIn
+        <a class="btn btn-icon" href={AUTHOR.linkedin} aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener noreferrer">
+          <SocialIcon name="linkedin" />
         </a>
-        <a class="btn" href={AUTHOR.huggingface} target="_blank" rel="noopener noreferrer">
-          Hugging Face
+        <a class="btn btn-icon" href={AUTHOR.huggingface} aria-label="Hugging Face" title="Hugging Face" target="_blank" rel="noopener noreferrer">
+          <SocialIcon name="huggingface" />
         </a>
       </nav>
     </PageHeader>
-
-    <!-- Now ------------------------------------------------------------- -->
-    <section class="section" aria-labelledby="now">
-      <div class="section-head">
-        <h2 class="label" id="now">Now</h2>
-        <p class="meta">Updated {NOW.updated}</p>
-      </div>
-
-      <p class="max-w-text text-ink-muted">{NOW.text}</p>
-
-      <ul class="meta-row mt-4">
-        <li>{NOW.role}</li>
-        <li>{NOW.org}</li>
-        <li>{NOW.period}</li>
-      </ul>
-    </section>
 
     <!-- Selected work --------------------------------------------------- -->
     {

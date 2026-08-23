@@ -1,0 +1,31 @@
+---
+/**
+ * Brand marks, inlined from src/icons/*.svg at build time.
+ *
+ * Committed rather than pulled from a CDN or an icon package: the files are
+ * ~1KB each, they never change, and the site is not allowed a third-party
+ * runtime request. See SUCCESSION.md.
+ *
+ * The <title> inside each source file is stripped — every icon here sits inside
+ * an anchor that already carries an aria-label, so a title element would make a
+ * screen reader announce the name twice.
+ */
+import github from '../icons/github.svg?raw';
+import linkedin from '../icons/linkedin.svg?raw';
+import huggingface from '../icons/huggingface.svg?raw';
+
+const ICONS: Record<string, string> = { github, linkedin, huggingface };
+
+interface Props {
+  name: 'github' | 'linkedin' | 'huggingface';
+  class?: string;
+}
+
+const { name, class: className = 'size-[1.15rem]' } = Astro.props;
+
+const svg = ICONS[name]
+  .replace(/<title>.*?<\/title>/s, '')
+  .replace('<svg', `<svg class="${className}" fill="currentColor" aria-hidden="true" focusable="false"`);
+---
+
+<Fragment set:html={svg} />
