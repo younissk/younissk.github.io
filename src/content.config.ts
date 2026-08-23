@@ -113,6 +113,20 @@ const posts = defineCollection({
     draft: z.boolean().default(false),
     /** Root-relative image path, e.g. "/assets/covers/v-dom-diagram.png". */
     hero: z.string().optional(),
+    /**
+     * Code, data, models and papers the post is about, shown at the top rather
+     * than buried in a paragraph. Same shape as a project's links, so both
+     * render through the same component.
+     */
+    links: z
+      .array(
+        z.object({
+          kind: z.enum(LINK_KINDS),
+          label: z.string(),
+          url: z.string(),
+        }),
+      )
+      .default([]),
   }),
 });
 

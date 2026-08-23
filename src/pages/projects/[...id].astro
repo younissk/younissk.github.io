@@ -5,6 +5,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import Prose from '../../components/Prose.astro';
 import Tag from '../../components/Tag.astro';
+import ResourceLinks from '../../components/ResourceLinks.astro';
 import ExternalLink from '../../components/ExternalLink.astro';
 import {
   formatCount,
@@ -94,23 +95,9 @@ const siblings = (await getCollection('projects'))
       description={p.summary}
       meta={meta}
     >
-      {
-        links.length > 0 && (
-          <Fragment slot="actions">
-            {headline.map((link) =>
-              link.external ? (
-                <ExternalLink href={link.url} class={link.primary ? 'btn btn-primary' : 'btn'}>
-                  {link.label}
-                </ExternalLink>
-              ) : (
-                <a class={link.primary ? 'btn btn-primary' : 'btn'} href={link.url}>
-                  {link.label}
-                </a>
-              ),
-            )}
-          </Fragment>
-        )
-      }
+      <Fragment slot="actions">
+        <ResourceLinks links={p.links} />
+      </Fragment>
     </PageHeader>
 
     <section class="section pt-0">

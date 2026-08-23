@@ -3,6 +3,7 @@ import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import Prose from '../../components/Prose.astro';
+import ResourceLinks from '../../components/ResourceLinks.astro';
 import Tag from '../../components/Tag.astro';
 import { readingTimeLabel } from './_reading-time';
 import { getPosts, isoDate, languageName, longDate, tagSlug, type Post } from './_post-utils';
@@ -28,7 +29,7 @@ interface Props {
 }
 
 const { post, newer, older } = Astro.props;
-const { title, description, date, tags, lang, hero } = post.data;
+const { title, description, date, tags, lang, hero, links } = post.data;
 const { Content } = await render(post);
 ---
 
@@ -46,6 +47,8 @@ const { Content } = await render(post);
         <li>{readingTimeLabel(post.body)}</li>
         {lang !== 'en' && <li lang={lang}>{languageName(lang)}</li>}
       </ul>
+
+      <ResourceLinks links={links} class="mt-4" />
 
       {
         tags.length > 0 && (

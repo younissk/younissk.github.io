@@ -5,6 +5,11 @@ date: 2025-09-28
 tags: ["llm", "fine-tuning", "tool-calling", "qlora", "bfcl", "negative-result"]
 lang: "en"
 draft: false
+links:
+  - { kind: repo, label: "Code", url: "https://github.com/younissk/falcon-twig" }
+  - { kind: model, label: "Falcon-Twig-7B", url: "https://huggingface.co/younissk/Falcon-Twig-7B" }
+  - { kind: dataset, label: "tool-calling-mix", url: "https://huggingface.co/datasets/younissk/tool-calling-mix" }
+  - { kind: repo, label: "Dataset code", url: "https://github.com/younissk/tool-calling-mix" }
 ---
 
 ![Banner reading "Falcon Twig", with the word Twig drawn from branches and leaves, next to a purple cartoon falcon wearing sunglasses and holding a twig in its beak](./falcon-twig-banner.png)
@@ -14,8 +19,6 @@ I fine-tuned Falcon-H1-7B-Instruct on a custom tool-calling dataset with QLoRA a
 The one thing that moved in the right direction was parallel tool calling. Every Falcon-H1 baseline scored 0.00% there. Falcon Twig scored 18.75%. That is the entire improvement.
 
 This is the write-up of that run: the setup, the data, the numbers, and what the failure cases say about where it went wrong.
-
-Code: [github.com/younissk/falcon-twig](https://github.com/younissk/falcon-twig). Dataset: [github.com/younissk/tool-calling-mix](https://github.com/younissk/tool-calling-mix) and [huggingface.co/datasets/younissk/tool-calling-mix](https://huggingface.co/datasets/younissk/tool-calling-mix). Model: [huggingface.co/younissk/Falcon-Twig-7B](https://huggingface.co/younissk/Falcon-Twig-7B).
 
 ## What I tried and why
 

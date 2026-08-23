@@ -1,0 +1,78 @@
+---
+/**
+ * The links belonging to a piece of work, rendered as buttons at the top.
+ *
+ * These used to live in a sentence inside the prose ("Code: ... Dataset: ...").
+ * Anyone arriving to fetch the model had to read a paragraph to find it. They
+ * are frontmatter now, and they sit above the body on every post and project
+ * that has them.
+ *
+ * Renders nothing when the list is empty, so a post with no artifacts does not
+ * get an empty strip.
+ */
+import { LINK_KINDS } from '../content.config';
+
+export interface ResourceLink {
+  kind: string;
+  label: string;
+  url: string;
+}
+
+interface Props {
+  links?: readonly ResourceLink[] | null;
+  class?: string;
+}
+
+/* Defaulted rather than required. An entry written before `links` existed in
+   the schema has no array at all, and a missing list should render nothing,
+   not throw on the page. */
+const { links, class: className } = Astro.props;
+const list = Array.isArray(links) ? links : [];
+
+/** Display order, so a repo never sits above the thing you can open. */
+const order = new Map(LINK_KINDS.map((k, i) => [k as string, i]));
+const sorted = [...list].sort(
+  (a, b) => (order.get(a.kind) ?? 99) - (order.get(b.kind) ?? 99),
+);
+
+const KIND_TITLE: Record<string, string> = {
+  site: 'Live',
+  demo: 'Demo',
+  post: 'Write-up',
+  video: 'Video',
+  paper: 'Paper',
+  model: 'Model',
+  dataset: 'Dataset',
+  repo: 'Repository',
+};
+---
+
+{
+  sorted.length > 0 && (
+    <nav class:list={['resource-links', className]} aria-label="Links and resources">
+      {sorted.map((l) => {
+        const external = l.url.startsWith('http');
+        return (
+          <a
+            class="btn btn-sm"
+            href={l.url}
+            title={`${KIND_TITLE[l.kind] ?? l.kind}: ${l.label}`}
+            target={external ? '_blank' : undefined}
+            rel={external ? 'noopener noreferrer' : undefined}
+          >
+            {l.label}
+            {external ? ' ↗' : ''}
+          </a>
+        );
+      })}
+    </nav>
+  )
+}
+
+<style>
+  .resource-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+</style>
