@@ -23,11 +23,28 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
 
   <div class="landing-inner">
     <p class="label">{AUTHOR.role}</p>
-    <h1 class="text-ink text-display font-semibold mt-2">{AUTHOR.name}</h1>
 
-    <SocialLinks class="mt-7" />
+    <div class="landing-head">
+      <h1 class="text-ink text-display font-semibold">{AUTHOR.name}</h1>
 
-    <nav class="landing-nav mt-10" aria-label="Sections">
+      {/* A real input, not a button dressed as one. Typing here opens the
+          palette and carries the keystrokes across, so the first characters
+          are never swallowed. */}
+      <div class="landing-search">
+        <input
+          id="landing-search"
+          type="text"
+          class="landing-search-input"
+          placeholder="Search"
+          aria-label="Search this site"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <kbd class="landing-search-kbd">⌘K</kbd>
+      </div>
+    </div>
+
+    <nav class="landing-nav mt-9" aria-label="Sections">
       {
         NAV.map((item) => (
           <a class="landing-link" href={item.href}>
@@ -36,23 +53,32 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
           </a>
         ))
       }
-      <button type="button" class="landing-link" data-open-palette aria-label="Search this site">
-        <span class="landing-link-label">Search</span>
-        <span class="landing-link-blurb">Everything, one keystroke &nbsp;<kbd>⌘K</kbd></span>
-      </button>
     </nav>
+  </div>
+
+  <div class="landing-foot">
+    <SocialLinks />
   </div>
 </BaseLayout>
 
 <script is:inline>
-  // The palette hydrates on idle; this only asks it to open. Delegated, so it
-  // is harmless before hydration and needs no island of its own.
-  document.addEventListener('click', (event) => {
-    const target = event.target;
-    if (!(target instanceof Element)) return;
-    if (!target.closest('[data-open-palette]')) return;
-    window.dispatchEvent(new CustomEvent('open-command-palette'));
-  });
+  (() => {
+    const box = document.getElementById('landing-search');
+    if (!box) return;
+
+    const openWith = (query) => {
+      window.dispatchEvent(
+        new CustomEvent('open-command-palette', { detail: { query } }),
+      );
+      /* The palette owns the input from here; clear this one so returning to
+         the page does not show a stale query. */
+      box.value = '';
+      box.blur();
+    };
+
+    box.addEventListener('focus', () => openWith(''));
+    box.addEventListener('input', () => openWith(box.value));
+  })();
 </script>
 
 <style is:global>
@@ -60,7 +86,9 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
     flex: 1;
     min-height: 100svh;
     display: grid;
-    place-items: center;
+    /* Content centred in the free space, profiles parked on the last row. */
+    grid-template-rows: 1fr auto;
+    justify-items: center;
     padding: 2rem 1.25rem;
   }
 </style>
@@ -69,6 +97,66 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
   .landing-inner {
     width: 100%;
     max-width: 44rem;
+    align-self: center;
+  }
+
+  .landing-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+  }
+
+  .landing-search {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1 1 14rem;
+    min-width: 12rem;
+    max-width: 20rem;
+    padding: 0.5rem 0.7rem;
+    border: 2px solid var(--c-border-strong);
+    background-color: var(--c-surface);
+  }
+
+  .landing-search:focus-within {
+    border-color: var(--c-accent);
+  }
+
+  .landing-search-input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: var(--c-ink);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+  }
+
+  .landing-search-input:focus {
+    outline: none;
+  }
+
+  .landing-search-input::placeholder {
+    color: var(--c-ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .landing-search-kbd {
+    flex-shrink: 0;
+    border: 1px solid var(--c-border-strong);
+    padding: 0 0.3rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    color: var(--c-ink-faint);
+  }
+
+  .landing-foot {
+    width: 100%;
+    max-width: 44rem;
+    padding-top: 2rem;
   }
 
   .landing-nav {

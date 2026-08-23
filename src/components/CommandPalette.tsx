@@ -57,8 +57,9 @@ export default function CommandPalette({ entries }: Props) {
     restoreRef.current?.focus();
   }, []);
 
-  const openPalette = useCallback(() => {
+  const openPalette = useCallback((seed?: string) => {
     restoreRef.current = document.activeElement as HTMLElement | null;
+    if (seed) setQuery(seed);
     setOpen(true);
   }, []);
 
@@ -70,7 +71,10 @@ export default function CommandPalette({ entries }: Props) {
         open ? close() : openPalette();
       }
     };
-    const onOpen = () => openPalette();
+    const onOpen = (e: Event) => {
+      const seed = (e as CustomEvent<{ query?: string }>).detail?.query;
+      openPalette(seed);
+    };
     window.addEventListener('keydown', onKey);
     window.addEventListener('open-command-palette', onOpen);
     return () => {
@@ -80,7 +84,12 @@ export default function CommandPalette({ entries }: Props) {
   }, [open, close, openPalette]);
 
   useEffect(() => {
-    if (open) inputRef.current?.focus();
+    if (!open) return;
+    const el = inputRef.current;
+    el?.focus();
+    /* Caret after the seeded text, not before it. */
+    const n = el?.value.length ?? 0;
+    el?.setSelectionRange(n, n);
   }, [open]);
 
   useEffect(() => setActive(0), [query]);

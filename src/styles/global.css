@@ -1117,11 +1117,15 @@
   }
 
   /* --- forms --------------------------------------------------------------- */
+  /* No !important here. It was added to beat ContactForm's scoped rule, which
+     has since been fixed to set the right border itself, and leaving it meant
+     any input that legitimately wants no border, like the borderless one inside
+     the landing search box, could not have one. */
   input[type='text'],
   input[type='email'],
   textarea {
-    border: 2px solid var(--c-border-strong) !important;
-    border-radius: 0 !important;
+    border: 2px solid var(--c-border-strong);
+    border-radius: 0;
     font-family: var(--font-mono);
   }
 
