@@ -30,22 +30,6 @@ const searchEntries = await buildSearchIndex();
 <!doctype html>
 <html lang="en">
   <head>
-    <script is:inline>
-      // Runs before first paint: no flash of the wrong theme.
-      (() => {
-        try {
-          const stored = localStorage.getItem('theme');
-          const dark =
-            stored === 'dark' ||
-            (stored !== 'light' &&
-              window.matchMedia('(prefers-color-scheme: dark)').matches);
-          document.documentElement.classList.toggle('dark', dark);
-          document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
-        } catch (_) {
-          /* storage blocked — fall back to the light default */
-        }
-      })();
-    </script>
 
     <Head
       title={title}

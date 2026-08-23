@@ -2,41 +2,16 @@
 @import "katex/dist/katex.min.css";
 @plugin "@tailwindcss/typography";
 
-/* Class-based dark mode. The bootstrap script in BaseLayout puts `.dark` on <html>
-   before first paint, seeded from localStorage or prefers-color-scheme. */
-@custom-variant dark (&:where(.dark, .dark *));
+/* Dark only. There is no light palette and no toggle: one set of colours,
+   chosen once, is the whole theme. `dark:` is kept as a no-op variant so any
+   stray utility still resolves rather than erroring. */
+@custom-variant dark (&);
 
 /* ---------------------------------------------------------------------------
    Raw palette. Never reference --c-* directly in markup — use the Tailwind
    utilities generated from the @theme block below (bg-bg, text-ink, ...).
-   These exist so a single class flip on <html> re-themes the whole document.
    --------------------------------------------------------------------------- */
 :root {
-  color-scheme: light;
-
-  --c-bg: #ffffff;
-  --c-surface: #f6f6f4;
-  --c-surface-2: #ecece8;
-  --c-border: #e3e3de;
-  --c-border-strong: #c6c6bf;
-
-  --c-ink: #15151a;
-  --c-ink-muted: #4c4c55;
-  --c-ink-faint: #74747f;
-
-  --c-accent: #1a4fd6;
-  --c-accent-hover: #12379c;
-  --c-accent-soft: #eaf0ff;
-
-  --c-positive: #12664a;
-  --c-warning: #7d5300;
-  --c-danger: #a01b1b;
-
-  --c-focus: #1a4fd6;
-  --c-selection: #d7e2ff;
-}
-
-.dark {
   color-scheme: dark;
 
   --c-bg: #0d0d0f;
@@ -805,8 +780,8 @@
    Shiki dual theme. astro.config.mjs emits both palettes; this swaps to the
    dark one when .dark is present.
    --------------------------------------------------------------------------- */
-.dark .astro-code,
-.dark .astro-code span {
+.astro-code,
+.astro-code span {
   color: var(--shiki-dark) !important;
   background-color: var(--shiki-dark-bg) !important;
   font-style: var(--shiki-dark-font-style) !important;

@@ -124,8 +124,8 @@ export default function EmbeddingSpace() {
     const h = Math.min(560, Math.round(w * 0.62));
 
     const scene = new THREE.Scene();
-    const dark = document.documentElement.classList.contains('dark');
-    scene.background = new THREE.Color(dark ? 0x0d0d0f : 0xfbfbfa);
+    // The site is dark-only, so this matches --c-bg with no theme check.
+    scene.background = new THREE.Color(0x0d0d0f);
 
     const camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
     camera.position.set(2.4, 1.7, 2.4);
@@ -144,7 +144,7 @@ export default function EmbeddingSpace() {
     // Faint axes, so it reads as a plot rather than a toy.
     const axes = new THREE.LineSegments(
       new THREE.EdgesGeometry(new THREE.BoxGeometry(2, 2, 2)),
-      new THREE.LineBasicMaterial({ color: dark ? 0x2a2a30 : 0xdedede }),
+      new THREE.LineBasicMaterial({ color: 0x2a2a30 }),
     );
     scene.add(axes);
 

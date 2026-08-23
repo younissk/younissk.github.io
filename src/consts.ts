@@ -16,6 +16,7 @@ export interface AuthorInfo {
   readonly github: string;
   readonly linkedin: string;
   readonly youtube: string;
+  readonly huggingface: string;
   readonly githubHandle: string;
   readonly repoUrl: string;
 }
@@ -26,6 +27,7 @@ export const AUTHOR: AuthorInfo = {
   github: 'https://github.com/younissk',
   linkedin: 'https://www.linkedin.com/in/youniss',
   youtube: 'https://www.youtube.com/@youniss-ml',
+  huggingface: 'https://huggingface.co/younissk',
   githubHandle: 'younissk',
   repoUrl: 'https://github.com/younissk/younissk.github.io',
 };
@@ -62,6 +64,7 @@ export const SOCIALS: readonly SocialLink[] = [
   { label: 'GitHub', href: AUTHOR.github, handle: '@younissk' },
   { label: 'LinkedIn', href: AUTHOR.linkedin, handle: '/in/youniss' },
   { label: 'YouTube', href: AUTHOR.youtube, handle: '@youniss-ml' },
+  { label: 'Hugging Face', href: AUTHOR.huggingface, handle: '@younissk' },
   { label: 'Contact', href: '/contact/' },
   { label: 'RSS', href: '/rss.xml' },
 ];

@@ -377,7 +377,6 @@ function allCards(): Card[] {
     { name: 'videos', eyebrow: 'Videos', title: blurb('/videos/') },
     { name: 'papers', eyebrow: 'Papers', title: blurb('/papers/') },
     { name: 'contact', eyebrow: 'Contact', title: blurb('/contact/') },
-    { name: 'cv', eyebrow: 'CV', title: AUTHOR.role },
     { name: 'now', eyebrow: 'Now', title: 'What I am working on right now' },
     { name: 'uses', eyebrow: 'Uses', title: 'The tools I actually work in' },
 

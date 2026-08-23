@@ -16,7 +16,6 @@ export interface SearchEntry {
 const PAGES: SearchEntry[] = [
   { href: '/', title: 'Home', detail: 'Start here', group: 'page', keywords: 'youniss kandah' },
   { href: '/about/', title: 'About', detail: 'Paramedic, construction, AI', group: 'page', keywords: 'bio background story' },
-  { href: '/cv/', title: 'CV', detail: 'Roles, education, skills', group: 'page', keywords: 'resume curriculum vitae experience' },
   { href: '/now/', title: 'Now', detail: 'What I am doing at the moment', group: 'page', keywords: 'current' },
   { href: '/uses/', title: 'Uses', detail: 'The stack I actually work in', group: 'page', keywords: 'setup tools stack' },
   { href: '/contact/', title: 'Contact', detail: 'Send me a message', group: 'page', keywords: 'email get in touch hire' },
