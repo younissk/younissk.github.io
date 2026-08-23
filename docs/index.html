@@ -18,14 +18,12 @@
 
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 
-    const SPACING = 46;
-    const STEPS_PER_FRAME = 2;
-    const FRAME_MS = 1000 / 24;
-    /* Walkers pick the neighbour that gets them closer to the goal this often.
-       At 1.0 they walk straight at it, the race is over in about a second and
-       the whole thing resets constantly, which reads as flicker. At 0.5 they
-       wander enough to tangle, box each other in, and have to unwind. */
-    const GREED = 0.5;
+    const SPACING = 24;
+    const STEPS_PER_FRAME = 1;
+    const FRAME_MS = 1000 / 9;
+    /* How often a walker ignores Warnsdorff and steps at random. Zero makes
+       every round look the same; too much and they strangle themselves early. */
+    const CHAOS = 0.12;
 
     /* Dim on purpose. This sits behind the hero and the text has to win. */
     const COLOURS = [
@@ -39,8 +37,8 @@
     let rows = 0;
     let owner = new Int8Array(0); // 0 free, 1..4 = walker id
     let walkers = [];
-    let goal = { x: 0, y: 0 };
-    let winner = -1;
+    let filled = 0;
+    let alive = 0;
     let holdUntil = 0;
     let raf = 0;
     let last = 0;
@@ -48,15 +46,11 @@
 
     const idx = (x, y) => y * cols + x;
     const inBounds = (x, y) => x >= 0 && x < cols && y >= 0 && y < rows;
-    const dist = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
 
     function reset() {
       owner = new Int8Array(cols * rows);
-      winner = -1;
-      goal = {
-        x: 2 + Math.floor(Math.random() * Math.max(1, cols - 4)),
-        y: 2 + Math.floor(Math.random() * Math.max(1, rows - 4)),
-      };
+      filled = 0;
+      alive = 4;
 
       walkers = [];
       for (let i = 0; i < 4; i++) {
@@ -67,26 +61,27 @@
           x = Math.floor(Math.random() * cols);
           y = Math.floor(Math.random() * rows);
           tries++;
-        } while ((owner[idx(x, y)] !== 0 || (x === goal.x && y === goal.y)) && tries < 200);
+        } while (owner[idx(x, y)] !== 0 && tries < 200);
 
         owner[idx(x, y)] = i + 1;
-        walkers.push({ id: i + 1, path: [{ x, y }], done: false, stuck: false });
+        filled++;
+        walkers.push({ id: i + 1, path: [{ x, y }], dead: false });
       }
     }
 
+    function freeNeighbours(x, y) {
+      let n = 0;
+      if (inBounds(x + 1, y) && owner[idx(x + 1, y)] === 0) n++;
+      if (inBounds(x - 1, y) && owner[idx(x - 1, y)] === 0) n++;
+      if (inBounds(x, y + 1) && owner[idx(x, y + 1)] === 0) n++;
+      if (inBounds(x, y - 1) && owner[idx(x, y - 1)] === 0) n++;
+      return n;
+    }
+
     function step(w) {
-      if (w.done || w.path.length === 0) return;
+      if (w.dead) return;
 
       const head = w.path[w.path.length - 1];
-      if (head.x === goal.x && head.y === goal.y) {
-        w.done = true;
-        if (winner === -1) {
-          winner = w.id;
-          holdUntil = performance.now() + 1400;
-        }
-        return;
-      }
-
       const options = [
         { x: head.x + 1, y: head.y },
         { x: head.x - 1, y: head.y },
@@ -95,23 +90,34 @@
       ].filter((n) => inBounds(n.x, n.y) && owner[idx(n.x, n.y)] === 0);
 
       if (options.length === 0) {
-        /* Boxed in. Unwind one cell and free it, which may also be the cell
-           another walker has been waiting on. */
-        const dead = w.path.pop();
-        if (dead) owner[idx(dead.x, dead.y)] = 0;
-        w.stuck = w.path.length === 0;
+        /* Sealed in. It stays where it died; the trail is the point. */
+        w.dead = true;
+        alive--;
         return;
       }
 
       let next;
-      if (Math.random() < GREED) {
-        options.sort((a, b) => dist(a, goal) - dist(b, goal));
-        next = options[0];
-      } else {
+      if (Math.random() < CHAOS) {
         next = options[Math.floor(Math.random() * options.length)];
+      } else {
+        /* Warnsdorff: take the tightest corner first, so the cells that would
+           otherwise be orphaned get used while they are still reachable. */
+        let best = Infinity;
+        let tied = [];
+        for (const o of options) {
+          const n = freeNeighbours(o.x, o.y);
+          if (n < best) {
+            best = n;
+            tied = [o];
+          } else if (n === best) {
+            tied.push(o);
+          }
+        }
+        next = tied[Math.floor(Math.random() * tied.length)];
       }
 
       owner[idx(next.x, next.y)] = w.id;
+      filled++;
       w.path.push(next);
     }
 
@@ -123,27 +129,13 @@
       const ox = SPACING * 0.5;
       const oy = SPACING * 0.5;
 
-      /* The goal: a small square, filled once someone reaches it. */
-      const gx = ox + goal.x * SPACING;
-      const gy = oy + goal.y * SPACING;
-      ctx.lineWidth = 2;
-      if (winner === -1) {
-        ctx.strokeStyle = 'rgba(255, 228, 0, 0.45)';
-        ctx.strokeRect(gx - 11, gy - 11, 22, 22);
-        ctx.strokeRect(gx - 4, gy - 4, 8, 8);
-      } else {
-        ctx.fillStyle = 'rgba(255, 228, 0, 0.9)';
-        ctx.fillRect(gx - 11, gy - 11, 22, 22);
-      }
-
       ctx.lineCap = 'square';
       ctx.lineJoin = 'miter';
 
       for (const w of walkers) {
         if (w.path.length === 0) continue;
-        const won = winner === w.id;
-        ctx.strokeStyle = won ? 'rgba(255, 228, 0, 0.95)' : COLOURS[w.id - 1];
-        ctx.lineWidth = won ? 4 : 3;
+        ctx.strokeStyle = COLOURS[w.id - 1];
+        ctx.lineWidth = 2;
 
         ctx.beginPath();
         ctx.moveTo(ox + w.path[0].x * SPACING, oy + w.path[0].y * SPACING);
@@ -152,9 +144,13 @@
         }
         ctx.stroke();
 
-        const head = w.path[w.path.length - 1];
-        ctx.fillStyle = ctx.strokeStyle;
-        ctx.fillRect(ox + head.x * SPACING - 4, oy + head.y * SPACING - 4, 8, 8);
+        /* A live head gets a marker; a dead one does not, so you can see who
+           is still going without any labels. */
+        if (!w.dead) {
+          const head = w.path[w.path.length - 1];
+          ctx.fillStyle = ctx.strokeStyle;
+          ctx.fillRect(ox + head.x * SPACING - 3, oy + head.y * SPACING - 3, 6, 6);
+        }
       }
     }
 
@@ -163,14 +159,16 @@
       if (now - last < FRAME_MS) return;
       last = now;
 
-      if (winner !== -1) {
-        if (now > holdUntil) reset();
+      if (alive === 0 || filled >= cols * rows) {
+        if (!holdUntil) holdUntil = now + 2200;
+        if (now > holdUntil) {
+          holdUntil = 0;
+          reset();
+        }
       } else {
         for (let s = 0; s < STEPS_PER_FRAME; s++) {
           for (const w of walkers) step(w);
         }
-        /* Everyone unwound to nothing: the grid is hostile, start over. */
-        if (walkers.every((w) => w.stuck)) reset();
       }
       draw();
     }
@@ -202,7 +200,7 @@
 
     if (reduced.matches) {
       /* One frozen frame: run the race to completion without painting it. */
-      for (let i = 0; i < 4000 && winner === -1; i++) for (const w of walkers) step(w);
+      for (let i = 0; i < 20000 && alive > 0; i++) for (const w of walkers) step(w);
       draw();
     } else {
       start();
