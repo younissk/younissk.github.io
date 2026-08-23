@@ -19,10 +19,26 @@ interface Props {
   publishedTime?: string;
   /** Extra classes on <main>, e.g. for a full-bleed hero page. */
   mainClass?: string;
+  /**
+   * Drop the header and footer. The home page is a full-viewport landing with
+   * nothing but the name, the profiles and a way in; chrome around it would be
+   * the only thing on screen competing with the simulation behind it.
+   *
+   * The command palette still loads, so ⌘K works there too.
+   */
+  bare?: boolean;
 }
 
-const { title, description, ogImage, noindex, ogType, publishedTime, mainClass } =
-  Astro.props;
+const {
+  title,
+  description,
+  ogImage,
+  noindex,
+  ogType,
+  publishedTime,
+  mainClass,
+  bare = false,
+} = Astro.props;
 
 const searchEntries = await buildSearchIndex();
 ---
@@ -42,12 +58,13 @@ const searchEntries = await buildSearchIndex();
   </head>
 
   <body class="flex min-h-svh flex-col">
-    <a class="skip-link" href="#main">Skip to content</a>
-    <Header />
+    {/* Nothing to skip past when there is no navigation above the content. */}
+    {!bare && <a class="skip-link" href="#main">Skip to content</a>}
+    {!bare && <Header />}
     <main id="main" class={mainClass}>
       <slot />
     </main>
-    <Footer />
+    {!bare && <Footer />}
     <CommandPalette entries={searchEntries} client:idle />
   </body>
 </html>
