@@ -1,0 +1,254 @@
+---
+/**
+ * Four self-avoiding walks racing to a goal.
+ *
+ * A port of younissk.github.io/p5-projects/Self avoiding walk, which is a
+ * single walker doing a depth-first walk with backtracking on a grid. This runs
+ * four of them on ONE shared grid, so they are self-avoiding and also avoid
+ * each other: a cell another walker is standing on is a wall. They race, they
+ * box each other in, and a walker that traps itself has to unwind.
+ *
+ * Written against the raw 2D canvas rather than p5. p5.min.js is about a
+ * megabyte, and this is the background of the most-visited page on a site whose
+ * whole architecture is that nothing third-party loads at runtime. The
+ * simulation is the same; the dependency is not worth it.
+ *
+ * It is a background, so it yields: it stops when the tab is hidden, stops when
+ * scrolled out of view, and renders a single frozen frame instead of animating
+ * when the visitor asks for reduced motion.
+ */
+---
+
+<canvas id="walk-bg" aria-hidden="true"></canvas>
+
+<style>
+  #walk-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    const canvas = document.getElementById('walk-bg');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d', { alpha: false });
+    if (!ctx) return;
+
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+
+    const SPACING = 46;
+    const STEPS_PER_FRAME = 2;
+    const FRAME_MS = 1000 / 24;
+    /* Walkers pick the neighbour that gets them closer to the goal this often.
+       At 1.0 they walk straight at it, the race is over in about a second and
+       the whole thing resets constantly, which reads as flicker. At 0.5 they
+       wander enough to tangle, box each other in, and have to unwind. */
+    const GREED = 0.5;
+
+    /* Dim on purpose. This sits behind the hero and the text has to win. */
+    const COLOURS = [
+      'rgba(255, 228, 0, 0.55)',
+      'rgba(255, 255, 255, 0.34)',
+      'rgba(255, 255, 255, 0.18)',
+      'rgba(255, 228, 0, 0.22)',
+    ];
+
+    let cols = 0;
+    let rows = 0;
+    let owner = new Int8Array(0); // 0 free, 1..4 = walker id
+    let walkers = [];
+    let goal = { x: 0, y: 0 };
+    let winner = -1;
+    let holdUntil = 0;
+    let raf = 0;
+    let last = 0;
+    let running = false;
+
+    const idx = (x, y) => y * cols + x;
+    const inBounds = (x, y) => x >= 0 && x < cols && y >= 0 && y < rows;
+    const dist = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+
+    function reset() {
+      owner = new Int8Array(cols * rows);
+      winner = -1;
+      goal = {
+        x: 2 + Math.floor(Math.random() * Math.max(1, cols - 4)),
+        y: 2 + Math.floor(Math.random() * Math.max(1, rows - 4)),
+      };
+
+      walkers = [];
+      for (let i = 0; i < 4; i++) {
+        let x = 0;
+        let y = 0;
+        let tries = 0;
+        do {
+          x = Math.floor(Math.random() * cols);
+          y = Math.floor(Math.random() * rows);
+          tries++;
+        } while ((owner[idx(x, y)] !== 0 || (x === goal.x && y === goal.y)) && tries < 200);
+
+        owner[idx(x, y)] = i + 1;
+        walkers.push({ id: i + 1, path: [{ x, y }], done: false, stuck: false });
+      }
+    }
+
+    function step(w) {
+      if (w.done || w.path.length === 0) return;
+
+      const head = w.path[w.path.length - 1];
+      if (head.x === goal.x && head.y === goal.y) {
+        w.done = true;
+        if (winner === -1) {
+          winner = w.id;
+          holdUntil = performance.now() + 1400;
+        }
+        return;
+      }
+
+      const options = [
+        { x: head.x + 1, y: head.y },
+        { x: head.x - 1, y: head.y },
+        { x: head.x, y: head.y + 1 },
+        { x: head.x, y: head.y - 1 },
+      ].filter((n) => inBounds(n.x, n.y) && owner[idx(n.x, n.y)] === 0);
+
+      if (options.length === 0) {
+        /* Boxed in. Unwind one cell and free it, which may also be the cell
+           another walker has been waiting on. */
+        const dead = w.path.pop();
+        if (dead) owner[idx(dead.x, dead.y)] = 0;
+        w.stuck = w.path.length === 0;
+        return;
+      }
+
+      let next;
+      if (Math.random() < GREED) {
+        options.sort((a, b) => dist(a, goal) - dist(b, goal));
+        next = options[0];
+      } else {
+        next = options[Math.floor(Math.random() * options.length)];
+      }
+
+      owner[idx(next.x, next.y)] = w.id;
+      w.path.push(next);
+    }
+
+    function draw() {
+      const styles = getComputedStyle(document.documentElement);
+      ctx.fillStyle = styles.getPropertyValue('--c-bg').trim() || '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const ox = SPACING * 0.5;
+      const oy = SPACING * 0.5;
+
+      /* The goal: a small square, filled once someone reaches it. */
+      const gx = ox + goal.x * SPACING;
+      const gy = oy + goal.y * SPACING;
+      ctx.lineWidth = 2;
+      if (winner === -1) {
+        ctx.strokeStyle = 'rgba(255, 228, 0, 0.45)';
+        ctx.strokeRect(gx - 11, gy - 11, 22, 22);
+        ctx.strokeRect(gx - 4, gy - 4, 8, 8);
+      } else {
+        ctx.fillStyle = 'rgba(255, 228, 0, 0.9)';
+        ctx.fillRect(gx - 11, gy - 11, 22, 22);
+      }
+
+      ctx.lineCap = 'square';
+      ctx.lineJoin = 'miter';
+
+      for (const w of walkers) {
+        if (w.path.length === 0) continue;
+        const won = winner === w.id;
+        ctx.strokeStyle = won ? 'rgba(255, 228, 0, 0.95)' : COLOURS[w.id - 1];
+        ctx.lineWidth = won ? 4 : 3;
+
+        ctx.beginPath();
+        ctx.moveTo(ox + w.path[0].x * SPACING, oy + w.path[0].y * SPACING);
+        for (let i = 1; i < w.path.length; i++) {
+          ctx.lineTo(ox + w.path[i].x * SPACING, oy + w.path[i].y * SPACING);
+        }
+        ctx.stroke();
+
+        const head = w.path[w.path.length - 1];
+        ctx.fillStyle = ctx.strokeStyle;
+        ctx.fillRect(ox + head.x * SPACING - 4, oy + head.y * SPACING - 4, 8, 8);
+      }
+    }
+
+    function tick(now) {
+      raf = requestAnimationFrame(tick);
+      if (now - last < FRAME_MS) return;
+      last = now;
+
+      if (winner !== -1) {
+        if (now > holdUntil) reset();
+      } else {
+        for (let s = 0; s < STEPS_PER_FRAME; s++) {
+          for (const w of walkers) step(w);
+        }
+        /* Everyone unwound to nothing: the grid is hostile, start over. */
+        if (walkers.every((w) => w.stuck)) reset();
+      }
+      draw();
+    }
+
+    function size() {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      canvas.width = Math.floor(innerWidth * dpr);
+      canvas.height = Math.floor(innerHeight * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cols = Math.max(4, Math.floor(innerWidth / SPACING));
+      rows = Math.max(4, Math.floor(innerHeight / SPACING));
+      reset();
+      draw();
+    }
+
+    function start() {
+      if (running || reduced.matches) return;
+      running = true;
+      last = 0;
+      raf = requestAnimationFrame(tick);
+    }
+
+    function stop() {
+      running = false;
+      cancelAnimationFrame(raf);
+    }
+
+    size();
+
+    if (reduced.matches) {
+      /* One frozen frame: run the race to completion without painting it. */
+      for (let i = 0; i < 4000 && winner === -1; i++) for (const w of walkers) step(w);
+      draw();
+    } else {
+      start();
+    }
+
+    let resizeTimer = 0;
+    addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(size, 200);
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      document.hidden ? stop() : start();
+    });
+
+    /* Off-screen is off. The hero is short, so this stops within a scroll. */
+    const sentinel = document.getElementById('main') ?? document.body;
+    new IntersectionObserver(
+      ([entry]) => (entry.isIntersecting ? start() : stop()),
+      { rootMargin: '0px 0px -60% 0px' },
+    ).observe(sentinel);
+
+    reduced.addEventListener('change', () => (reduced.matches ? stop() : start()));
+  })();
+</script>

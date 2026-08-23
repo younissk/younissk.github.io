@@ -123,13 +123,16 @@
   }
 
   html {
+    /* The ground colour lives here, not on body, so a fixed z-index:-1 canvas
+       can sit between the two. body painting its own background would cover it. */
+    background-color: var(--c-bg);
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
   }
 
   body {
-    background-color: var(--c-bg);
+    background-color: transparent;
     color: var(--c-ink);
     font-family: var(--font-sans);
     font-size: 1rem;

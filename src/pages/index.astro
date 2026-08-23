@@ -5,6 +5,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import Tag from '../components/Tag.astro';
 import SocialLinks from '../components/SocialLinks.astro';
+import WalkBackground from '../components/WalkBackground.astro';
 import ContactForm from '../components/ContactForm.astro';
 import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
 
@@ -56,6 +57,8 @@ const STACK_SHOWN = 6;
 ---
 
 <BaseLayout title={`${AUTHOR.name} — ${AUTHOR.role}`} description={SITE_DESCRIPTION}>
+  <WalkBackground />
+
   <div class="page">
     <PageHeader
       eyebrow={AUTHOR.role}
