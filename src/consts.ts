@@ -85,10 +85,14 @@ export const RSS_PATH = '/rss.xml';
  * form stops working — SUCCESSION.md explains how to drop it and go back to a
  * plain address.
  */
-export const CONTACT_ENDPOINT = '';
+export const CONTACT_ENDPOINT = 'https://api.web3forms.com/submit';
 
 /**
  * Web3Forms wants the key in a hidden field rather than the URL. Ignored when
  * empty, so Formspree-style endpoints need nothing here.
+ *
+ * This key is public by design — Web3Forms documents it as safe in client-side
+ * code, and it has to ship in the HTML for the form to work at all. It is not a
+ * secret and does not belong in Actions secrets.
  */
-export const CONTACT_ACCESS_KEY = '';
+export const CONTACT_ACCESS_KEY = 'a0a7b927-222f-4cd6-be8e-0cc9addf5d91';

@@ -10,7 +10,9 @@
 
   Built with: Astro, Tailwind CSS
   Served as: static HTML committed to git, published by GitHub Pages
-  Requires: no build step, no CI, no database, no third-party requests
+  Requires: no build step, no CI, no database
+  Third party: one, and only if you use it. The contact form posts to
+               Web3Forms. Nothing is loaded from anyone else, on any page.
   Analytics: none
   Cookies: none
 
