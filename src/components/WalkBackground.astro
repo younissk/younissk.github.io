@@ -19,9 +19,12 @@
  * become isolated, and survive far longer than a random step would. A small
  * chance of ignoring the rule keeps the shapes from being identical each round.
  *
- * A walker with nowhere to go dies where it stands rather than backtracking:
- * unwinding would un-fill the grid, and filling is the point. The round ends
- * when all four are dead or the grid is full, then it resets.
+ * A walker with nowhere to go dies, and dying frees every cell it ever took.
+ * A replacement spawns immediately somewhere else, so there are always four
+ * running and the animation never ends: territory is recycled rather than
+ * consumed, and the grid settles into a churn instead of filling up and
+ * stopping. There is still a hard reset if the grid somehow fills completely,
+ * which the recycling makes close to impossible.
  *
  * Written against the raw 2D canvas rather than p5. p5.min.js is about a
  * megabyte, and this is the background of the most-visited page on a site whose
@@ -76,7 +79,6 @@
     let owner = new Int8Array(0); // 0 free, 1..4 = walker id
     let walkers = [];
     let filled = 0;
-    let alive = 0;
     let holdUntil = 0;
     let raf = 0;
     let last = 0;
@@ -88,23 +90,44 @@
     function reset() {
       owner = new Int8Array(cols * rows);
       filled = 0;
-      alive = 4;
 
       walkers = [];
       for (let i = 0; i < 4; i++) {
-        let x = 0;
-        let y = 0;
-        let tries = 0;
-        do {
-          x = Math.floor(Math.random() * cols);
-          y = Math.floor(Math.random() * rows);
-          tries++;
-        } while (owner[idx(x, y)] !== 0 && tries < 200);
-
-        owner[idx(x, y)] = i + 1;
-        filled++;
-        walkers.push({ id: i + 1, path: [{ x, y }], dead: false });
+        walkers.push({ id: i + 1, path: [], dead: false });
+        respawn(walkers[i]);
       }
+    }
+
+    /** A free cell, or null when there is genuinely nowhere left. */
+    function freeCell() {
+      for (let tries = 0; tries < 300; tries++) {
+        const x = Math.floor(Math.random() * cols);
+        const y = Math.floor(Math.random() * rows);
+        if (owner[idx(x, y)] === 0) return { x, y };
+      }
+      /* Random darts missed, so sweep. Cheap, and only runs when the grid is
+         nearly full, which is exactly when darts stop working. */
+      for (let i = 0; i < owner.length; i++) {
+        if (owner[i] === 0) return { x: i % cols, y: Math.floor(i / cols) };
+      }
+      return null;
+    }
+
+    /** Free everything this walker took and drop it back in somewhere else. */
+    function respawn(w) {
+      for (const c of w.path) owner[idx(c.x, c.y)] = 0;
+      filled -= w.path.length;
+
+      const spot = freeCell();
+      if (!spot) {
+        w.path = [];
+        w.dead = true;
+        return;
+      }
+      owner[idx(spot.x, spot.y)] = w.id;
+      filled++;
+      w.path = [spot];
+      w.dead = false;
     }
 
     function freeNeighbours(x, y) {
@@ -128,9 +151,9 @@
       ].filter((n) => inBounds(n.x, n.y) && owner[idx(n.x, n.y)] === 0);
 
       if (options.length === 0) {
-        /* Sealed in. It stays where it died; the trail is the point. */
-        w.dead = true;
-        alive--;
+        /* Sealed in. It gives its territory back and starts over elsewhere,
+           which is what keeps this running forever instead of silting up. */
+        respawn(w);
         return;
       }
 
@@ -197,7 +220,7 @@
       if (now - last < FRAME_MS) return;
       last = now;
 
-      if (alive === 0 || filled >= cols * rows) {
+      if (filled >= cols * rows) {
         if (!holdUntil) holdUntil = now + 2200;
         if (now > holdUntil) {
           holdUntil = 0;
@@ -238,7 +261,7 @@
 
     if (reduced.matches) {
       /* One frozen frame: run the race to completion without painting it. */
-      for (let i = 0; i < 20000 && alive > 0; i++) for (const w of walkers) step(w);
+      for (let i = 0; i < 6000; i++) for (const w of walkers) step(w);
       draw();
     } else {
       start();
