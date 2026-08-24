@@ -60,11 +60,11 @@
     "forks": 3
   },
   "https://huggingface.co/datasets/younissk/audio-text-embed-to-images": {
-    "downloads": 21,
+    "downloads": 14,
     "likes": 0
   },
   "https://huggingface.co/datasets/younissk/tool-calling-mix": {
-    "downloads": 190,
+    "downloads": 213,
     "likes": 4
   },
   "https://huggingface.co/younissk/DISCO-v0.1": {
@@ -76,11 +76,11 @@
     "likes": 0
   },
   "https://huggingface.co/younissk/nanoBeard-frigate-125M-GGUF": {
-    "downloads": 44,
+    "downloads": 39,
     "likes": 0
   },
   "https://huggingface.co/younissk/nanoBeard-frigate-360M-GGUF": {
-    "downloads": 76,
+    "downloads": 62,
     "likes": 4
   },
   "https://huggingface.co/younissk/nanoBeard-galleon-34M": {
@@ -92,12 +92,12 @@
     "likes": 1
   },
   "https://huggingface.co/younissk/nanoBeard-sloop-14M": {
-    "downloads": 132,
+    "downloads": 111,
     "likes": 6
   },
   "https://huggingface.co/younissk/nanoBeard-sloop-14M-GGUF": {
-    "downloads": 37,
+    "downloads": 34,
     "likes": 0
   },
-  "syncedAt": "2026-08-18"
+  "syncedAt": "2026-08-24"
 }
