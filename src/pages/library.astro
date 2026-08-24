@@ -15,7 +15,7 @@ import { getCollection, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import Tag from '../components/Tag.astro';
-import { VIDEOS, videoHref } from '../lib/videoSlug';
+import { VIDEOS, videoHref } from '../lib/videos';
 
 const [posts, papers] = await Promise.all([
   getCollection('posts', ({ data }) => !data.draft),

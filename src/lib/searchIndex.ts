@@ -1,5 +1,5 @@
 import { getCollection } from 'astro:content';
-import { videoHref, VIDEOS } from './videoSlug';
+import { videoHref, VIDEOS } from './videos';
 
 export interface SearchEntry {
   /** Route to navigate to. */
