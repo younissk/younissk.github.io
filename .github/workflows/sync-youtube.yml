@@ -40,6 +40,16 @@ jobs:
           YT_CHANNEL_ID: ${{ secrets.YT_CHANNEL_ID }}
         run: npm run sync:youtube
 
+      # The published site IS the committed docs/ folder, so writing the JSON
+      # into src/ is only half the job: without this the data sits in the repo
+      # and never reaches a page. Verified the hard way — 27 videos landed in
+      # src/data/videos.json and the live Library still showed six entries.
+      #
+      # This does not put CI in the publish path. If this step ever breaks, the
+      # last good docs/ keeps serving; the Action is an author, not the printer.
+      - name: Rebuild the site
+        run: npm run build
+
       - name: Commit if changed
         run: |
           if git diff --quiet -- src/data/videos.json; then
@@ -48,6 +58,6 @@ jobs:
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/data/videos.json
+          git add src/data/videos.json docs
           git commit -m "chore(videos): sync YouTube feed"
           git push

@@ -41,11 +41,14 @@ const configured = CONTACT_ENDPOINT.trim().length > 0;
         <input type="hidden" name="redirect" value={`${SITE_URL}/contact/?sent=1`} />
         <input type="hidden" name="subject" value="Message from youniss.dev" />
 
-        {/* Honeypot. A public endpoint gets scraped; bots fill every field. */}
-        <div class="hp" aria-hidden="true">
-          <label for="company">Company</label>
-          <input id="company" type="text" name="botcheck" tabindex="-1" autocomplete="off" />
-        </div>
+        {/*
+          Honeypot. Web3Forms documents this as a CHECKBOX named botcheck, and
+          it silently discards a submission where it is set. It was a text input
+          here, which is a quiet way to lose real messages: an off-screen text
+          field labelled "Company" is exactly what a browser autofill will
+          helpfully complete, and the sender would never know.
+        */}
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" aria-hidden="true" />
 
         <div class="field">
           <label for="cf-name">Name</label>

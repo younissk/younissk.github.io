@@ -74,6 +74,7 @@ const GH_HOST = 'github.com';
 
 interface HubMetric {
   downloads: number;
+  downloadsMonth?: number;
   likes: number;
 }
 
@@ -232,7 +233,10 @@ async function getJson<T>(
 
 interface HubItem {
   id?: string;
+  /** Rolling 30-day window — what a repo page shows by default. */
   downloads?: number;
+  /** Cumulative. Only returned when explicitly expanded, see below. */
+  downloadsAllTime?: number;
   likes?: number;
 }
 
@@ -246,15 +250,33 @@ async function fetchHubIndex(
   endpoint: 'models' | 'datasets',
   owner: string,
 ): Promise<Map<string, HubMetric> | null> {
-  const url = `${HF_API}/${endpoint}?author=${encodeURIComponent(owner)}&limit=1000`;
+  /*
+   * `downloads` from this endpoint is a ROLLING 30-DAY count, not a total. It
+   * is what the site showed at first, and it made the work look far smaller
+   * than it is: sloop-14M reads 111 for the month against 3,407 all time.
+   * Worse, it goes down week to week, so a chart of it looks like decline.
+   *
+   * downloadsAllTime is the cumulative figure and is only returned when asked
+   * for by name through expand[].
+   */
+  const url =
+    `${HF_API}/${endpoint}?author=${encodeURIComponent(owner)}&limit=1000` +
+    `&expand[]=downloads&expand[]=downloadsAllTime&expand[]=likes`;
   const items = await getJson<HubItem[]>(url, {}, `hf ${endpoint} for ${owner}`);
   if (!Array.isArray(items)) return null;
 
   const index = new Map<string, HubMetric>();
   for (const item of items) {
     if (!item.id) continue;
+    const allTime = Number.isFinite(item.downloadsAllTime)
+      ? Number(item.downloadsAllTime)
+      : null;
+    const month = Number.isFinite(item.downloads) ? Number(item.downloads) : 0;
     index.set(item.id.toLowerCase(), {
-      downloads: Number.isFinite(item.downloads) ? Number(item.downloads) : 0,
+      /* All time is the headline. Fall back to the 30-day figure only if the
+         expansion ever stops being honoured, so the number never vanishes. */
+      downloads: allTime ?? month,
+      downloadsMonth: month,
       likes: Number.isFinite(item.likes) ? Number(item.likes) : 0,
     });
   }
@@ -302,7 +324,11 @@ function serialise(metrics: Metrics, syncedAt: string | null): string {
     const value = metrics[key];
     ordered[key] =
       'downloads' in value
-        ? { downloads: value.downloads, likes: value.likes }
+        ? {
+            downloads: value.downloads,
+            downloadsMonth: value.downloadsMonth,
+            likes: value.likes,
+          }
         : { stars: value.stars, forks: value.forks };
   }
   if (syncedAt) ordered[SYNCED_AT] = syncedAt;
