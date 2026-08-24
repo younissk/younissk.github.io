@@ -6,39 +6,42 @@
  *
  * Optional extras (resources, notes, long-form body) come from the `videos`
  * content collection, keyed by the YouTube video id — src/content/videos/<id>.md.
+ *
+ * The route is the slugified title, not the video id: /videos/TMi4chYVcSY/ told
+ * a reader and a search engine nothing. This one file emits both, though — the
+ * real page at the slug, and a redirect stub at the old id, because those id
+ * URLs were published and a URL you have shipped is a promise.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import ExternalLink from '../../components/ExternalLink.astro';
 import Prose from '../../components/Prose.astro';
 import { getCollection, render } from 'astro:content';
-import videosData from '../../data/videos.json';
-
-interface Thumb {
-  url: string;
-  width: number;
-  height: number;
-}
-
-interface Video {
-  id: string;
-  title: string;
-  description: string;
-  publishedAt: string;
-  thumbnails: { default: Thumb | null; medium: Thumb | null; high: Thumb | null };
-  duration: string | null;
-  viewCount: number | null;
-  url: string;
-}
+import { SITE_URL } from '../../consts';
+import { VIDEOS, videoRoutes, videoSlug } from '../../lib/videoSlug';
+import type { VideoRecord } from '../../lib/videoSlug';
 
 export function getStaticPaths() {
-  return (videosData as unknown as Video[]).map((video) => ({
-    params: { id: video.id },
-    props: { video },
+  const byId = new Map(VIDEOS.map((v) => [v.id, v]));
+
+  const pages = videoRoutes().map(({ slug, id }) => ({
+    params: { slug },
+    props: { video: byId.get(id)!, redirectTo: null as string | null },
   }));
+
+  /* Old id URLs keep working. They were live, so they are a promise. */
+  const redirects = VIDEOS.filter((v) => videoSlug(v.id) !== v.id).map((v) => ({
+    params: { slug: v.id },
+    props: { video: v, redirectTo: `/videos/${videoSlug(v.id)}/` },
+  }));
+
+  return [...pages, ...redirects];
 }
 
-const { video } = Astro.props as { video: Video };
+const { video, redirectTo } = Astro.props as {
+  video: VideoRecord;
+  redirectTo: string | null;
+};
 
 /** "PT1H2M3S" → "1:02:03"; "PT12M34S" → "12:34". */
 function formatDuration(iso: string | null): string | null {
@@ -111,6 +114,29 @@ const summary = description
   : `Watch “${video.title}” — part of the video archive on youniss.dev.`;
 ---
 
+{
+  /* A stub, not a page. Meta refresh plus a canonical, which is the most a
+     static host can do without a redirect layer, and noindex so the duplicate
+     never competes with the real one. */
+  redirectTo && (
+    <html lang="en">
+      <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="refresh" content={`0; url=${redirectTo}`} />
+        <link rel="canonical" href={new URL(redirectTo, SITE_URL).href} />
+        <meta name="robots" content="noindex, follow" />
+        <title>{video.title}</title>
+      </head>
+      <body>
+        <p>
+          This video moved to <a href={redirectTo}>{redirectTo}</a>.
+        </p>
+      </body>
+    </html>
+  )
+}
+
+{!redirectTo && (
 <BaseLayout
   title={video.title}
   description={summary}
@@ -237,8 +263,23 @@ const summary = description
         <a class="link-quiet" href="/videos/">← All videos</a>
       </div>
     </div>
+
+      <section class="section">
+        <div class="section-head">
+          <h2 class="label">Keep a copy</h2>
+        </div>
+        <p class="text-ink-muted max-w-text">
+          It is my video. If you want it on your own disk rather than on
+          someone else's platform, this is how:
+        </p>
+        <pre class="dl-block"><code>yt-dlp {video.url}</code></pre>
+        <p class="meta mt-2">
+          Needs <a class="link" href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a>.
+        </p>
+      </section>
   </div>
 </BaseLayout>
+)}
 
 <script>
   // Click-to-load: swap the poster for the real iframe only on demand.

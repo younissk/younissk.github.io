@@ -1,4 +1,5 @@
 import { getCollection } from 'astro:content';
+import { videoHref, VIDEOS } from './videoSlug';
 
 export interface SearchEntry {
   /** Route to navigate to. */
@@ -61,7 +62,7 @@ export async function buildSearchIndex(): Promise<SearchEntry[]> {
       keywords: e.data.tags.join(' '),
     })),
     ...videos.map((e) => ({
-      href: `/videos/${e.id}/`,
+      href: videoHref(e.id),
       title: e.id,
       detail: 'Video',
       group: 'video',

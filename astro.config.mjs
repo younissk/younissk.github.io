@@ -1,5 +1,19 @@
 // @ts-check
+import { readFileSync } from 'node:fs';
+
 import { defineConfig } from 'astro/config';
+
+/*
+ * Video ids, read straight off the synced data. The video routes emit a real
+ * page at the slugified title plus a noindex redirect stub at the old id URL,
+ * and a sitemap that lists noindex URLs is asking a crawler to fetch pages it
+ * has been told to ignore.
+ */
+const VIDEO_IDS = new Set(
+  JSON.parse(readFileSync(new URL('./src/data/videos.json', import.meta.url), 'utf8')).map(
+    (v) => v.id,
+  ),
+);
 
 import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
@@ -40,7 +54,11 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
-      filter: (page) => !page.includes('/draft/'),
+      filter: (page) => {
+        if (page.includes('/draft/')) return false;
+        const segment = page.replace(/\/$/, '').split('/').pop();
+        return !VIDEO_IDS.has(segment);
+      },
     }),
     react(),
   ],
