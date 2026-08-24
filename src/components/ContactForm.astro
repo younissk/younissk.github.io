@@ -39,7 +39,14 @@ const configured = CONTACT_ENDPOINT.trim().length > 0;
         {/* Come back to this page after sending. */}
         <input type="hidden" name="_next" value={`${SITE_URL}/contact/?sent=1`} />
         <input type="hidden" name="redirect" value={`${SITE_URL}/contact/?sent=1`} />
-        <input type="hidden" name="subject" value="Message from youniss.dev" />
+        <input type="hidden" name="subject" value="youniss.dev — new message" />
+        {/*
+          A named sender reads as a person rather than an anonymous relay, which
+          is one of the things a spam filter weighs. Reply-To is not set here on
+          purpose: Web3Forms already uses the `email` field for it, so replying
+          goes straight to whoever wrote in.
+        */}
+        <input type="hidden" name="from_name" value="youniss.dev contact form" />
 
         {/*
           Honeypot. Web3Forms documents this as a CHECKBOX named botcheck, and
