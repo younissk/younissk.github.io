@@ -1,1 +1,704 @@
-[]
+[
+  {
+    "id": "TMi4chYVcSY",
+    "title": "I Built an AI that Runs on your Phone (no servers)",
+    "description": "i made an ai app which runs my own models on your device without servers. i published it on the appstore, hope you enjoy it.\n\nhttps://younissk.github.io/nanoBeard/\nhttps://apps.apple.com/at/app/nanobeard/id6776172780?l=en-GB\nhttps://huggingface.co/younissk/models\n\n0:00 Intro\n0:36 The Plan\n1:33 Why Build the App First?\n4:44 Building the First App Version\n7:08 Improving the Dataset & Training\n13:18 Chatbot Tests\n14:59 Chinchilla Optimal\n17:31 125M vs 361M\n26:00 Scope Creep\n26:40 Submitting to app stores\n37:10 Marketing Plan\n38:27 Outro",
+    "publishedAt": "2026-06-27T20:45:07Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/TMi4chYVcSY-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/TMi4chYVcSY-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/TMi4chYVcSY-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT40M",
+    "viewCount": 26715,
+    "url": "https://www.youtube.com/watch?v=TMi4chYVcSY"
+  },
+  {
+    "id": "coDs1LWmAdI",
+    "title": "I Built My Own LLM Completely From Scratch (for pirates)",
+    "description": "openai spent millions. i spent 0.70 euros for training.\n\nit was a really fun probject, hope you learned something. It was interesting to see the entire pipeline from data to a workable llm, in really just a part of my weekend. Honestly, editing this video almost took longer than the entire project.\n\nNevertheless, here is the HF space if you want to try it out:\nhttps://huggingface.co/spaces/younissk/nanoBeard-playground\nAnd here github: https://github.com/younissk/pirate_llm\n\n\n00:00 The Goal\n00:52 How to build a LLM\n02:54 Finding the data\n04:30 Tokenizer And BPE Vocab\n06:52 GPT Architecture Explained\n14:01 GPU Training Run\n15:53 Sampling The Base Model\n17:41 Instruction Tuning Chatbot\n20:13 Branding And Demo Space\n22:55 Final Wrap Up",
+    "publishedAt": "2026-05-17T21:38:46Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/coDs1LWmAdI-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/coDs1LWmAdI-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/coDs1LWmAdI-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT23M20S",
+    "viewCount": 92302,
+    "url": "https://www.youtube.com/watch?v=coDs1LWmAdI"
+  },
+  {
+    "id": "XGINo_KUqBg",
+    "title": "I Built My Own Programming Language",
+    "description": "I was frustrated with python, so I thought I could do it better. I was wrong, but it was still a super cool experience. \n\nHere the repo: https://github.com/younissk/tython\nHere the docs: https://younissk.github.io/tython/\n\n00:00 Why Python Feels Broken\n01:21 Building a Python Transpiler (Abstract Syntax Tree)\n02:25 Designing syntax for LLMs\n03:23 Static Types and Data Models\n04:19 Opinionated Syntax and Formatting\n05:25 Better Errors and Token Efficiency\n06:38 Tooling and LSP Support\n08:37 Unified Project Manager\n09:33 Imports and Compatibility\n11:02 Branding Name Docs Mascot\n13:43 Putting it all together in a project\n15:18 Lessons Learned",
+    "publishedAt": "2026-04-29T19:06:30Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/XGINo_KUqBg-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/XGINo_KUqBg-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/XGINo_KUqBg-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT17M9S",
+    "viewCount": 19205,
+    "url": "https://www.youtube.com/watch?v=XGINo_KUqBg"
+  },
+  {
+    "id": "PSqLmpM0Gu4",
+    "title": "I Made The Most Accurate AI Research Assistant For Science",
+    "description": "I Made a unique AI research assistant using Azure and OpenAI. It was a super fun project and I wanted to share to hopefully help others with their ideas. Hope it helps!\n\nHere is the link: https://papernavigator.com/\nAnd code: https://github.com/younissk/PaperNavigator",
+    "publishedAt": "2026-04-23T15:22:33Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/PSqLmpM0Gu4-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/PSqLmpM0Gu4-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/PSqLmpM0Gu4-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT13M13S",
+    "viewCount": 465,
+    "url": "https://www.youtube.com/watch?v=PSqLmpM0Gu4"
+  },
+  {
+    "id": "XNtWpyxMuwQ",
+    "title": "Retrieval Augmented Generation Explained in 3 Minutes (No Fluff)",
+    "description": "in this video i explain clearly how rag and semantic search actually works. no fluff, no ai circle jerking.\n\n00:00 why rag exists\n00:27 Semantic Search & Embeddings Explained\n01:17 chunking\n01:47 vector databases\n02:12 entire rag workflow",
+    "publishedAt": "2026-02-19T13:46:50Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/XNtWpyxMuwQ-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/XNtWpyxMuwQ-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/XNtWpyxMuwQ-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT2M46S",
+    "viewCount": 132,
+    "url": "https://www.youtube.com/watch?v=XNtWpyxMuwQ"
+  },
+  {
+    "id": "wnUqElQcGZ4",
+    "title": "how long term agent memory works",
+    "description": "Understanding Long-Term Memory in Personal Assistant Agents\n\nIn this video, we explore how personal assistant agents like Chat GPT learn and remember details about you through long-term memory. We break down the three types of long-term memory: semantic, episodic, and procedural. Learn how these memories help the agent retain facts, recall past interactions, and adapt to user preferences. We also discuss how these memories are updated, whether in real-time or asynchronously. Dive into the mechanisms that enable your digital assistant to provide a more personalized experience!\n\n00:00 Introduction to Personal Assistant Agents\n00:48 Types of Long-Term Memories\n01:06 Semantic Memory Explained\n01:45 Episodic Memory Explained\n02:22 Procedural Memory Explained\n03:04 How Memory Works in Practice\n04:49 Updating the Memory\n06:00 Conclusion and Final Thoughts",
+    "publishedAt": "2026-02-12T23:01:19Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/wnUqElQcGZ4-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/wnUqElQcGZ4-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/wnUqElQcGZ4-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT6M14S",
+    "viewCount": 113,
+    "url": "https://www.youtube.com/watch?v=wnUqElQcGZ4"
+  },
+  {
+    "id": "So3Xw-3FCH8",
+    "title": "Query Expansion: The RAG Technique Everyone's Missing",
+    "description": "Enhance Your RAG Systems with Query Expansion Techniques\n\nIn this episode, we explore building a help page system for a laptop manufacturer using Retrieval-Augmented Generation (RAG). We address the issue of lost context when comparing user queries to large data chunks by introducing query expansion techniques. Learn how to use a Language Learning Model (LLM) to create enhanced queries or multiple search queries to improve accuracy. Discover practical methods to increase the effectiveness of RAG systems, while understanding the trade-offs involved.\n\n00:00 Introduction to Building a RAG System\n00:19 Understanding Query and Chunk Embeddings\n00:36 Challenges with Query Context\n00:53 Introducing Query Expansion\n01:18 Creating Fake Answers with LLM\n01:51 Generating New Query Text\n02:13 Alternative Query Expansion Methods\n02:30 Combining Multiple Search Queries\n03:32 Final Thoughts on Query Expansion\n03:53 Conclusion and Personal Insights",
+    "publishedAt": "2026-02-10T23:00:36Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/So3Xw-3FCH8-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/So3Xw-3FCH8-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/So3Xw-3FCH8-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT4M3S",
+    "viewCount": 270,
+    "url": "https://www.youtube.com/watch?v=So3Xw-3FCH8"
+  },
+  {
+    "id": "SjPmlJQPz7E",
+    "title": "Knowledge Graph RAG explained in 5min",
+    "description": "Understanding Knowledge Graph RAG: Elevating Retrieval-Augmented Generation\n\nIn this video, we dive into Knowledge Graph RAG and compare it with vector database RAG for retrieval-augmented generation. We explore how vector DB RAG works by chunking a document into smaller pieces and creating semantic embeddings for each chunk, which are then used for search queries through cosine similarity. However, this approach lacks relational context between chunks. Conversely, Knowledge Graph RAG maintains these relationships, connecting chunks, books, and other entities like authors through nodes and edges in a graph. This method enhances retrieval capabilities, making it particularly useful for complex data relationships and is utilized by major search engines like Google and Bing.\n\n00:00 Introduction to Knowledge Graph RAG\n00:09 Understanding Vector DB RAG\n00:35 Chunking and Embeddings\n01:24 Limitations of Vector DB RAG\n02:39 Introduction to Knowledge Graphs\n03:03 Building Relationships in Knowledge Graphs\n04:25 Advantages of Knowledge Graph RAG\n04:37 Real-World Applications\n05:10 Conclusion and Future Prospects",
+    "publishedAt": "2026-02-09T07:29:18Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/SjPmlJQPz7E-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/SjPmlJQPz7E-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/SjPmlJQPz7E-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT5M18S",
+    "viewCount": 326,
+    "url": "https://www.youtube.com/watch?v=SjPmlJQPz7E"
+  },
+  {
+    "id": "NmrEGofWIgg",
+    "title": "Protein Hydrolysis and Cleavage Overview | Bioanalytics",
+    "description": "Breaking Down Proteins: Hydrolysis and Cleavage Explained\n\nIn this episode, we delve into protein analysis by exploring two main methods: protein hydrolysis and protein cleavage. We cover how protein hydrolysis uses acid, base, or enzymatic processes to break down proteins into individual amino acids. The episode also details protein cleavage, focusing on breaking proteins at specific sites to create peptides. Techniques such as ion exchange and RP-HPLC chromatography for filtering amino acids, as well as endoprotease and chemical cleavage methods for peptide analysis, are discussed. This comprehensive guide aids in understanding the processes used to analyze protein structures in biochemical research.\n\n00:00 Introduction to Protein Analysis\n00:15 Methods of Protein Hydrolysis\n01:00 Acid, Base, and Enzyme Hydrolysis\n02:53 Filtering Amino Acids\n03:48 Protein Cleavage Techniques\n04:48 Endo Protease and Chemical Cleavage\n07:06 Conclusion",
+    "publishedAt": "2026-01-31T23:00:33Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/NmrEGofWIgg-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/NmrEGofWIgg-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/NmrEGofWIgg-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT7M12S",
+    "viewCount": 46,
+    "url": "https://www.youtube.com/watch?v=NmrEGofWIgg"
+  },
+  {
+    "id": "BWsEjPwJ3Go",
+    "title": "Protein Separation (Electrophoresis and SDS PAGE) | Bioanalytics",
+    "description": "Understanding Electrophoresis and SDS PAGE in Protein and DNA Separation\n\nIn this video, we delve into the process of separating proteins and DNA using electrophoresis. The host explains the basic principles of electrophoresis, describing how a gel matrix and an electric current are used to separate molecules by size. The video also covers SDS PAGE, a technique that allows the separation of proteins by making them uniformly negatively charged. Additional methods such as the use of a stacking gel, resolving gel, and beta-mercaptoethanol for breaking disulfide bonds between protein molecules are discussed. Finally, the host explains how a molecular weight ladder is used to estimate the size of separated proteins. This comprehensive guide is ideal for students and researchers looking to understand the principles behind these crucial biochemical techniques.\n\n00:00 Introduction to Protein and DNA Separation\n00:14 Understanding Electrophoresis\n00:49 How Electrophoresis Works\n02:10 Challenges with Protein Separation\n02:47 Introduction to SDS-PAGE\n03:23 The Role of Gel Layers in Separation\n04:14 Using Beta-Mercaptoethanol\n04:53 Estimating Protein Weight with SDS-PAGE\n05:51 Conclusion and Final Thoughts",
+    "publishedAt": "2026-01-27T23:00:24Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/BWsEjPwJ3Go-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/BWsEjPwJ3Go-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/BWsEjPwJ3Go-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT6M8S",
+    "viewCount": 10,
+    "url": "https://www.youtube.com/watch?v=BWsEjPwJ3Go"
+  },
+  {
+    "id": "tu87ErxqUF0",
+    "title": "Chromatography clearly explained | Bioanalytics",
+    "description": "Understanding Chromatography: Methods and Applications Simplified\n\nIn this episode, we delve into the fundamentals of chromatography, a technique used to separate different proteins from a mixture. The video covers various methods such as size exclusion chromatography (SEC), ion exchange chromatography (IEC), affinity chromatography, and hydrophobic chromatography. Using a simplified approach, it explains how these methods work, focusing on filtering by size, charge, type of binding, and hydrophobicity. The video also highlights the possibility of combining different chromatography techniques to suit specific experimental needs.\n\n00:00 Introduction to Chromatography\n01:17 Understanding Size Filtration (SEC)\n03:12 Ion Exchange Chromatography (IEC)\n04:41 Affinity Chromatography Explained (Binding)\n06:00 Hydrophobic Interaction Chromatography (HIC)\n07:17 Combining Chromatography Methods",
+    "publishedAt": "2026-01-23T23:01:13Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/tu87ErxqUF0-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/tu87ErxqUF0-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/tu87ErxqUF0-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT7M32S",
+    "viewCount": 12,
+    "url": "https://www.youtube.com/watch?v=tu87ErxqUF0"
+  },
+  {
+    "id": "3rQrdkFbDSg",
+    "title": "Protein Purification Basics (Clearly explained) | Bioanalytics",
+    "description": "Protein Purification Made Simple: Step-by-Step Guide for Beginners\n\nIn this episode, we delve into the process of protein purification, explained in an easy-to-understand manner, ideal for those without a biology background. The video covers the four main steps: cell and tissue disruption, centrifugation, salting out, and desalting. It elaborates on gentle, harsh, and cryo grinding methods for cell disruption, followed by a detailed explanation of centrifugation to separate organelles and proteins. The process of salting out proteins and removing the salt using dialysis, ultrafiltration, or gel filtration is also discussed. Additionally, insights on using pH buffers, detergents, and protease inhibitors to maintain protein integrity are provided. Join us to learn the fundamentals of protein purification efficiently!\n\n00:00 Introduction to Protein Purification\n00:27 Step 1: Cell and Tissue Disruption\n01:19 Types of Disruption Methods\n03:04 Step 2: Centrifugation Process\n05:30 Step 3: Salting Out Proteins\n06:52 Step 4: Removing Salt from Proteins\n09:23 Protease, Detergents and Buffers\n12:22 Methods for Gentle, Harsh, and Cryo Grinding\n14:05 Conclusion and Final Thoughts",
+    "publishedAt": "2026-01-20T08:00:04Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/3rQrdkFbDSg-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/3rQrdkFbDSg-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/3rQrdkFbDSg-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT14M21S",
+    "viewCount": 29,
+    "url": "https://www.youtube.com/watch?v=3rQrdkFbDSg"
+  },
+  {
+    "id": "ChXkBq2LCRQ",
+    "title": "Market Basket Analysis and Association Rules",
+    "description": "Understanding Market Basket Analysis with Association Rules for Data Mining.\n\nIn this video, we delve into the concept of Market Basket Analysis, explaining how to identify items that are frequently bought together using association rule learning. We'll cover the process step-by-step, starting with frequent item set mining and moving on to creating and evaluating association rules using metrics like support and confidence. This comprehensive guide aims to provide a clear understanding of how to apply these techniques to real-world data to uncover valuable insights.\n\n00:00 Introduction to Market Basket Analysis\n00:42 Understanding Association Rules\n01:14 Frequent Item Set Mining\n02:46 Building the Item Set Tree\n05:32 Calculating Support\n07:00 Determining Frequent Items\n09:10 Creating Association Rules\n10:32 Calculating Confidence\n13:27 Conclusion and Credits",
+    "publishedAt": "2026-01-15T23:00:16Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/ChXkBq2LCRQ-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/ChXkBq2LCRQ-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/ChXkBq2LCRQ-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT13M50S",
+    "viewCount": 53,
+    "url": "https://www.youtube.com/watch?v=ChXkBq2LCRQ"
+  },
+  {
+    "id": "BALIM--Jz0Q",
+    "title": "Predictive Rule learning clearly explained (Data Mining)",
+    "description": "Learn how to build Rule Based Models for Data Mining and Machine Learning. In this tutorial, we explain the Separate and Conquer strategy and how to use Pruning to avoid overfitting.\n\nIn this video, we explore how to predict customer preferences using predictive rule learning (Data Mining), building on the previous discussions about subgroup discovery and descriptive rule learning. We use examples to illustrate how to create clear and understandable rules for prediction, introducing the Separate and Conquer algorithm. Methods to refine these rules, such as pruning and pre-pruning, are also covered. The content is based on a course in computational data analytics by Johannes FK at JKU.\n\n00:00 Introduction to Predictive Rule Learning\n00:39 Recap of Subgroup Discovery\n02:34 How to Create Classification Rules\n03:27 Applying the Rules to New Customers\n04:26 The Separate and Conquer Algorithm\n07:37 Pruning Rules to Prevent Overfitting\n09:37 Conclusion and Credits",
+    "publishedAt": "2026-01-08T08:35:12Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/BALIM--Jz0Q-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/BALIM--Jz0Q-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/BALIM--Jz0Q-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT9M54S",
+    "viewCount": 29,
+    "url": "https://www.youtube.com/watch?v=BALIM--Jz0Q"
+  },
+  {
+    "id": "MTP9DAS95cs",
+    "title": "What is Subgroup Discovery? Data Mining Explained",
+    "description": "Learn exactly what Subgroup Discovery is and how it fits into Data Mining. In this tutorial, we break down pattern mining concepts using a simple 'Shawarma' analogy to make complex data analysis easy to understand\n\nBy analyzing customer data through simple and interpretable rules, we delve into techniques such as top-downhill climbing and heuristic evaluations to find patterns and insights. This video is based on a course in computational data analytics by Johannes Fürnkranz at JKU.\n\n00:00 Intro\n00:38 Understanding Subgroup Discovery\n01:05 Evaluating Rules\n03:01 Plotting and Analyzing Rules\n04:18 Finding Good Rules\n05:19 Top-Down Hill Climbing Explained\n08:55 Applying Rules for Business Decisions\n09:18 Conclusion and Credits",
+    "publishedAt": "2026-01-01T22:00:20Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/MTP9DAS95cs-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/MTP9DAS95cs-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/MTP9DAS95cs-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT9M30S",
+    "viewCount": 96,
+    "url": "https://www.youtube.com/watch?v=MTP9DAS95cs"
+  },
+  {
+    "id": "ey-QbxwUvVM",
+    "title": "What is Data Mining? Full introduction",
+    "description": "Introduction to Data Mining\n\nThis video covers the basics of data mining, including its importance, processes, and practical applications. We also explore the differences between database operations, machine learning, and data mining, providing real-world examples and insights. Perfect for anyone looking to understand how to extract valuable knowledge from mountains of data.\n\n00:00 Introduction to Ahmed's Shawarma Dilemma\n00:23 Understanding Data Mining\n00:53 The Importance of Data Mining in 2025\n02:21 Transforming Data into Knowledge\n03:56 Data Preparation Steps\n06:23 Data Mining Techniques\n07:01 Evaluating Data Insights\n08:32 Database Operations vs. Machine Learning vs. Data Mining\n09:47 Applications of Data Mining\n10:24 Conclusion and Credits",
+    "publishedAt": "2025-12-30T12:27:23Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/ey-QbxwUvVM-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/ey-QbxwUvVM-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/ey-QbxwUvVM-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT10M40S",
+    "viewCount": 195,
+    "url": "https://www.youtube.com/watch?v=ey-QbxwUvVM"
+  },
+  {
+    "id": "yOnap_z-8Zk",
+    "title": "How beginner level research in AI and ML looks like",
+    "description": "In this video, I share my thesis presentation on novel methods for comparing audio and text for retrieval. I delve into the limitations of traditional search engines and propose a new approach to search through multiple modalities without relying on text comparison. By converting text and audio into vectors called embeddings and calculating their similarity, we aim to improve accuracy. I discuss the baseline system, our proposed method of transforming embeddings into pseudo-images for a vision transformer, and our experimental results. Despite underwhelming performance, this exploration offers valuable insights and potential future improvements. Special thanks to my team members and supervisors for their support.\n\n00:00 Introduction and Personal Journey\n00:31 Traditional Search Engines and Their Limitations\n01:22 Thesis Overview and Objectives\n02:18 Acknowledgements and Team Contributions\n02:50 Understanding Audio-Text Retrieval\n06:01 Baseline System Explained\n10:45 Proposed Method: Vision Proxy Approach\n12:18 Experiment and Results\n13:52 Discussion and Future Improvements\n15:22 Conclusion and Final Thoughts",
+    "publishedAt": "2025-12-12T11:01:56Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/yOnap_z-8Zk-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/yOnap_z-8Zk-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/yOnap_z-8Zk-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT15M34S",
+    "viewCount": 49,
+    "url": "https://www.youtube.com/watch?v=yOnap_z-8Zk"
+  },
+  {
+    "id": "s-eMKQFW-jA",
+    "title": "How Computers Actually Reasons: The engine behind Logic",
+    "description": "While Machine Learning gets all the hype, SAT Solvers and Propositional Logic are the silent engines behind precise Artificial Intelligence reasoning.\n\nIn this Computer Science guide, we break down Boolean Satisfiability (SAT) without the confusion. You will learn the difference between formal logic and ML, understand CNF (Conjunctive Normal Form), and see how the DPLL Algorithm powers automated reasoning. Finally, we apply everything to solve a Sudoku puzzle using nothing but logic.\n\n00:00 Formal Logic vs. Machine Learning in AI\n00:41 What is Propositional Logic? (Syntax & Semantics)\n03:43 Satisfiability, Validity & Unsatisfiability\n04:47 How to use a SAT Solver (Limboole Demo)\n06:47 Conjunctive Normal Form (CNF) Explained\n09:19 Resolution & Blocked Clauses\n10:48 The DPLL Algorithm & Boolean Constraint Propagation\n12:04 Practical Example: Solving Sudoku with SAT\n\n#ComputerScience #ArtificialIntelligence #DiscreteMath #Logic #SATSolver",
+    "publishedAt": "2025-11-15T18:18:37Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/s-eMKQFW-jA-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/s-eMKQFW-jA-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/s-eMKQFW-jA-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT14M17S",
+    "viewCount": 151,
+    "url": "https://www.youtube.com/watch?v=s-eMKQFW-jA"
+  },
+  {
+    "id": "Lr0HDbbH3e4",
+    "title": "Setting Up Python Like a ML Engineer in 2025",
+    "description": "My Modern Python Developer Setup for Machine Learning Projects\n\nIn this video, I share my current developer setup for machine learning and Python projects. I'll walk you through the tools and frameworks I use, including my shift from AI-assisted coding back to Neo Vim, my package manager (UV), and my main frameworks (PyTorch and Polars). I'll also discuss my database provider (Superbase), my use of 'make' for project management, and the platforms I use for hosting models (Hugging Face) and training (Vast AI). I'm eager to hear your feedback and learn about your own setups!\n\n00:00 Introduction and Background\n00:46 Choosing the Right IDE\n02:01 AI-Assisted Coding: Pros and Cons\n03:04 Setting Up Your Python Environment\n03:06 Package Management with UV\n04:44 Exploring Data Handling Libraries\n05:16 Database Choices and Setup\n05:51 Using Make for Project Automation\n07:18 Hosting and Training Models\n07:50 Practical Demonstration\n09:46 Conclusion and Feedback",
+    "publishedAt": "2025-11-04T10:09:18Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/Lr0HDbbH3e4-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/Lr0HDbbH3e4-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/Lr0HDbbH3e4-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT10M4S",
+    "viewCount": 70,
+    "url": "https://www.youtube.com/watch?v=Lr0HDbbH3e4"
+  },
+  {
+    "id": "tqSTP3KyGhc",
+    "title": "I Built a Search Engine for 600K Shopify Products!",
+    "description": "https://shopify-search.up.railway.app/\n\nThis video introduces a new project titled 'Shopify Search,' a unified database of 646,000 Shopify products from around 1,500 stores. Demonstrating the full-text search capabilities in a PostgreSQL database, I showcase how users can find products and access detailed product information, including price and images. The project also features a recommendation system built using Sentence Transformers and allows users to add or remove domains. The video covers the technical aspects, including front-end development with Next.js, design choices, and future enhancement ideas such as multimodal and collaborative filtering-based search. Feedback on the design and functionality is encouraged.\n\n00:00 Introduction to the New Project\n00:47 Exploring the Shopify Search Engine\n01:05 Product Details and Recommender System\n01:45 Data Source and User Features\n02:25 Technical Implementation\n02:48 Design and Creative Process\n03:39 Future Enhancements and Ideas\n04:56 Conclusion and Feedback Request",
+    "publishedAt": "2025-10-17T11:01:47Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/tqSTP3KyGhc-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/tqSTP3KyGhc-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/tqSTP3KyGhc-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT6M11S",
+    "viewCount": 25,
+    "url": "https://www.youtube.com/watch?v=tqSTP3KyGhc"
+  },
+  {
+    "id": "SA5BShJuLqg",
+    "title": "Fine-Tuning LLMs: My Catastrophic Mistake",
+    "description": "You're about to make the same fine-tuning mistake that wiped out a month of my work (and costed about 100$). In this video, I break down what catastrophic forgetting is, why it happens when fine-tuning LLMs, and exactly how to avoid it. Whether you're fine-tuning a Falcon model or any other LLM, this will save you.\nTopics covered: LLM fine-tuning, catastrophic forgetting, Falcon, LoRA, training mistakes\n\nGithub: https://github.com/younissk/falcon-twig\nHugging face: https://huggingface.co/younissk/Falcon-Twig-7B\n\n00:00 Abu Dhabi's Ambitious AI Government Project\n00:43 Falcon Models: Performance and Challenges\n02:27 Testing and Benchmarking Falcon Models\n05:48 Creating a Custom Dataset for Tool Calling\n08:05 Training and Fine-Tuning the Model\n09:46 Analyzing the Results and Future Steps\n13:04 Conclusion and Lessons Learned",
+    "publishedAt": "2025-10-10T07:11:13Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/SA5BShJuLqg-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/SA5BShJuLqg-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/SA5BShJuLqg-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT13M59S",
+    "viewCount": 118,
+    "url": "https://www.youtube.com/watch?v=SA5BShJuLqg"
+  },
+  {
+    "id": "WqJVewQo-zI",
+    "title": "Falcon H1: The Model Nobody's Talking About",
+    "description": "Hosting TII's H1 Models Locally and on the Cloud: A Step-by-Step Guide\n\nIn this video, we explore TII's new H1 models along with their hybrid architecture. The guide details how to efficiently host these models on your laptop as well as in the cloud using Hugging Face. We compare the 'base' and 'instruct' variants of the models, and demonstrate how to set up a LAMA CPP server. By following this tutorial, you'll learn how to deploy and connect these models to your applications seamlessly, potentially saving costs compared to other endpoints like GPT.\n\n00:00 Introduction to TII's New H1 Models\n00:57 Understanding GGUF Models\n01:21 Base vs Instruct Models\n03:21 Model Parameters and Efficiency\n04:39 Setting Up the H1 Model Locally\n05:59 Deploying the H1 Model on the Cloud\n07:35 Testing and Using the Deployed Model\n08:48 Conclusion and Next Steps",
+    "publishedAt": "2025-10-05T11:30:20Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/WqJVewQo-zI-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/WqJVewQo-zI-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/WqJVewQo-zI-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT9M32S",
+    "viewCount": 130,
+    "url": "https://www.youtube.com/watch?v=WqJVewQo-zI"
+  },
+  {
+    "id": "e6GwR5b79ao",
+    "title": "Can LLMs Really Beat Traditional Recommendations? New Research Says Yes",
+    "description": "Exploring Large Language Models in Recommender Systems: Methods and Analysis\n\nIn this presentation, I discuss my recent university seminar paper on the integration of large language models (LLMs) into recommender systems. The video covers traditional recommender systems such as content-based and collaborative filtering, the fundamental concepts behind large language models, and five paradigms of LLM-based recommendation systems. By the end, we analyze the empirical benefits, potential risks, and future prospects of LLMs in enhancing recommender systems efficiency and user engagement.\n\n00:00 Introduction and Overview\n00:43 Traditional Recommender Systems\n02:17 Introduction to Large Language Models (LLMs)\n03:09 LLMs in Recommender Systems\n03:57 BERT for Rec: A Non-LLM Approach\n07:04 Unified Text to Text Paradigm (P5)\n07:57 GPT for Rec: Transforming Recommendations into Search\n09:31 Tiger: Semantic ID Generation\n10:41 Prompt-Based Content Enrichment\n11:16 Dynamic Title Personalization\n13:00 Conclusion and Future Directions",
+    "publishedAt": "2025-09-26T11:01:28Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/e6GwR5b79ao-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/e6GwR5b79ao-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/e6GwR5b79ao-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT15M53S",
+    "viewCount": 219,
+    "url": "https://www.youtube.com/watch?v=e6GwR5b79ao"
+  },
+  {
+    "id": "kcU9U7BYCOs",
+    "title": "Cheapest Cloud GPU for Deep Learning & LLMs (Vast.ai Guide)",
+    "description": "In this video, I show you how to use Vast.ai to rent high-end GPUs like the Nvidia A100 or RTX 4090 for a fraction of the cost of AWS or Google Colab. Whether you are doing Deep Learning, training LLMs, or rendering, this cheap cloud GPU guide covers everything from Docker setup to connecting via SSH and VS Code\n\n00:00 Introduction to Vast AI\n00:38 Setting Up Your Vast AI Environment\n01:14 Choosing the Right GPU\n01:36 Importance of Download Speed\n03:03 Renting and Managing Instances\n03:31 Connecting and Using Your Instance\n04:46 Advanced Connection Methods\n06:11 Using VS Code with Vast AI\n07:06 Additional Tips and Final Thoughts",
+    "publishedAt": "2025-09-20T12:48:26Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/kcU9U7BYCOs-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/kcU9U7BYCOs-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/kcU9U7BYCOs-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT9M",
+    "viewCount": 3261,
+    "url": "https://www.youtube.com/watch?v=kcU9U7BYCOs"
+  },
+  {
+    "id": "uw5KvPHZbGk",
+    "title": "This prompt decomposition technique transformed my LLM outputs",
+    "description": "Optimize Your LLM Agent with Divide and Conquer Prompts\n\nLearn how to improve the performance and reliability of your LLM agents by using the divide and conquer technique. I demonstrate how to break down a large input prompt into smaller, manageable prompts to reduce variance, simplify debugging, and achieve better results. Using a practical example of grading user-submitted essays, I show how the process can yield more accurate and consistent evaluation by creating JSON metadata, sample solutions, and exercise-wise prompts for the LLM. This strategy can significantly enhance the quality of outputs from your LLM agents.\n\n00:00 Introduction to LLM Agent Issues\n00:43 Divide and Conquer Prompts\n01:17 Example Task: Grading an Assignment\n02:44 Implementing the Solution\n05:06 Results and Conclusion",
+    "publishedAt": "2025-07-07T19:40:59Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/uw5KvPHZbGk-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/uw5KvPHZbGk-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/uw5KvPHZbGk-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT6M7S",
+    "viewCount": 69,
+    "url": "https://www.youtube.com/watch?v=uw5KvPHZbGk"
+  },
+  {
+    "id": "SqSMNqZ1CVs",
+    "title": "How to build the Simplest Recommendation System (No Users, No Backend)",
+    "description": "In this video, we're going to explore the simplest way to build a recommendation system without the need for user data or a backend infrastructure. This approach is perfect for beginners who want to dive into the world of RecSys and machine learning. We'll be focusing on Content Based approaches, a popular technique used in many recommendation systems today. \n\nBy the end of this video, you'll have a basic understanding of how to implement a recommendation system without any data infrastructure or backend.",
+    "publishedAt": "2025-07-03T22:30:54Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/SqSMNqZ1CVs-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/SqSMNqZ1CVs-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/SqSMNqZ1CVs-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT15M52S",
+    "viewCount": 57,
+    "url": "https://www.youtube.com/watch?v=SqSMNqZ1CVs"
+  },
+  {
+    "id": "AXdhFF8Kg6U",
+    "title": "6 Genius Tricks Companies Use to Recommend Content",
+    "description": "In this 7-minute crash course we break down 6 classic recommender algorithms, explained with FOOD\n\nWhat you'll learn  \n00:00 – Intro  \n00:27 – Memory-Based Collaborative Filtering  \n01:00 – Matrix Factorization\n03:35 – Neural Collaborative Filtering  \n04:17 – Content-Based Filtering  \n05:43 – Sequential / Session-Based Models  \n06:27 – Graph-Based Models  \n06:57 – Outro  \n\nThe style of this video is heavily inspired by @statquest\n\nIf there is any mistake in the video, please contact me here: https://youniss.dev/contact",
+    "publishedAt": "2025-04-27T10:25:42Z",
+    "thumbnails": {
+      "default": {
+        "url": "/thumbs/AXdhFF8Kg6U-default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "/thumbs/AXdhFF8Kg6U-medium.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "/thumbs/AXdhFF8Kg6U-high.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "duration": "PT7M10S",
+    "viewCount": 112,
+    "url": "https://www.youtube.com/watch?v=AXdhFF8Kg6U"
+  }
+]
