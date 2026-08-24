@@ -21,6 +21,17 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
 >
   <WalkBackground />
 
+  {/*
+    A rule inset from the edge of the viewport, so the whole screen reads as a
+    framed plate. A div, not a border on the canvas: a canvas is a replaced
+    element, so `inset` with an auto width leaves it at its intrinsic 300x150
+    in the corner instead of stretching. A div stretches.
+
+    Sits at z-index -1 like the canvas and comes after it in the DOM, so it
+    paints over the simulation and under every piece of text.
+  */}
+  <div class="screen-frame" aria-hidden="true"></div>
+
   <div class="landing-inner">
     <p class="label">{AUTHOR.role}</p>
 
@@ -82,6 +93,21 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
 </script>
 
 <style is:global>
+  /* One inset for the frame, shared by the canvas border and the content
+     padding, so the text never sits under the rule. */
+  :root {
+    --frame-inset: clamp(0.75rem, 2vw, 1.75rem);
+    --frame-width: 2px;
+  }
+
+  .screen-frame {
+    position: fixed;
+    inset: var(--frame-inset);
+    z-index: -1;
+    border: var(--frame-width) solid var(--c-border-strong);
+    pointer-events: none;
+  }
+
   .landing {
     flex: 1;
     min-height: 100svh;
@@ -89,7 +115,7 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
     /* Content centred in the free space, profiles parked on the last row. */
     grid-template-rows: 1fr auto;
     justify-items: center;
-    padding: 2rem 1.25rem;
+    padding: calc(var(--frame-inset) + 2rem) calc(var(--frame-inset) + 1.5rem);
   }
 </style>
 

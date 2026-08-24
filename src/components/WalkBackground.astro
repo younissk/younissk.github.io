@@ -39,13 +39,27 @@
 <canvas id="walk-bg" aria-hidden="true"></canvas>
 
 <style>
+  /*
+   * The frame is the canvas's own border rather than a separate element. That
+   * keeps the simulation visibly inside it, and avoids stacking a fixed frame
+   * between a z-index:-1 canvas and unpositioned text.
+   */
   #walk-bg {
     position: fixed;
-    inset: 0;
+    top: var(--frame-inset);
+    left: var(--frame-inset);
+    /*
+     * Sized explicitly, not with `inset`. A canvas is a REPLACED element, so
+     * with all four offsets set and width:auto it takes its intrinsic 300x150
+     * and parks in the corner instead of stretching. That is what happened the
+     * first time this frame was added.
+     */
+    width: calc(100vw - 2 * var(--frame-inset));
+    height: calc(100svh - 2 * var(--frame-inset));
+    box-sizing: border-box;
     z-index: -1;
     display: block;
-    width: 100%;
-    height: 100%;
+    border: var(--frame-width) solid var(--c-border-strong);
     pointer-events: none;
   }
 </style>
@@ -235,12 +249,14 @@
     }
 
     function size() {
+      const w = innerWidth;
+      const h = innerHeight;
       const dpr = Math.min(devicePixelRatio || 1, 2);
-      canvas.width = Math.floor(innerWidth * dpr);
-      canvas.height = Math.floor(innerHeight * dpr);
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cols = Math.max(4, Math.floor(innerWidth / SPACING));
-      rows = Math.max(4, Math.floor(innerHeight / SPACING));
+      cols = Math.max(4, Math.floor(w / SPACING));
+      rows = Math.max(4, Math.floor(h / SPACING));
       reset();
       draw();
     }
