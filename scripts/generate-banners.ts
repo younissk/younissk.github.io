@@ -301,7 +301,13 @@ function nanoBeard(ships: {
    that a trademark on a personal site can imply an endorsement nobody gave, and
    he owns that call.
    ------------------------------------------------------------------------- */
-function jku(wordmark: string, institute: string | null, tint: string): Node {
+function jku(
+  wordmark: string,
+  institute: string | null,
+  tint: string,
+  /** A third mark, stacked under the institute one. DCASE, for the challenge work. */
+  extra: { src: string; width: number; height: number } | null = null,
+): Node {
   return box(
     {
       width: '100%',
@@ -332,19 +338,45 @@ function jku(wordmark: string, institute: string | null, tint: string): Node {
         type: 'img',
         props: { src: wordmark, width: 360, height: 180, style: { width: '360px', height: '180px' } },
       }),
-      ...(institute
+      ...(institute || extra
         ? [
             box({
               width: '1px',
-              height: '132px',
+              height: '150px',
               backgroundColor: '#c9c9cf',
               marginLeft: '54px',
               marginRight: '54px',
             }),
-            box({ width: '340px', height: '92px' }, {
-              type: 'img',
-              props: { src: institute, width: 340, height: 92, style: { width: '340px', height: '92px' } },
-            }),
+            box(
+              { flexDirection: 'column', alignItems: 'flex-start' },
+              [
+                ...(institute
+                  ? [
+                      box({ width: '330px', height: '89px' }, {
+                        type: 'img',
+                        props: { src: institute, width: 330, height: 89, style: { width: '330px', height: '89px' } },
+                      }),
+                    ]
+                  : []),
+                ...(extra
+                  ? [
+                      box({
+                        width: `${extra.width}px`,
+                        height: `${extra.height}px`,
+                        marginTop: institute ? '26px' : '0px',
+                      }, {
+                        type: 'img',
+                        props: {
+                          src: extra.src,
+                          width: extra.width,
+                          height: extra.height,
+                          style: { width: `${extra.width}px`, height: `${extra.height}px` },
+                        },
+                      }),
+                    ]
+                  : []),
+              ],
+            ),
           ]
         : []),
     ],
@@ -362,6 +394,12 @@ async function main(): Promise<void> {
   /* Supplied as-is: black on white, which is seamless on a white ground. */
   const wordmark = dataUri(readFileSync(resolve(ART_DIR, 'jku.jpg')), 'image/jpeg');
   const institute = dataUri(readFileSync(resolve(ART_DIR, 'jku-cp.png')));
+  /* The exact challenge the embed2image work was entered in. */
+  const dcase = {
+    src: dataUri(readFileSync(resolve(ART_DIR, 'dcase2025_challenge.png'))),
+    width: 330,
+    height: 29,
+  };
   const ships = {
     sloop: dataUri(await pixelUpscale('sloop.png', 10)),
     frigate: dataUri(await pixelUpscale('frigate.png', 10)),
@@ -375,7 +413,7 @@ async function main(): Promise<void> {
     { name: 'papernavigator', node: paperNavigator() },
     { name: 'shopify-search', node: shopifySearch() },
     { name: 'tempbench-temporal-lalm-reasoning-benchmark', node: jku(wordmark, institute, '#1f5fa8') },
-    { name: 'embed2image-contrastive-retrieval', node: jku(wordmark, institute, '#5b4bbf') },
+    { name: 'embed2image-contrastive-retrieval', node: jku(wordmark, institute, '#3f8f52', dcase) },
     { name: 'jku-exam-practice', node: jku(wordmark, null, '#8a7a00') },
   ];
 
