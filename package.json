@@ -12,7 +12,8 @@
     "astro": "astro",
     "sync:youtube": "tsx scripts/sync-youtube.ts",
     "sync:metrics": "tsx scripts/sync-metrics.ts",
-    "og": "tsx scripts/generate-og.ts"
+    "og": "tsx scripts/generate-og.ts",
+    "banners": "tsx scripts/generate-banners.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.5",

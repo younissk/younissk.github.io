@@ -8,6 +8,15 @@ import ProjectIndex, {
   type ProjectRow,
 } from '../../components/ProjectIndex';
 import { markFor } from '../../lib/mark';
+
+/* Which projects ship a real banner. Resolved against the directory at build
+   time, so adding a file is the whole job — no list to keep in sync. Five come
+   from the projects' own repos, the rest are drawn by `npm run banners`. */
+const BANNERS = new Set(
+  Object.keys(import.meta.glob('/public/banners/*.webp')).map(
+    (path) => path.split('/').pop()!.replace(/\.webp$/, ''),
+  ),
+);
 import metricsData from '../../data/metrics.json';
 import { PROJECT_CATEGORIES } from '../../content.config';
 import { AUTHOR } from '../../consts';
@@ -51,6 +60,7 @@ const projects: ProjectRow[] = entries
     featured: entry.data.featured,
     /* Deterministic from the slug, computed here so the island ships no
        generator code. */
+    banner: BANNERS.has(entry.id) ? `/banners/${entry.id}.webp` : null,
     mark: (() => {
       const { path, cols, rows } = markFor(entry.id, 14, 5);
       return { path, cols, rows };
