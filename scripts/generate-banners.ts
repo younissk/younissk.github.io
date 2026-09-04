@@ -17,7 +17,7 @@
  * Run by hand with `npm run banners`, output committed. Nothing here runs at
  * build time or in the publish path, same rule as the OG cards.
  */
-import { mkdirSync, readFileSync, writeFileSync, unlinkSync, existsSync } from 'node:fs';
+import { mkdirSync, readFileSync, unlinkSync, existsSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import satori from 'satori';
@@ -36,27 +36,6 @@ const HEIGHT = 400;
 /** Inline an image so satori never reaches the network. */
 const dataUri = (buf: Buffer, mime = 'image/png') =>
   `data:${mime};base64,${buf.toString('base64')}`;
-
-/**
- * A black-on-white logo, turned into white-on-transparent.
- *
- * The JKU wordmark ships as greyscale on white. Negating it alone would leave a
- * black plate around the glyph; instead the negated image becomes the alpha
- * channel of a solid white one, so only the letterforms survive. Pure
- * monochrome, so the inversion is exact — the same trick the site header uses
- * on the square-Kufic avatar.
- */
-async function whiteOnTransparent(file: string): Promise<Buffer> {
-  const src = sharp(resolve(ART_DIR, file));
-  const { width, height } = await src.metadata();
-  const alpha = await sharp(resolve(ART_DIR, file)).greyscale().negate().toColourspace('b-w').toBuffer();
-  return sharp({
-    create: { width: width!, height: height!, channels: 3, background: '#ffffff' },
-  })
-    .joinChannel(alpha, { raw: undefined })
-    .png()
-    .toBuffer();
-}
 
 /** Pixel art has to be resampled nearest-neighbour or it turns to mush. */
 async function pixelUpscale(file: string, scale: number): Promise<Buffer> {
@@ -308,27 +287,33 @@ function nanoBeard(ships: {
 /* -------------------------------------------------------------------------
    The JKU work — TempBench, embed2image, the exam simulator.
 
-   Uses the university's own marks, at Youniss's explicit direction. I had
-   drawn a typographic stand-in instead, on the grounds that a trademark on a
-   personal site can imply an endorsement nobody gave; he owns that call and
-   made it. The wordmark is greyscale so it inverts exactly for a dark ground;
-   the institute logo is two-colour and would invert into the wrong colours, so
-   it sits on its own white plate the way brand guidelines normally require.
-   ------------------------------------------------------------------------- */
-function jku(wordmark: string, institute: string | null, accent: string): Node {
-  const GROUND = '#0b0b0d';
+   White ground, both marks in their supplied colours.
 
+   The first version put the wordmark white-on-dark and the two-colour institute
+   logo on its own white plate, because inverting it would have produced the
+   wrong blue. That plate read as a sticker pasted onto the card. Since the
+   institute logo ships on pure white (sampled: 255,255,255), making the whole
+   banner white means its background simply disappears — and both marks then
+   appear exactly as their owners drew them, which is what brand guidelines ask
+   for anyway.
+
+   Uses the university's marks at Youniss's explicit direction; I had raised
+   that a trademark on a personal site can imply an endorsement nobody gave, and
+   he owns that call.
+   ------------------------------------------------------------------------- */
+function jku(wordmark: string, institute: string | null, tint: string): Node {
   return box(
     {
       width: '100%',
       height: '100%',
-      backgroundColor: GROUND,
+      backgroundColor: '#ffffff',
       alignItems: 'center',
       padding: '0 78px',
       position: 'relative',
       overflow: 'hidden',
     },
     [
+      /* The site's grid motif, barely there so it never competes with a mark. */
       box(
         { position: 'absolute', top: '0px', left: '0px', width: '1200px', height: '400px' },
         Array.from({ length: 24 }, (_, i) =>
@@ -338,8 +323,8 @@ function jku(wordmark: string, institute: string | null, accent: string): Node {
             top: '0px',
             width: '1px',
             height: '400px',
-            backgroundColor: accent,
-            opacity: 0.12,
+            backgroundColor: tint,
+            opacity: 0.13,
           }),
         ),
       ),
@@ -350,24 +335,16 @@ function jku(wordmark: string, institute: string | null, accent: string): Node {
       ...(institute
         ? [
             box({
-              width: '2px',
-              height: '150px',
-              backgroundColor: accent,
-              opacity: 0.5,
+              width: '1px',
+              height: '132px',
+              backgroundColor: '#c9c9cf',
               marginLeft: '54px',
               marginRight: '54px',
             }),
-            box(
-              {
-                backgroundColor: '#ffffff',
-                padding: '22px 26px',
-                borderRadius: '2px',
-              },
-              {
-                type: 'img',
-                props: { src: institute, width: 340, height: 92, style: { width: '340px', height: '92px' } },
-              },
-            ),
+            box({ width: '340px', height: '92px' }, {
+              type: 'img',
+              props: { src: institute, width: 340, height: 92, style: { width: '340px', height: '92px' } },
+            }),
           ]
         : []),
     ],
@@ -382,7 +359,8 @@ async function main(): Promise<void> {
 
   /* Every asset is inlined as a data URI, so satori makes no network call and
      the generator works with no connection. */
-  const wordmark = dataUri(await whiteOnTransparent('jku.jpg'));
+  /* Supplied as-is: black on white, which is seamless on a white ground. */
+  const wordmark = dataUri(readFileSync(resolve(ART_DIR, 'jku.jpg')), 'image/jpeg');
   const institute = dataUri(readFileSync(resolve(ART_DIR, 'jku-cp.png')));
   const ships = {
     sloop: dataUri(await pixelUpscale('sloop.png', 10)),
@@ -396,9 +374,9 @@ async function main(): Promise<void> {
     { name: 'nanobeard', node: nanoBeard(ships) },
     { name: 'papernavigator', node: paperNavigator() },
     { name: 'shopify-search', node: shopifySearch() },
-    { name: 'tempbench-temporal-lalm-reasoning-benchmark', node: jku(wordmark, institute, '#7dd3fc') },
-    { name: 'embed2image-contrastive-retrieval', node: jku(wordmark, institute, '#c4b5fd') },
-    { name: 'jku-exam-practice', node: jku(wordmark, null, '#ffe400') },
+    { name: 'tempbench-temporal-lalm-reasoning-benchmark', node: jku(wordmark, institute, '#1f5fa8') },
+    { name: 'embed2image-contrastive-retrieval', node: jku(wordmark, institute, '#5b4bbf') },
+    { name: 'jku-exam-practice', node: jku(wordmark, null, '#8a7a00') },
   ];
 
   mkdirSync(OUT_DIR, { recursive: true });
