@@ -233,7 +233,12 @@ function shopifySearch(): Node {
    for its model classes. Sloop, frigate and galleon are the real assets,
    upscaled nearest-neighbour so they stay pixels.
    ------------------------------------------------------------------------- */
-function nanoBeard(ships: { sloop: string; frigate: string; galleon: string }): Node {
+function nanoBeard(ships: {
+  sloop: string;
+  frigate: string;
+  galleon: string;
+  captain: string;
+}): Node {
   const BG = '#EAD7CE';
   const INK = '#2b1d12';
   const MUTED = '#6b5844';
@@ -287,10 +292,15 @@ function nanoBeard(ships: { sloop: string; frigate: string; galleon: string }): 
         backgroundColor: INK,
         opacity: 0.82,
       }),
-      ship(ships.frigate, 300, 190, 78, 90),
-      ship(ships.galleon, 220, 220, 66, 470),
-      ship(ships.sloop, 160, 140, 84, 800),
-      ship(ships.frigate, 120, 76, 96, 1010),
+      /* The fleet runs left; the captain comes up behind it. He is the sprite
+         that chases the ships on the project's own site, so the banner is the
+         same gag rather than a still life of boats. */
+      ship(ships.frigate, 288, 182, 76, 40),
+      ship(ships.galleon, 212, 212, 66, 372),
+      ship(ships.sloop, 152, 133, 82, 650),
+      /* Bigger than anything he is chasing, and low enough to be in the water
+         rather than hovering over it. */
+      ship(ships.captain, 246, 305, 40, 872),
     ],
   );
 }
@@ -378,6 +388,8 @@ async function main(): Promise<void> {
     sloop: dataUri(await pixelUpscale('sloop.png', 10)),
     frigate: dataUri(await pixelUpscale('frigate.png', 10)),
     galleon: dataUri(await pixelUpscale('galleon.png', 11)),
+    /* Mouth open — the chasing pose, not the idle one. */
+    captain: dataUri(await pixelUpscale('nanobeard-open.png', 14)),
   };
 
   const banners: Array<{ name: string; node: Node }> = [
