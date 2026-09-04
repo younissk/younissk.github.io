@@ -21,19 +21,33 @@ export async function getStaticPaths() {
     }
   }
 
+  /* A tag page with one post used to be a heading, one row, and then a footer
+     that was 45% of the document. Every page now carries the neighbouring tags
+     and the rest of the writing, so a narrow slice still leads somewhere. */
+  const allTags = [...bySlug.entries()]
+    .map(([slug, v]) => ({ slug, label: v.label, count: v.posts.length }))
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+
   return [...bySlug.entries()].map(([slug, { label, posts: tagged }]) => ({
     params: { tag: slug },
-    props: { label, posts: tagged },
+    props: {
+      label,
+      posts: tagged,
+      related: allTags.filter((t) => t.slug !== slug).slice(0, 12),
+      others: posts.filter((post) => !tagged.includes(post)).slice(0, 4),
+    },
   }));
 }
 
 interface Props {
   label: string;
   posts: Post[];
+  related: ReadonlyArray<{ slug: string; label: string; count: number }>;
+  others: Post[];
 }
 
 const { tag: slug } = Astro.params;
-const { label, posts } = Astro.props;
+const { label, posts, related, others } = Astro.props;
 const count = `${posts.length} ${posts.length === 1 ? 'post' : 'posts'}`;
 ---
 
@@ -53,5 +67,38 @@ const count = `${posts.length} ${posts.length === 1 ? 'post' : 'posts'}`;
         {posts.map((post) => <PostRow post={post} activeTagSlug={slug} />)}
       </ul>
     </section>
+
+    {
+      related.length > 0 && (
+        <section class="section">
+          <div class="section-head">
+            <h2 class="label">Other tags</h2>
+          </div>
+          <ul class="tag-row mt-4">
+            {related.map((t) => (
+              <li>
+                <a class="tag" href={`/writing/tags/${t.slug}/`}>
+                  {t.label} {t.count}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      others.length > 0 && (
+        <section class="section">
+          <div class="section-head">
+            <h2 class="label">More writing</h2>
+            <a class="meta link-quiet" href="/writing/">All posts</a>
+          </div>
+          <ul class="row-list mt-4">
+            {others.map((post) => <PostRow post={post} />)}
+          </ul>
+        </section>
+      )
+    }
   </div>
 </BaseLayout>

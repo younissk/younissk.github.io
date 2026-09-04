@@ -45,7 +45,7 @@ const hasBelow = Astro.slots.has('default');
       <h1
         class:list={[
           'text-ink',
-          size === 'display' ? 'text-display font-semibold' : 'text-title font-semibold',
+          size === 'display' ? 'text-display' : 'text-title',
         ]}
       >
         {title}

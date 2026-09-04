@@ -35,27 +35,30 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
   <div class="landing-inner">
     <p class="label">{AUTHOR.role}</p>
 
-    <div class="landing-head">
-      <h1 class="text-ink text-display font-semibold">{AUTHOR.name}</h1>
+    <h1 class="landing-name">{AUTHOR.name}</h1>
 
-      {/* A real input, not a button dressed as one. Typing here opens the
-          palette and carries the keystrokes across, so the first characters
-          are never swallowed. */}
-      <div class="landing-search">
-        <input
-          id="landing-search"
-          type="text"
-          class="landing-search-input"
-          placeholder="Search"
-          aria-label="Search this site"
-          autocomplete="off"
-          spellcheck="false"
-        />
-        <kbd class="landing-search-kbd">⌘K</kbd>
-      </div>
+    {/* Still a real input, not a button dressed as one — typing here carries
+        the keystrokes into the palette. Moved below the name and stripped of
+        its box: at hero size the name has to be the only loud thing, and a
+        2px-bordered field sitting beside it was winning. */}
+    <div class="landing-search">
+      <svg class="landing-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="m20 20-3.5-3.5"></path>
+      </svg>
+      <input
+        id="landing-search"
+        type="text"
+        class="landing-search-input"
+        placeholder="Search everything"
+        aria-label="Search this site"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <kbd class="landing-search-kbd">⌘K</kbd>
     </div>
 
-    <nav class="landing-nav mt-9" aria-label="Sections">
+    <nav class="landing-nav" aria-label="Sections">
       {
         NAV.map((item) => (
           <a class="landing-link" href={item.href}>
@@ -130,46 +133,86 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
     pointer-events: none;
   }
 
+  /* Three rows: a little air, the plate, then the profiles pinned to the
+     bottom. The old grid centred a short block in one big free row, which left
+     a dead band under the nav and made the whole composition float. */
   .landing {
     flex: 1;
     min-height: 100svh;
     display: grid;
-    /* Content centred in the free space, profiles parked on the last row. */
-    grid-template-rows: 1fr auto;
+    grid-template-rows: minmax(2rem, 1fr) auto minmax(2rem, 0.55fr);
     justify-items: center;
-    padding: calc(var(--frame-inset) + 2rem) calc(var(--frame-inset) + 1.5rem);
+    padding: calc(var(--frame-inset) + 1.5rem) calc(var(--frame-inset) + 1.5rem);
   }
 </style>
 
 <style>
   .landing-inner {
+    grid-row: 2;
+    position: relative;
     width: 100%;
-    max-width: 44rem;
-    align-self: center;
+    max-width: 54rem;
   }
 
-  .landing-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem 2rem;
+  /* A scrim, not a panel.
+     Now that the simulation actually draws, its lines run straight through the
+     nav and the search line and the text stopped winning. This restores the
+     ground under the words without putting a visible box around them: opaque
+     at the centre, gone by the edges, so the walkers still read as continuous
+     behind it. Sits above the canvas (z-index -1) and below the text. */
+  .landing-inner::before,
+  .landing-foot::before {
+    content: "";
+    position: absolute;
+    inset: -1.75rem -2.25rem;
+    z-index: -1;
+    background: radial-gradient(
+      ellipse 70% 60% at 50% 50%,
+      rgb(0 0 0 / 0.82) 0%,
+      rgb(0 0 0 / 0.62) 55%,
+      rgb(0 0 0 / 0) 100%
+    );
+    pointer-events: none;
   }
 
+  /* The whole point of this page. Roughly 16-25% of viewport height, set in
+     the display face, tracked tight enough to read as one mass. */
+  .landing-name {
+    font-family: var(--font-display);
+    font-size: var(--text-hero);
+    line-height: 0.86;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+    color: var(--c-ink);
+    margin: 0.35rem 0 0;
+  }
+
+  /* Quiet by construction: no box, one hairline under it. It reads as a line
+     of the page rather than a control competing with the name. */
   .landing-search {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    flex: 1 1 14rem;
-    min-width: 12rem;
-    max-width: 20rem;
-    padding: 0.5rem 0.7rem;
-    border: 2px solid var(--c-border-strong);
-    background-color: var(--c-surface);
+    gap: 0.6rem;
+    width: 100%;
+    margin-top: 1.6rem;
+    padding: 0.55rem 0.15rem;
+    border-bottom: 2px solid var(--c-ink-faint);
+    transition: border-color 140ms ease;
   }
 
   .landing-search:focus-within {
-    border-color: var(--c-accent);
+    border-bottom-color: var(--c-accent);
+  }
+
+  .landing-search-icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    color: var(--c-ink-faint);
+  }
+
+  .landing-search:focus-within .landing-search-icon {
+    color: var(--c-accent);
   }
 
   .landing-search-input {
@@ -179,7 +222,7 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
     background: transparent;
     color: var(--c-ink);
     font-family: var(--font-mono);
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
   }
 
   .landing-search-input:focus {
@@ -194,7 +237,6 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
 
   .landing-search-kbd {
     flex-shrink: 0;
-    border: 1px solid var(--c-border-strong);
     padding: 0 0.3rem;
     font-family: var(--font-mono);
     font-size: var(--text-meta);
@@ -202,14 +244,17 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
   }
 
   .landing-foot {
+    grid-row: 3;
+    position: relative;
+    align-self: end;
     width: 100%;
-    max-width: 44rem;
-    padding-top: 2rem;
+    max-width: 54rem;
   }
 
   .landing-nav {
     display: grid;
     gap: 0;
+    margin-top: 2.75rem;
     border-top: 2px solid var(--c-border-strong);
   }
 
@@ -220,12 +265,15 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
     justify-content: space-between;
     gap: 0.25rem 1.5rem;
     width: 100%;
-    padding: 0.85rem 0.25rem;
-    border-bottom: 2px solid var(--c-border);
+    padding: 0.95rem 0.25rem;
+    border-bottom: 2px solid var(--c-ink-faint);
     text-align: left;
     color: var(--c-ink);
     background: transparent;
     cursor: pointer;
+    /* The one place on the site where a hover moves something. */
+    transition: padding-left 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      background-color 140ms ease, border-color 140ms ease;
   }
 
   .landing-link:hover,
@@ -233,13 +281,21 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
     background-color: var(--c-accent);
     color: #000;
     border-bottom-color: var(--c-accent);
+    padding-left: 1rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .landing-link { transition: none; }
+    .landing-link:hover,
+    .landing-link:focus-visible { padding-left: 0.25rem; }
   }
 
   .landing-link-label {
     font-family: var(--font-mono);
     font-weight: 700;
+    font-size: 0.9375rem;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.02em;
   }
 
   .landing-link-blurb {
@@ -251,11 +307,5 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
   .landing-link:hover .landing-link-blurb,
   .landing-link:focus-visible .landing-link-blurb {
     color: #000;
-  }
-
-  .landing-link kbd {
-    border: 1px solid currentColor;
-    padding: 0 0.25rem;
-    font: inherit;
   }
 </style>

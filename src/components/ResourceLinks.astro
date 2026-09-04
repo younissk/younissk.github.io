@@ -21,12 +21,23 @@ export interface ResourceLink {
 interface Props {
   links?: readonly ResourceLink[] | null;
   class?: string;
+  /**
+   * Cap on how many buttons render, with the first styled as primary.
+   *
+   * nanoBeard has nine links and rendering all nine here put three rows of
+   * identical bordered buttons above the first sentence of prose. Where the
+   * page already carries a grouped Links table further down, two is enough:
+   * the obvious thing to open, and the write-up.
+   */
+  max?: number;
+  /** Text for the overflow link, e.g. "All 9 links". */
+  moreHref?: string;
 }
 
 /* Defaulted rather than required. An entry written before `links` existed in
    the schema has no array at all, and a missing list should render nothing,
    not throw on the page. */
-const { links, class: className } = Astro.props;
+const { links, class: className, max, moreHref } = Astro.props;
 const list = Array.isArray(links) ? links : [];
 
 /** Display order, so a repo never sits above the thing you can open. */
@@ -34,6 +45,9 @@ const order = new Map(LINK_KINDS.map((k, i) => [k as string, i]));
 const sorted = [...list].sort(
   (a, b) => (order.get(a.kind) ?? 99) - (order.get(b.kind) ?? 99),
 );
+
+const shown = typeof max === 'number' ? sorted.slice(0, max) : sorted;
+const hidden = sorted.length - shown.length;
 
 const KIND_TITLE: Record<string, string> = {
   site: 'Live',
@@ -48,13 +62,13 @@ const KIND_TITLE: Record<string, string> = {
 ---
 
 {
-  sorted.length > 0 && (
+  shown.length > 0 && (
     <nav class:list={['resource-links', className]} aria-label="Links and resources">
-      {sorted.map((l) => {
+      {shown.map((l, i) => {
         const external = l.url.startsWith('http');
         return (
           <a
-            class="btn btn-sm"
+            class:list={['btn btn-sm', i === 0 && 'btn-primary']}
             href={l.url}
             title={`${KIND_TITLE[l.kind] ?? l.kind}: ${l.label}`}
             target={external ? '_blank' : undefined}
@@ -65,6 +79,11 @@ const KIND_TITLE: Record<string, string> = {
           </a>
         );
       })}
+      {hidden > 0 && moreHref && (
+        <a class="btn btn-sm btn-ghost" href={moreHref}>
+          +{hidden} more ↓
+        </a>
+      )}
     </nav>
   )
 }

@@ -15,7 +15,7 @@ import { getCollection, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import Tag from '../components/Tag.astro';
-import { VIDEOS, videoHref } from '../lib/videos';
+import { VIDEOS, videoHref, formatDuration } from '../lib/videos';
 
 const [posts, papers] = await Promise.all([
   getCollection('posts', ({ data }) => !data.draft),
@@ -30,6 +30,8 @@ interface Row {
   year: number;
   date: string;
   tags: readonly string[];
+  /** Local thumbnail, for the videos. */
+  thumb?: string | null;
 }
 
 /** Reading time from the real body, not a guess. */
@@ -64,11 +66,14 @@ const rows: Row[] = [
   ...VIDEOS.map((v) => ({
     href: videoHref(v.id),
     title: v.title,
-    detail: 'YouTube',
+    detail: formatDuration(v.duration) ?? 'YouTube',
     kind: 'video' as const,
     year: new Date(v.publishedAt).getFullYear(),
     date: v.publishedAt.slice(0, 10),
     tags: [] as string[],
+    /* 81 of these have been sitting in the repo unused while this page
+       rendered 27 identical lines of text. */
+    thumb: (v.thumbnails.medium ?? v.thumbnails.default)?.url ?? null,
   })),
 ].sort((a, b) => b.date.localeCompare(a.date));
 
@@ -98,29 +103,35 @@ const meta = [
         {
           rows.map((r) => (
             <li class="row">
-              <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                <h2 class="row-title min-w-0 text-base">
+              {r.thumb ? (
+                <img class="row-media" src={r.thumb} alt="" width="320" height="180" loading="lazy" decoding="async" />
+              ) : (
+                <span class="row-media row-media-blank" aria-hidden="true" />
+              )}
+
+              <div class="row-main">
+                <span class="kind" data-kind={r.kind}>{r.kind}</span>
+                <h2 class="row-title mt-1">
                   <a class="link-quiet" href={r.href}>
                     {r.title}
                   </a>
                 </h2>
-                <span class="tag shrink-0">{r.kind}</span>
+
+                {r.tags.length > 0 && (
+                  <ul class="tag-row mt-2.5">
+                    {r.tags.map((t) => (
+                      <li>
+                        <Tag>{t}</Tag>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
 
-              <ul class="meta-row mt-1.5">
-                <li class="tabular">{r.year}</li>
-                <li>{r.detail}</li>
-              </ul>
-
-              {r.tags.length > 0 && (
-                <ul class="tag-row mt-2.5">
-                  {r.tags.map((t) => (
-                    <li>
-                      <Tag>{t}</Tag>
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <p class="row-rail">
+                <time datetime={r.date}>{r.year}</time>
+                <span>{r.detail}</span>
+              </p>
             </li>
           ))
         }

@@ -14,7 +14,6 @@ bibtex: |
     author      = {Kandah, Youniss},
     school      = {Johannes Kepler University Linz},
     type        = {Bachelor's Thesis},
-    address     = {Linz, Austria},
     year        = {2025},
     month       = {10},
     note        = {Institute of Computational Perception. Supervisor: Shah Nawaz},

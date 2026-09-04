@@ -101,7 +101,7 @@ const projectSchema = {
 ---
 
 <BaseLayout title={p.title} description={p.summary} ogType="article" schema={projectSchema}>
-  <div class="page-narrow">
+  <div class="page">
     <p class="pt-8 md:pt-10">
       <a class="meta link-quiet" href="/projects/">← All projects</a>
     </p>
@@ -114,32 +114,35 @@ const projectSchema = {
       meta={meta}
     >
       <Fragment slot="actions">
-        <ResourceLinks links={p.links} />
+        {/* Two buttons, not nine. The grouped Links table in the rail carries
+            every one of them. */}
+        <ResourceLinks links={p.links} max={2} moreHref="#details" />
       </Fragment>
     </PageHeader>
 
-    <section class="section pt-0">
-      <h2 class="sr-only">About {p.title}</h2>
-      <Prose>
-        <Content />
-      </Prose>
-    </section>
+    <div class="detail-grid">
+      <section class="section pt-0 detail-body">
+        <h2 class="sr-only">About {p.title}</h2>
+        <Prose>
+          <Content />
+        </Prose>
+      </section>
 
-    <section class="section">
+      <aside class="detail-rail" id="details">
       <div class="section-head">
         <h2 class="label">Details</h2>
         <p class="meta">{p.repoName}</p>
       </div>
 
-      <dl class="grid gap-x-8 gap-y-5 sm:grid-cols-[7rem_minmax(0,1fr)]">
-        <dt class="label sm:pt-1">Stack</dt>
+      <dl class="grid gap-x-6 gap-y-5">
+        <dt class="label">Stack</dt>
         <dd>
           <ul class="tag-row">
             {p.stack.map((item) => <li><Tag>{item}</Tag></li>)}
           </ul>
         </dd>
 
-        <dt class="label sm:pt-1">Tags</dt>
+        <dt class="label">Tags</dt>
         <dd>
           <ul class="tag-row">
             {
@@ -152,7 +155,7 @@ const projectSchema = {
           </ul>
         </dd>
 
-        <dt class="label sm:pt-1">Links</dt>
+        <dt class="label">Links</dt>
         <dd>
           {
             grouped.length > 0 ? (
@@ -191,7 +194,8 @@ const projectSchema = {
           }
         </dd>
       </dl>
-    </section>
+      </aside>
+    </div>
 
     {
       siblings.length > 0 && (

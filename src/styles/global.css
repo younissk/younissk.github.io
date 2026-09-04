@@ -17,9 +17,16 @@
   /* Brutalist: pure black ground, pure white ink, one loud accent. Contrast is
      the whole palette — there are no mid-tones doing decorative work. */
   --c-bg: #000000;
-  --c-surface: #0a0a0a;
-  --c-surface-2: #161616;
-  --c-border: #333333;
+  --c-surface: #0d0d0d;
+  /* Raised from #161616 (1.16:1 against black — invisible). The hard offset
+     shadow on cards and the row hover both use this, so both were decorative
+     decisions that could not actually be seen until something turned yellow. */
+  --c-surface-2: #262626;
+  /* Raised from #333333 (1.66:1, under the 3:1 needed for a UI boundary).
+     This hairline is the ONLY thing separating items on every index page, so
+     on a site whose whole premise is visible structure, the structure was not
+     visible. */
+  --c-border: #4f4f4f;
   --c-border-strong: #ffffff;
 
   --c-ink: #ffffff;
@@ -28,11 +35,16 @@
 
   --c-accent: #ffe400;
   --c-accent-hover: #ffffff;
-  --c-accent-soft: #262200;
+  --c-accent-soft: #3d3600;
 
-  --c-positive: #00e07a;
-  --c-warning: #ffe400;
-  --c-danger: #ff4d4d;
+  /* Kind and status colours. These were declared months ago and never used
+     once; the Library labelled posts, papers and videos with three identical
+     grey chips. Colour is the cheapest way to make a list scannable. */
+  --c-positive: #4ade80;
+  --c-danger: #ff6b6b;
+  --c-kind-post: #7dd3fc;
+  --c-kind-paper: #c4b5fd;
+  --c-kind-video: #fca5a5;
 
   --c-focus: #ffe400;
   --c-selection: #ffe400;
@@ -58,18 +70,29 @@
   --color-accent-soft: var(--c-accent-soft);
 
   --color-positive: var(--c-positive);
-  --color-warning: var(--c-warning);
   --color-danger: var(--c-danger);
+  --color-kind-post: var(--c-kind-post);
+  --color-kind-paper: var(--c-kind-paper);
+  --color-kind-video: var(--c-kind-video);
 }
 
 @theme {
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system,
+  /* Three faces, all self-hosted from the repo. The mono used to be a bare
+     system stack, which meant it rendered as SF Mono here, Consolas on Windows
+     and DejaVu on Linux — a third of the visible text on the site was a
+     typeface the site did not ship and had never seen. That also broke the
+     promise in SUCCESSION.md that every font comes from this repository. */
+  --font-sans: "Archivo Variable", ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", "JetBrains Mono", Menlo,
-    Consolas, "Liberation Mono", monospace;
+  --font-display: "Archivo Black", "Archivo Variable", ui-sans-serif, system-ui,
+    sans-serif;
+  --font-mono: "Martian Mono Variable", ui-monospace, SFMono-Regular, "SF Mono",
+    Menlo, Consolas, "Liberation Mono", monospace;
 
   /* Measures. Generates max-w-text / max-w-page / max-w-wide. */
-  --container-text: 44rem;
+  /* 40rem gives roughly 72 characters per line at 16px. 44rem gave 81, which
+     is the wrong end of the comfortable range on a dark ground. */
+  --container-text: 40rem;
   --container-page: 68rem;
   --container-wide: 84rem;
 
@@ -93,22 +116,42 @@
   --radius-3xl: 0;
   --radius-4xl: 0;
 
-  /* Type scale. */
-  --text-display: clamp(2.125rem, 1.45rem + 2.7vw, 3.25rem);
-  --text-display--line-height: 1.05;
-  --text-display--letter-spacing: -0.028em;
+  /* Type scale — a perfect fourth (1.333) anchored at 16px:
+       12 · 16 · 21 · 28 · 38 · 51 · 96
 
-  --text-title: clamp(1.5rem, 1.2rem + 1.15vw, 2rem);
-  --text-title--line-height: 1.15;
-  --text-title--letter-spacing: -0.02em;
+     The old scale had ten sizes, eight of them crammed between 11px and 18px,
+     where the steps are below the just-noticeable difference. That is why the
+     pages read as undifferentiated grey: there was no size that said "read
+     this". The small end is deliberately almost unchanged — what was missing
+     was the middle and the top. */
+
+  /* The name on the landing page, and nothing else. */
+  --text-hero: clamp(3.75rem, 2rem + 11vw, 9rem);
+  --text-hero--line-height: 0.86;
+  --text-hero--letter-spacing: -0.045em;
+
+  /* Page titles. */
+  --text-display: clamp(2.375rem, 1.6rem + 3.4vw, 3.75rem);
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.03em;
+
+  --text-title: clamp(1.75rem, 1.35rem + 1.6vw, 2.375rem);
+  --text-title--line-height: 1.1;
+  --text-title--letter-spacing: -0.025em;
+
+  /* The rung that did not exist: the scannable title in a list, and the lede
+     under a heading. Anything a visitor skims lives here, not at body size. */
+  --text-lead: 1.3125rem;
+  --text-lead--line-height: 1.3;
+  --text-lead--letter-spacing: -0.015em;
 
   --text-meta: 0.75rem;
   --text-meta--line-height: 1.4;
-  --text-meta--letter-spacing: 0.02em;
+  --text-meta--letter-spacing: 0.01em;
 
   --text-label: 0.6875rem;
   --text-label--line-height: 1.2;
-  --text-label--letter-spacing: 0.12em;
+  --text-label--letter-spacing: 0.1em;
 }
 
 /* ---------------------------------------------------------------------------
@@ -199,8 +242,8 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Shared component classes. Documented in DESIGN.md — other pages rely on these
-   names, so rename nothing without updating that contract.
+   Shared component classes. Other pages rely on these names, so renaming one
+   means updating every use.
    --------------------------------------------------------------------------- */
 @layer components {
   /* --- layout ------------------------------------------------------------ */
@@ -366,9 +409,19 @@
     border-radius: var(--radius-hair);
   }
 
+  /* Two columns from 60rem. A 1024px-wide card holding two lines of summary
+     put the title and its metadata a thousand pixels apart. */
   .card-list {
     display: grid;
-    gap: 0.875rem;
+    gap: 1.25rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 60rem) {
+    .card-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem;
+    }
   }
 
   /* --- command palette ---------------------------------------------------- */
@@ -543,13 +596,70 @@
     border-top: 1px solid var(--c-border);
   }
 
+  /* A grid, not a block.
+     These lists sit in a 1088px container and used to strand a title at the far
+     left and a grey chip 1000px away at the far right, with nothing between.
+     Now: an optional thumbnail, the text, and a metadata rail that stays close
+     enough to the title to be read with it. */
   .row {
-    display: block;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: start;
+    column-gap: 1.25rem;
+    row-gap: 0.35rem;
     border-bottom: 1px solid var(--c-border);
-    padding-block: 0.875rem;
+    padding-block: 1rem;
     padding-inline: 0.5rem;
     margin-inline: -0.5rem;
     transition: background-color 120ms ease;
+  }
+
+  /* 16:9 thumbnail. The repo already ships 81 of these and no list used one. */
+  .row-media {
+    grid-row: span 2;
+    width: 8.5rem;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    background-color: var(--c-surface-2);
+    border: 1px solid var(--c-border);
+  }
+
+  /* Posts and papers have no thumbnail. They get an empty slot of the same
+     size so every title in a mixed list starts on the same x. */
+  .row-media-blank {
+    background-color: transparent;
+    border-color: transparent;
+    border-left: 2px solid var(--c-border);
+  }
+
+  @media (max-width: 40rem) {
+    .row { column-gap: 0.85rem; }
+    .row-media { width: 5.5rem; }
+    .row-media-blank { display: none; }
+  }
+
+  .row-main { grid-column: 2; min-width: 0; }
+
+  /* The rail: year, kind, duration. Right-aligned, tabular, quiet. */
+  .row-rail {
+    grid-column: 3;
+    display: flex;
+    align-items: baseline;
+    gap: 0.85rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    color: var(--c-ink-faint);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 40rem) {
+    .row-rail {
+      grid-column: 2;
+      grid-row: 2;
+      justify-content: flex-start;
+    }
   }
 
   a.row:hover,
@@ -557,10 +667,15 @@
     background-color: var(--c-surface);
   }
 
+  /* Was body size, so on every index page the item title and its description
+     were the same 16px and nothing said "start here". */
   .row-title {
+    font-size: var(--text-lead);
+    line-height: 1.25;
     font-weight: 600;
     color: var(--c-ink);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
   }
 
   .row-desc {
@@ -568,6 +683,28 @@
     font-size: 0.9375rem;
     line-height: 1.55;
   }
+
+  /* Kind, carried by colour rather than by a fourth grey chip. A dot, so it
+     reads at a glance down a 33-item list without adding another box. */
+  .kind {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-ink-faint);
+  }
+  .kind::before {
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: currentColor;
+  }
+  .kind[data-kind="post"] { color: var(--c-kind-post); }
+  .kind[data-kind="paper"] { color: var(--c-kind-paper); }
+  .kind[data-kind="video"] { color: var(--c-kind-video); }
 
   /* --- tags -------------------------------------------------------------- */
   .tag-row {
@@ -701,7 +838,7 @@
 
 /* ---------------------------------------------------------------------------
    Prose. One block serves both themes because every value resolves through the
-   --c-* vars, which the .dark class already re-points.
+   --c-* vars.
    --------------------------------------------------------------------------- */
 @layer components {
 
@@ -800,12 +937,12 @@
     transition: filter 140ms ease;
   }
 
-  .dark .prose :where(img):not(:where(.not-prose *)) {
+  .prose :where(img):not(:where(.not-prose *)) {
     filter: brightness(0.82) contrast(1.03);
   }
 
-  .dark .prose :where(img):not(:where(.not-prose *)):hover,
-  .dark .prose :where(a:focus-visible img):not(:where(.not-prose *)) {
+  .prose :where(img):not(:where(.not-prose *)):hover,
+  .prose :where(a:focus-visible img):not(:where(.not-prose *)) {
     filter: none;
   }
 
@@ -825,7 +962,7 @@
 
 /* ---------------------------------------------------------------------------
    Shiki dual theme. astro.config.mjs emits both palettes; this swaps to the
-   dark one when .dark is present.
+   dark one.
    --------------------------------------------------------------------------- */
 .astro-code,
 .astro-code span {
@@ -992,15 +1129,22 @@
   }
 
   /* --- controls ------------------------------------------------------------ */
+  /* Two tiers, so a row of actions has an obvious first choice.
+     `.btn` is now the SECONDARY treatment: no border, just a ground. Only
+     `.btn-primary` keeps a hard edge. Nine identical bordered buttons stacked
+     above the prose on a project page is what this fixes. */
   .btn {
-    border: 2px solid var(--c-border-strong);
+    border: 2px solid transparent;
     border-radius: 0;
+    background-color: var(--c-surface-2);
     font-family: var(--font-mono);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     font-size: 0.8125rem;
-    transition: none;
+    transition: background-color 160ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      color 160ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   /* Inversion, not tint. */
@@ -1010,10 +1154,28 @@
     color: #000000;
   }
 
+  .btn:active {
+    transform: translateY(1px);
+  }
+
   .btn-primary {
     background-color: var(--c-accent);
     border-color: var(--c-accent);
     color: #000000;
+  }
+
+  /* Ghost: the tertiary rung. For "and six more" style links that should not
+     look like actions at all. */
+  .btn-ghost {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--c-ink-faint);
+    padding-inline: 0.35rem;
+  }
+  .btn-ghost:hover,
+  .btn-ghost:focus-visible {
+    background-color: transparent;
+    color: var(--c-accent);
   }
 
   .btn-primary:hover,
@@ -1033,13 +1195,31 @@
   }
 
   /* --- tags ---------------------------------------------------------------- */
+  /* No border.
+     Border was the only signal on this site for "this is a thing", so it was
+     spent on cards, chips, buttons and inputs alike — 155 bordered elements on
+     the projects page, which is why nothing read as structural. A tag is a
+     label, not an object: it gets a ground instead, and the borders are saved
+     for boundaries that actually divide something. */
   .tag {
-    border: 1px solid var(--c-ink-faint);
+    border: 0;
     border-radius: 0;
+    background-color: var(--c-surface-2);
     color: var(--c-ink-muted);
     text-transform: uppercase;
     letter-spacing: 0.06em;
     font-weight: 600;
+    padding: 0.3rem 0.45rem;
+  }
+
+  .tag:hover {
+    background-color: var(--c-accent);
+    color: #000;
+  }
+
+  .tag[data-active="true"] {
+    background-color: var(--c-accent);
+    color: #000;
   }
 
   .tag:hover,
@@ -1056,7 +1236,9 @@
     border: 2px solid var(--c-border-strong);
     border-radius: 0;
     box-shadow: 6px 6px 0 0 var(--c-surface-2);
-    transition: none;
+    transition: border-color 160ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      background-color 160ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   .pcard:hover,
@@ -1190,5 +1372,202 @@
     font-size: 0.8125rem;
     line-height: 1.5;
     white-space: pre;
+  }
+}
+
+/* ===========================================================================
+   VIDEO GRID
+   ===========================================================================
+   The one page that is not a single centred column. 27 videos, every
+   thumbnail already in the repo, previously rendered as 27 lines of text.
+   =========================================================================== */
+@layer components {
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    gap: 2rem 1.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .video-link {
+    display: block;
+    color: var(--c-ink);
+  }
+
+  .video-shot {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background-color: var(--c-surface-2);
+    border: 2px solid var(--c-border);
+    transition: border-color 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .video-shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    /* Thumbnails are loud; let them sit back until the card is the subject. */
+    filter: saturate(0.85) brightness(0.85);
+    transition: filter 200ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .video-link:hover .video-shot img,
+  .video-link:focus-visible .video-shot img {
+    filter: none;
+    transform: scale(1.03);
+  }
+
+  .video-link:hover .video-shot,
+  .video-link:focus-visible .video-shot {
+    border-color: var(--c-accent);
+  }
+
+  .video-duration {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 0.15rem 0.4rem;
+    background-color: #000;
+    color: var(--c-ink);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .video-title {
+    display: block;
+    margin-top: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  .video-link:hover .video-title,
+  .video-link:focus-visible .video-title {
+    color: var(--c-accent);
+  }
+
+  .video-meta {
+    margin-top: 0.4rem;
+    justify-content: flex-start;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .video-shot img { transition: none; }
+    .video-link:hover .video-shot img { transform: none; }
+  }
+}
+
+/* ===========================================================================
+   STATUS + STAGGER
+   =========================================================================== */
+@layer components {
+  /* --c-positive and --c-danger were declared months ago and never used once.
+     Status was rendered as the same grey as everything else beside it. */
+  .status[data-status="active"],
+  .status[data-status="shipped"] {
+    color: var(--c-positive);
+  }
+  .status[data-status="archived"],
+  .status[data-status="abandoned"] {
+    color: var(--c-danger);
+  }
+  .status[data-status="experiment"] {
+    color: var(--c-kind-paper);
+  }
+
+  /* The site had zero @keyframes. One, on the thing you actually came to read,
+     so a list arrives rather than just being there. Cheap, and it stops at the
+     first eight rows so a 33-item page is not a slideshow. */
+  @keyframes row-in {
+    from { opacity: 0; transform: translateY(0.5rem); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .row-list > .row:nth-child(-n + 8),
+    .video-grid > .video-card:nth-child(-n + 8) {
+      animation: row-in 420ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+    }
+    .row-list > .row:nth-child(1),
+    .video-grid > .video-card:nth-child(1) { animation-delay: 0ms; }
+    .row-list > .row:nth-child(2),
+    .video-grid > .video-card:nth-child(2) { animation-delay: 45ms; }
+    .row-list > .row:nth-child(3),
+    .video-grid > .video-card:nth-child(3) { animation-delay: 90ms; }
+    .row-list > .row:nth-child(4),
+    .video-grid > .video-card:nth-child(4) { animation-delay: 135ms; }
+    .row-list > .row:nth-child(5),
+    .video-grid > .video-card:nth-child(5) { animation-delay: 180ms; }
+    .row-list > .row:nth-child(6),
+    .video-grid > .video-card:nth-child(6) { animation-delay: 225ms; }
+    .row-list > .row:nth-child(7),
+    .video-grid > .video-card:nth-child(7) { animation-delay: 270ms; }
+    .row-list > .row:nth-child(8),
+    .video-grid > .video-card:nth-child(8) { animation-delay: 315ms; }
+  }
+}
+
+/* ===========================================================================
+   DETAIL LAYOUT
+   ===========================================================================
+   Project and paper pages were a single 640px column inside a 1280px viewport
+   with the right half empty and nothing placed in it. The metadata that used
+   to sit in a long block under the prose now sits beside it.
+   =========================================================================== */
+@layer components {
+  .detail-grid {
+    display: grid;
+    gap: 0 4rem;
+    align-items: start;
+  }
+
+  @media (min-width: 64rem) {
+    .detail-grid {
+      grid-template-columns: minmax(0, 1fr) 20rem;
+    }
+
+    .detail-rail {
+      position: sticky;
+      top: 5rem;
+      padding-top: var(--spacing-section);
+      border-left: 2px solid var(--c-border);
+      padding-left: 1.75rem;
+    }
+  }
+
+  /* Keep the reading measure honest even though the container is now wider. */
+  .detail-body :where(.prose) {
+    max-width: var(--container-text);
+  }
+
+  .detail-rail .section-head {
+    margin-top: 0;
+  }
+
+  /* The grouped links table was built for a full-width column. In a 20rem rail
+     its label/value flex row wraps unevenly, so stack it instead: label on its
+     own line, values flush left under it. */
+  .detail-rail dl > div {
+    display: block;
+  }
+
+  .detail-rail dl > div > dt {
+    width: auto;
+    margin-bottom: 0.15rem;
+  }
+
+  .detail-rail dl > div > dd {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
   }
 }

@@ -30,22 +30,30 @@ const meta = [
     <PageHeader eyebrow="Archive" title="Videos" meta={meta} />
 
     <section class="section">
-      <ul class="row-list">
+      {/* A grid, not a row list. This page is 27 videos and the repo already
+          ships every thumbnail; rendering them as text was throwing away the
+          only imagery the site has. */}
+      <ul class="video-grid">
         {
           videos.map((v) => {
             const duration = formatDuration(v.duration);
             const date = v.publishedAt.slice(0, 10);
+            const thumb = (v.thumbnails.high ?? v.thumbnails.medium ?? v.thumbnails.default)?.url;
             return (
-              <li class="row">
-                <h2 class="row-title text-base">
-                  <a class="link-quiet" href={videoHref(v.id)}>{v.title}</a>
-                </h2>
-
-                <ul class="meta-row mt-1.5">
-                  <li><time datetime={date} class="tabular">{date}</time></li>
-                  {duration && <li class="tabular">{duration}</li>}
-                  {v.viewCount != null && <li class="tabular">{nf.format(v.viewCount)} views</li>}
-                </ul>
+              <li class="video-card">
+                <a class="video-link" href={videoHref(v.id)}>
+                  <span class="video-shot">
+                    {thumb && (
+                      <img src={thumb} alt="" width="480" height="360" loading="lazy" decoding="async" />
+                    )}
+                    {duration && <span class="video-duration">{duration}</span>}
+                  </span>
+                  <span class="video-title">{v.title}</span>
+                </a>
+                <p class="row-rail video-meta">
+                  <time datetime={date}>{date}</time>
+                  {v.viewCount != null && <span>{nf.format(v.viewCount)} views</span>}
+                </p>
               </li>
             );
           })

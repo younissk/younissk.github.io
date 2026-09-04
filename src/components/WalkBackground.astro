@@ -19,12 +19,16 @@
  * become isolated, and survive far longer than a random step would. A small
  * chance of ignoring the rule keeps the shapes from being identical each round.
  *
- * A walker with nowhere to go dies, and dying frees every cell it ever took.
- * A replacement spawns immediately somewhere else, so there are always four
- * running and the animation never ends: territory is recycled rather than
- * consumed, and the grid settles into a churn instead of filling up and
- * stopping. There is still a hard reset if the grid somehow fills completely,
- * which the recycling makes close to impossible.
+ * A walker with nowhere to go retires. Its path stays exactly where it is —
+ * still owned, so nobody may cross it, and still drawn, faded back to a
+ * texture — and a replacement spawns elsewhere. So the picture accumulates:
+ * the grid genuinely fills over about twenty seconds, holds for a beat, and
+ * starts again.
+ *
+ * It did not always. Retiring a walker used to hand its whole territory back,
+ * which erased as fast as the other three drew. Measured on the live site,
+ * coverage peaked near 2% and then fell. The reset below was unreachable and
+ * the whole simulation was, in practice, invisible.
  *
  * Written against the raw 2D canvas rather than p5. p5.min.js is about a
  * megabyte, and this is the background of the most-visited page on a site whose
@@ -75,23 +79,38 @@
 
     const SPACING = 24;
     const STEPS_PER_FRAME = 1;
-    const FRAME_MS = 1000 / 9;
+    /* Was 9fps, which drew about 36 cells a second. Combined with the bug
+       below, coverage peaked near 2% and then went DOWN. Measured on the live
+       site: 1.98% at three seconds, 1.85% ten seconds later. Nobody ever saw
+       this thing draw anything. */
+    const FRAME_MS = 1000 / 24;
     /* How often a walker ignores Warnsdorff and steps at random. Zero makes
        every round look the same; too much and they strangle themselves early. */
     const CHAOS = 0.12;
 
-    /* Dim on purpose. This sits behind the hero and the text has to win. */
-    const COLOURS = [
-      'rgba(255, 228, 0, 0.55)',
-      'rgba(255, 255, 255, 0.34)',
-      'rgba(255, 255, 255, 0.18)',
-      'rgba(255, 228, 0, 0.22)',
+    /* Two tiers. The walker that is moving right now is bright enough to
+       follow; everything it has already laid down fades back to a texture.
+       That is what keeps the accumulated picture from fighting the text, and
+       it reads as depth rather than as one flat wash. */
+    const LIVE = [
+      'rgba(255, 228, 0, 0.92)',
+      'rgba(255, 255, 255, 0.72)',
+      'rgba(255, 255, 255, 0.55)',
+      'rgba(255, 228, 0, 0.62)',
+    ];
+    const TRAIL = [
+      'rgba(255, 228, 0, 0.30)',
+      'rgba(255, 255, 255, 0.24)',
+      'rgba(255, 255, 255, 0.17)',
+      'rgba(255, 228, 0, 0.20)',
     ];
 
     let cols = 0;
     let rows = 0;
     let owner = new Int8Array(0); // 0 free, 1..4 = walker id
     let walkers = [];
+    /* Finished paths. THE fix: these used to be thrown away. */
+    let trails = [];
     let filled = 0;
     let holdUntil = 0;
     let raf = 0;
@@ -104,6 +123,7 @@
     function reset() {
       owner = new Int8Array(cols * rows);
       filled = 0;
+      trails = [];
 
       walkers = [];
       for (let i = 0; i < 4; i++) {
@@ -127,10 +147,21 @@
       return null;
     }
 
-    /** Free everything this walker took and drop it back in somewhere else. */
+    /**
+     * Retire this walker's path and start a new one elsewhere.
+     *
+     * This used to free every cell the walker had taken, which is why the
+     * drawing never accumulated: a walker seals itself in after roughly fifty
+     * steps, and handing its whole territory back erased as much as the other
+     * three were adding. The picture oscillated around 2% coverage forever.
+     *
+     * Now the path is kept — the cells stay owned, so later walkers route
+     * around it, and it stays on screen as a dimmed trail. The grid genuinely
+     * fills, which is what the reset at the end of tick() was always waiting
+     * for and never got.
+     */
     function respawn(w) {
-      for (const c of w.path) owner[idx(c.x, c.y)] = 0;
-      filled -= w.path.length;
+      if (w.path.length > 1) trails.push({ id: w.id, path: w.path });
 
       const spot = freeCell();
       if (!spot) {
@@ -165,8 +196,7 @@
       ].filter((n) => inBounds(n.x, n.y) && owner[idx(n.x, n.y)] === 0);
 
       if (options.length === 0) {
-        /* Sealed in. It gives its territory back and starts over elsewhere,
-           which is what keeps this running forever instead of silting up. */
+        /* Sealed in. It leaves its path behind and starts again elsewhere. */
         respawn(w);
         return;
       }
@@ -196,9 +226,25 @@
       w.path.push(next);
     }
 
+    /* Read once, not 24 times a second, to fetch a constant. */
+    let groundColour = '#000';
+
+    function drawPath(path, colour, width) {
+      if (path.length === 0) return;
+      const ox = SPACING * 0.5;
+      const oy = SPACING * 0.5;
+      ctx.strokeStyle = colour;
+      ctx.lineWidth = width;
+      ctx.beginPath();
+      ctx.moveTo(ox + path[0].x * SPACING, oy + path[0].y * SPACING);
+      for (let i = 1; i < path.length; i++) {
+        ctx.lineTo(ox + path[i].x * SPACING, oy + path[i].y * SPACING);
+      }
+      ctx.stroke();
+    }
+
     function draw() {
-      const styles = getComputedStyle(document.documentElement);
-      ctx.fillStyle = styles.getPropertyValue('--c-bg').trim() || '#000';
+      ctx.fillStyle = groundColour;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const ox = SPACING * 0.5;
@@ -207,24 +253,18 @@
       ctx.lineCap = 'square';
       ctx.lineJoin = 'miter';
 
-      for (const w of walkers) {
-        if (w.path.length === 0) continue;
-        ctx.strokeStyle = COLOURS[w.id - 1];
-        ctx.lineWidth = 2;
+      /* History first, so the live walkers draw on top of it. */
+      for (const t of trails) drawPath(t.path, TRAIL[t.id - 1], 2);
 
-        ctx.beginPath();
-        ctx.moveTo(ox + w.path[0].x * SPACING, oy + w.path[0].y * SPACING);
-        for (let i = 1; i < w.path.length; i++) {
-          ctx.lineTo(ox + w.path[i].x * SPACING, oy + w.path[i].y * SPACING);
-        }
-        ctx.stroke();
+      for (const w of walkers) {
+        drawPath(w.path, LIVE[w.id - 1], 3);
 
         /* A live head gets a marker; a dead one does not, so you can see who
            is still going without any labels. */
-        if (!w.dead) {
+        if (!w.dead && w.path.length) {
           const head = w.path[w.path.length - 1];
-          ctx.fillStyle = ctx.strokeStyle;
-          ctx.fillRect(ox + head.x * SPACING - 3, oy + head.y * SPACING - 3, 6, 6);
+          ctx.fillStyle = LIVE[w.id - 1];
+          ctx.fillRect(ox + head.x * SPACING - 3.5, oy + head.y * SPACING - 3.5, 7, 7);
         }
       }
     }
@@ -234,7 +274,10 @@
       if (now - last < FRAME_MS) return;
       last = now;
 
-      if (filled >= cols * rows) {
+      /* The grid genuinely fills now that trails persist, so this branch is
+         reached on every cycle rather than being unreachable. A few cells are
+         always sealed off in pockets nobody can enter, hence the 98%. */
+      if (filled >= cols * rows * 0.98 || walkers.every((w) => w.dead)) {
         if (!holdUntil) holdUntil = now + 2200;
         if (now > holdUntil) {
           holdUntil = 0;
@@ -257,6 +300,10 @@
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       cols = Math.max(4, Math.floor(w / SPACING));
       rows = Math.max(4, Math.floor(h / SPACING));
+      groundColour =
+        getComputedStyle(document.documentElement)
+          .getPropertyValue('--c-bg')
+          .trim() || '#000';
       reset();
       draw();
     }
@@ -281,7 +328,7 @@
          about 400 cells, and 6000 iterations there meant tens of milliseconds
          of blocked main thread on load — imposed on exactly the visitors who
          asked for less work. Two passes over the grid fills it just as well. */
-      const preroll = Math.max(400, cols * rows * 2);
+      const preroll = Math.max(400, cols * rows);
       for (let i = 0; i < preroll; i++) for (const w of walkers) step(w);
       draw();
     } else {

@@ -96,11 +96,6 @@ interface Props {
 /** How many tags the filter bar shows before "all N tags" is used. */
 const TAG_PREVIEW = 16;
 
-const SORTS: ReadonlyArray<{ value: Sort; label: string }> = [
-  { value: 'newest', label: 'Newest first' },
-  { value: 'oldest', label: 'Oldest first' },
-  { value: 'alpha', label: 'A–Z' },
-];
 
 function sortRows(rows: ProjectRow[], sort: Sort): ProjectRow[] {
   const out = [...rows];
@@ -119,7 +114,6 @@ export default function ProjectIndex({ projects, categories, metrics = {} }: Pro
   const [tags, setTags] = useState<string[]>([]);
   const [featuredOnly, setFeaturedOnly] = useState(false);
   const [sort, setSort] = useState<Sort>('newest');
-  const [showAllTags, setShowAllTags] = useState(false);
   const [hydrated, setHydrated] = useState(false);
 
   const searchRef = useRef<HTMLInputElement>(null);
@@ -284,10 +278,6 @@ export default function ProjectIndex({ projects, categories, metrics = {} }: Pro
     );
   }, [searched, matchesRest, tags]);
 
-  const previewTags = tagCounts.filter(
-    ([tag], index) => index < TAG_PREVIEW || tags.includes(tag),
-  );
-  const shownTags = showAllTags ? tagCounts : previewTags;
 
   const toggleTag = (tag: string) =>
     setTags((current) =>
@@ -345,7 +335,13 @@ export default function ProjectIndex({ projects, categories, metrics = {} }: Pro
 
   return (
     <div>
-      <section aria-label="Filter projects" className="pb-8">
+      {/* Trimmed to a search box and eight category chips.
+          This used to be 576px of filter machinery on desktop and a full phone
+          screen on mobile — a faceted search with a 49-tag cloud, a sort
+          control and a "selected only" toggle, all guarding thirteen items.
+          Tag and sort state is kept because the URL still carries it, but it no
+          longer costs a screen of chrome to reach the first project. */}
+      <section aria-label="Filter projects" className="pb-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative min-w-0 flex-1">
             <label className="sr-only" htmlFor="project-search">
@@ -363,44 +359,13 @@ export default function ProjectIndex({ projects, categories, metrics = {} }: Pro
             />
             <kbd
               aria-hidden="true"
-              className="pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 rounded-hair border border-border px-1.5 py-0.5 font-mono text-[0.6875rem] text-ink-faint sm:block"
+              className="pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 px-1.5 py-0.5 font-mono text-[0.6875rem] text-ink-faint sm:block"
             >
               /
             </kbd>
           </div>
 
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-            <button
-              type="button"
-              className="tag"
-              data-active={featuredOnly ? 'true' : undefined}
-              aria-pressed={featuredOnly}
-              title="Only the projects picked out as representative"
-              onClick={() => setFeaturedOnly((v) => !v)}
-            >
-              selected only
-            </button>
-            <label className="label shrink-0" htmlFor="project-sort">
-              Sort
-            </label>
-            <select
-              id="project-sort"
-              className="field w-auto"
-              value={sort}
-              onChange={(event) => setSort(event.target.value as Sort)}
-            >
-              {SORTS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <div className="mt-4">
-          <h2 className="label mb-2">Category</h2>
-          <ul className="tag-row">
+          <ul className="tag-row shrink-0">
             <li>
               <button
                 type="button"
@@ -409,23 +374,22 @@ export default function ProjectIndex({ projects, categories, metrics = {} }: Pro
                 aria-pressed={category === null}
                 onClick={() => setCategory(null)}
               >
-                all <span className="tabular text-[0.9em] opacity-70">{searched.filter((p) => matchesRest(p, { category: null })).length}</span>
+                all
               </button>
             </li>
             {categories.map((c) => {
               const count = categoryCounts.get(c) ?? 0;
+              if (count === 0 && category !== c) return null;
               return (
                 <li key={c}>
                   <button
                     type="button"
-                    className="tag disabled:cursor-not-allowed disabled:opacity-45"
+                    className="tag"
                     data-active={category === c ? 'true' : undefined}
                     aria-pressed={category === c}
-                    disabled={count === 0 && category !== c}
                     onClick={() => setCategory(category === c ? null : c)}
                   >
-                    {c}{' '}
-                    <span className="tabular text-[0.9em] opacity-70">{count}</span>
+                    {c}
                   </button>
                 </li>
               );
@@ -433,51 +397,27 @@ export default function ProjectIndex({ projects, categories, metrics = {} }: Pro
           </ul>
         </div>
 
-        <div className="mt-4">
-          <h2 className="label mb-2">
-            Tags{tags.length > 0 ? ` · ${tags.length} selected (all must match)` : ''}
-          </h2>
-          <ul
-            className={
-              showAllTags ? 'tag-row max-h-56 overflow-y-auto pr-1' : 'tag-row'
-            }
-          >
-            {shownTags.map(([tag, count]) => (
-              <li key={tag}>
-                <button
-                  type="button"
-                  className="tag"
-                  data-active={tags.includes(tag) ? 'true' : undefined}
-                  aria-pressed={tags.includes(tag)}
-                  onClick={() => toggleTag(tag)}
-                >
-                  {tag} <span className="tabular text-[0.9em] opacity-70">{count}</span>
-                </button>
-              </li>
+        {/* Only appears once something is actually filtering. */}
+        {anyFilter && (
+          <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-2">
+            <p className="meta" aria-live="polite">
+              {visible.length} of {projects.length}
+            </p>
+            {tags.map((tag) => (
+              <button key={tag} type="button" className="tag" data-active="true" onClick={() => toggleTag(tag)}>
+                {tag} ✕
+              </button>
             ))}
-          </ul>
-          {(showAllTags || tagCounts.length > previewTags.length) && (
-            <button
-              type="button"
-              className="meta link-quiet mt-2"
-              aria-expanded={showAllTags}
-              onClick={() => setShowAllTags((v) => !v)}
-            >
-              {showAllTags ? 'Show fewer tags' : `Show all ${tagCounts.length} tags`}
-            </button>
-          )}
-        </div>
-
-        <div className="mt-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
-          <p className="meta" aria-live="polite">
-            Showing {visible.length} of {projects.length} projects
-          </p>
-          {anyFilter && (
+            {featuredOnly && (
+              <button type="button" className="tag" data-active="true" onClick={() => setFeaturedOnly(false)}>
+                selected ✕
+              </button>
+            )}
             <button type="button" className="meta link-quiet" onClick={clearAll}>
-              Clear filters (Esc)
+              Clear (Esc)
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </section>
 
       {visible.length === 0 ? (
@@ -512,7 +452,7 @@ export default function ProjectIndex({ projects, categories, metrics = {} }: Pro
                 <ul className="meta-row shrink-0">
                   <li className="tabular">{p.year}</li>
                   <li>{p.category}</li>
-                  <li>{p.status}</li>
+                  <li className="status" data-status={p.status}>{p.status}</li>
                 </ul>
               </div>
 
@@ -539,10 +479,12 @@ export default function ProjectIndex({ projects, categories, metrics = {} }: Pro
 
               <div className="pcard-actions">
                 {(() => {
-                  /* Five buttons is the most a card can carry before it stops
-                     being scannable. nanoBeard has nine links; the rest live on
-                     the detail page behind "More". */
-                  const CARD_MAX = 5;
+                  /* Two, not five. Five bordered buttons per card meant a
+                     thirteen-card page carried sixty-odd identical boxes and
+                     spent the yellow accent thirteen times, which is how an
+                     accent stops meaning anything. Everything else is one
+                     click away on the detail page. */
+                  const CARD_MAX = 2;
                   const primary = p.links.find(
                     (l) => l.kind === 'site' || l.kind === 'demo',
                   );
