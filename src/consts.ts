@@ -8,7 +8,16 @@ export const SITE_URL = 'https://youniss.dev';
 export const SITE_TITLE = 'Youniss';
 
 export const SITE_DESCRIPTION =
-  'Applied AI engineer. Production RAG, LLM document extraction, and agent infrastructure in safety-critical and document-heavy domains.';
+  'Applied AI engineer. I work on retrieval and document extraction, mostly for people who cannot send their documents to somebody else’s API.';
+
+/**
+ * Stable identifier for the one Person node in the site's structured data.
+ *
+ * Every authored thing — paper, post, video, project — references this instead
+ * of repeating an author block, so a consumer sees one person with many works
+ * rather than one anonymous author per page.
+ */
+export const PERSON_ID = `${SITE_URL}/#person`;
 
 export interface AuthorInfo {
   readonly name: string;

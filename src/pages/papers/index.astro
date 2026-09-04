@@ -1,0 +1,56 @@
+---
+/**
+ * Publications.
+ *
+ * Each paper page links back here, and that link used to 404. This is also the
+ * page a citation-minded crawler wants: one list, with venue and year, that
+ * resolves the question "what has this person published".
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+
+const papers = (await getCollection('papers')).sort((a, b) => b.data.year - a.data.year);
+---
+
+<BaseLayout
+  title="Papers"
+  description={`${papers.length} publications: a bachelor thesis on audio-text retrieval, a DCASE challenge technical report, and a seminar paper on LLM-based recommender systems.`}
+>
+  <div class="page">
+    <PageHeader eyebrow="Publications" title="Papers" meta={[`${papers.length} papers`]} />
+
+    <section class="section">
+      <ul class="row-list">
+        {
+          papers.map((p) => (
+            <li class="row">
+              <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <h2 class="row-title min-w-0 text-base">
+                  <a class="link-quiet" href={`/papers/${p.id}/`}>{p.data.title}</a>
+                </h2>
+                <span class="tag shrink-0">{p.data.type.replace(/-/g, ' ')}</span>
+              </div>
+
+              <ul class="meta-row mt-1.5">
+                <li><time datetime={String(p.data.year)} class="tabular">{p.data.year}</time></li>
+                <li>{p.data.venue}</li>
+              </ul>
+
+              {/* Deliberately no author list here. The full name belongs on the
+                  paper's own page, where a citation needs to be accurate, not
+                  on an index that exists to help someone find the paper. */}
+              {p.data.authors.length > 1 && (
+                <p class="meta mt-1.5">With {p.data.authors.length - 1} co-authors.</p>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="meta mt-6">
+        Each page carries the abstract, a BibTeX entry and the PDF.
+      </p>
+    </section>
+  </div>
+</BaseLayout>

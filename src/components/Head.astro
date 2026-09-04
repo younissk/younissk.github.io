@@ -1,5 +1,5 @@
 ---
-import { SITE_TITLE, SITE_DESCRIPTION, SITE_URL, AUTHOR, RSS_PATH } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, SITE_URL, AUTHOR, RSS_PATH, PERSON_ID } from '../consts';
 
 interface Props {
   title: string;
@@ -13,6 +13,11 @@ interface Props {
   ogType?: 'website' | 'article';
   /** ISO date, emitted as article:published_time when ogType is 'article'. */
   publishedTime?: string;
+  /**
+   * Extra JSON-LD for this page: a VideoObject, a ScholarlyArticle and so on.
+   * Emitted alongside the Person node, which every page carries.
+   */
+  schema?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
@@ -23,6 +28,7 @@ const {
   canonical,
   ogType = 'website',
   publishedTime,
+  schema,
 } = Astro.props;
 
 const fullTitle = title.includes(SITE_TITLE) ? title : `${title} — ${SITE_TITLE}`;
@@ -58,20 +64,44 @@ function cardForRoute(pathname: string): string {
 // Absolute, always: most scrapers ignore a relative og:image outright.
 const imageUrl = new URL(ogImage ?? cardForRoute(Astro.url.pathname), SITE_URL).href;
 
+/**
+ * One Person node for the whole site, with a stable @id.
+ *
+ * Everything else that names an author — a paper, a post, a video — points at
+ * this @id instead of repeating the block, so a consumer sees one entity with
+ * many works rather than 73 unrelated copies of the same person.
+ *
+ * `name` is the single given name, deliberately. The full name appears only in
+ * the author lists on the three paper pages, where an accurate citation belongs.
+ */
 const personSchema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
+  '@id': PERSON_ID,
   name: AUTHOR.name,
   url: SITE_URL,
   jobTitle: AUTHOR.role,
+  image: new URL('/img/avatar.jpg', SITE_URL).href,
+  description: SITE_DESCRIPTION,
+  alumniOf: {
+    '@type': 'CollegeOrUniversity',
+    name: 'Johannes Kepler University',
+    sameAs: 'https://www.jku.at/',
+  },
   knowsAbout: [
     'Retrieval-augmented generation',
     'Large language models',
-    'Backend engineering',
+    'Audio-text retrieval',
+    'Contrastive learning',
     'Information retrieval',
+    'LLM fine-tuning',
+    'Tool calling and agent infrastructure',
+    'Document extraction',
   ],
   sameAs: [AUTHOR.github, AUTHOR.linkedin, AUTHOR.youtube, AUTHOR.huggingface],
 };
+
+const extraSchema = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
 ---
 
 <meta charset="utf-8" />
@@ -86,7 +116,7 @@ const personSchema = {
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="icon" href="/favicon.ico" sizes="32x32" />
-<meta name="theme-color" content="#0d0d0f" />
+<meta name="theme-color" content="#000000" />
 
 <link
   rel="alternate"
@@ -115,3 +145,8 @@ const personSchema = {
 <meta name="twitter:image" content={imageUrl} />
 
 <script type="application/ld+json" is:inline set:html={JSON.stringify(personSchema)} />
+{
+  extraSchema.map((node) => (
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(node)} />
+  ))
+}

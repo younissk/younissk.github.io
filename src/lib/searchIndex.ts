@@ -13,15 +13,36 @@ export interface SearchEntry {
   keywords: string;
 }
 
-/** Static routes that have no collection behind them. */
+/**
+ * Static routes that have no collection behind them.
+ *
+ * Nothing here may carry a surname or a place name. This index is inlined into
+ * the HTML of EVERY page, so a keyword added for one entry's benefit ends up in
+ * the source of the contact page and the uses page too. That is how the full
+ * name previously reached all 69 pages from a single line on the home entry.
+ */
 const PAGES: SearchEntry[] = [
-  { href: '/', title: 'Home', detail: 'Start here', group: 'page', keywords: 'youniss kandah' },
+  { href: '/', title: 'Home', detail: 'Start here', group: 'page', keywords: 'youniss home start' },
   { href: '/now/', title: 'Now', detail: 'What I am doing at the moment', group: 'page', keywords: 'current' },
   { href: '/uses/', title: 'Uses', detail: 'The stack I actually work in', group: 'page', keywords: 'setup tools stack' },
   { href: '/contact/', title: 'Contact', detail: 'Send me a message', group: 'page', keywords: 'email get in touch hire' },
   { href: '/projects/', title: 'Projects', detail: 'The full archive', group: 'page', keywords: 'repositories github' },
   { href: '/library/', title: 'Library', detail: 'Writing, papers and videos', group: 'page', keywords: 'blog posts publications youtube' },
+  { href: '/writing/', title: 'Writing', detail: 'Posts, newest first', group: 'page', keywords: 'blog articles' },
+  { href: '/papers/', title: 'Papers', detail: 'Publications, with BibTeX', group: 'page', keywords: 'publications research thesis' },
+  { href: '/videos/', title: 'Videos', detail: 'The video archive', group: 'page', keywords: 'youtube talks explainers' },
 ];
+
+/** First sentence of a video description, minus links and chapter timestamps. */
+function videoKeywords(description: string): string {
+  return description
+    .split('\n')
+    .filter((line) => !/^\s*\d+:\d+/.test(line) && !/https?:\/\//.test(line))
+    .join(' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 180);
+}
 
 /**
  * Everything on the site, flattened into one list for the command palette.
@@ -31,11 +52,10 @@ const PAGES: SearchEntry[] = [
  * runtime. It costs a few KB in the page and works offline.
  */
 export async function buildSearchIndex(): Promise<SearchEntry[]> {
-  const [projects, papers, posts, videos] = await Promise.all([
+  const [projects, papers, posts] = await Promise.all([
     getCollection('projects'),
     getCollection('papers'),
     getCollection('posts', ({ data }) => !data.draft),
-    getCollection('videos'),
   ]);
 
   return [
@@ -47,12 +67,16 @@ export async function buildSearchIndex(): Promise<SearchEntry[]> {
       group: 'project',
       keywords: [e.data.repoName, e.data.category, ...e.data.tags, ...e.data.stack].join(' '),
     })),
+    /* Author names and the venue string stay OUT of this index — the venue
+       carries the university's city, and both would be inlined site-wide. The
+       paper pages themselves still show the full author list, which is where an
+       accurate citation belongs. */
     ...papers.map((e) => ({
       href: `/papers/${e.id}/`,
       title: e.data.title,
-      detail: `${e.data.venue} · ${e.data.year}`,
+      detail: `${e.data.type.replace(/-/g, ' ')} · ${e.data.year}`,
       group: 'paper',
-      keywords: [e.data.type, ...e.data.authors].join(' '),
+      keywords: e.data.type,
     })),
     ...posts.map((e) => ({
       href: `/writing/${e.id}/`,
@@ -61,12 +85,15 @@ export async function buildSearchIndex(): Promise<SearchEntry[]> {
       group: 'writing',
       keywords: e.data.tags.join(' '),
     })),
-    ...videos.map((e) => ({
-      href: videoHref(e.id),
-      title: e.id,
-      detail: 'Video',
+    /* Videos come from src/data/videos.json, not from a content collection.
+       The collection holds only optional hand-written extras and is empty, so
+       indexing it produced zero video results and titled them by raw id. */
+    ...VIDEOS.map((v) => ({
+      href: videoHref(v.id),
+      title: v.title,
+      detail: v.publishedAt.slice(0, 10),
       group: 'video',
-      keywords: '',
+      keywords: videoKeywords(v.description),
     })),
   ];
 }

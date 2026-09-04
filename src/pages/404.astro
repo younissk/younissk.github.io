@@ -1,0 +1,47 @@
+---
+/**
+ * Custom 404.
+ *
+ * GitHub Pages serves its own branded "File not found" page otherwise, which is
+ * a dead end on someone else's domain with no way back into the site. This one
+ * is plain and gives every route a link.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { NAV } from '../consts';
+
+const elsewhere = [
+  { label: 'Writing', href: '/writing/' },
+  { label: 'Papers', href: '/papers/' },
+  { label: 'Videos', href: '/videos/' },
+  { label: 'Now', href: '/now/' },
+  { label: 'Uses', href: '/uses/' },
+];
+---
+
+<BaseLayout title="Not found" description="That page does not exist." noindex>
+  <div class="page-narrow">
+    <PageHeader eyebrow="404" title="Not found" meta={['That page does not exist']} />
+
+    <section class="section">
+      <p class="text-ink-muted">
+        Either the address is wrong, or it used to be a page here and is not one now. Everything
+        that does exist is one link away.
+      </p>
+
+      <ul class="row-list mt-6">
+        {
+          [...NAV, ...elsewhere].map((item) => (
+            <li class="row">
+              <a class="link-quiet" href={item.href}>{item.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="meta mt-6">
+        Or press <kbd>⌘K</kbd> and search.
+      </p>
+    </section>
+  </div>
+</BaseLayout>

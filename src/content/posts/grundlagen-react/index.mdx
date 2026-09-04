@@ -11,11 +11,11 @@ draft: false
 
 Bevor wir in die Tiefen von React eintauchen, ist es wichtig, einige grundlegende Konzepte und Begriffe zu klären. Dieser Abschnitt bietet eine Einführung in die Welt der Webanwendungen, erläutert, warum Frontend-Frameworks so entscheidend sind und zeigt Ihnen, wie Sie am besten ein Framework wie React erlernen können.
 
-## Web Applikationen 101
+### Web Applikationen 101
 
 In der modernen Softwareentwicklung sind Webanwendungen allgegenwärtig. Sie sind Programme, die in einem Webbrowser laufen und mit denen Benutzer interagieren können, um bestimmte Aufgaben zu erledigen – sei es Online-Shopping, Social Media oder Cloud-Computing. Webanwendungen bestehen im Allgemeinen aus einer Frontend-Schicht, die das Benutzerinterface (UI) beinhaltet, und einer Backend-Schicht, die für die Datenverarbeitung verantwortlich ist. Beide Schichten kommunizieren in der Regel über eine API (Application Programming Interface).
 
-## Von einer einfachen Webseite zu einer komplexen Web Applikation
+### Von einer einfachen Webseite zu einer komplexen Web Applikation
 
 Grundsätzlich ist eine Webseite traditionell nur HTML. Dann kann man CSS für das Styling und JavaScript für die UI-Logik hinzufügen. Wenn man im Browser auf eine URL geht, werden vom Webserver die HTML-, CSS- und JS-Dateien zurückgeschickt.
 
@@ -23,15 +23,15 @@ Grundsätzlich ist eine Webseite traditionell nur HTML. Dann kann man CSS für d
 
 Die Kommunikation zwischen Client und Server erfolgt synchron, das bedeutet, dass der Client, wenn er eine Anfrage schickt, auf eine Antwort wartet.
 
-### Was ist ein Client? Was ist ein Server?
+#### Was ist ein Client? Was ist ein Server?
 
 Der Unterschied zwischen den beiden ist, dass ein Client einen Server konsumiert und ein Server einem Client dient. Beispiele für Clients sind z.B. Browser oder cURL-Befehle, und Server sind z.B. Node.JS, Django, Spring Boot, NGINX, Apache usw. Ein Server kann aber auch ein Client sein, wenn er einen anderen Server konsumiert, wie ein Datenbankserver.
 
-### Was ist ein Webserver? Was ist ein Application Server?
+#### Was ist ein Webserver? Was ist ein Application Server?
 
 Ein Webserver schickt Ressourcen, meist HTML, CSS und JS, welche über HTTP geschickt werden. Ein Application Server schickt jedoch mehr als nur Ressourcen, wie zum Beispiel JSON. Zusätzlich ist ein Application Server nicht zu einem Protokoll gebunden und kann das Protokoll beliebig auswählen.
 
-### Was passiert, wenn man zusätzliche Anfragen an einen Webserver schickt?
+#### Was passiert, wenn man zusätzliche Anfragen an einen Webserver schickt?
 
 Eine moderne Webseite beinhaltet HTML, CSS und JS, sowie auch Icons, Videos und Bilder. All diese Ressourcen müssen dann zusätzlich vom Browser an den Webserver angefragt werden. Jedoch sind Anfragen an einen Webserver synchron, wodurch Wasserfallanfragen entstehen, oder "Waterfall requests".
 
@@ -39,13 +39,13 @@ Eine moderne Webseite beinhaltet HTML, CSS und JS, sowie auch Icons, Videos und 
 
 Wenn alle Dateien geladen sind, wird die Webseite im Browser angezeigt.
 
-## Web 2.0
+### Web 2.0
 
 Mit der Zeit war es nicht genug, nur statische Dateien mittels Webserver zu liefern. In Web 2.0 (ca. 2004) konnten Nutzer zum ersten Mal nicht nur den Inhalt von Webseiten lesen, sondern auch Inhalt erstellen. PHP hat vieles davon ermöglicht, da es wie ein serverseitiger Webserver ist. Dadurch wurde es möglich, dynamisch HTML-Dateien zu bearbeiten. Das bedeutet, dass der Server die HTML-Dateien selbst und automatisch ändern kann, ohne dass jemand manuell eingreifen muss, z.B. wenn jemand einen neuen Blogpost in einer Datenbank erstellt. Das nennt man Server-side Rendering.
 
 Templating-Engines in verschiedenen Programmiersprachen wurden verwendet, um komplexen Code innerhalb von HTML einzubauen. Beispiele sind Twig für PHP, JSP für Java oder Django für Python.
 
-## SPA - Single Page Applications
+### SPA - Single Page Applications
 
 Während der Zeit von Server-Side Rendering wurde nur sehr wenig JavaScript verwendet, hauptsächlich für kleine DOM (Document Object Model) Manipulationen und Animationen. jQuery war dafür die beliebteste Bibliothek.
 
@@ -85,11 +85,11 @@ ReactDOM.render(
 
 In diesem Fall sieht man eine Art Templating, wie vorher, jedoch diesmal im Client statt am Server. Solche Applikationen werden Client-Side Rendered Applications genannt, welche es möglich gemacht haben, SPAs zu erstellen.
 
-### Wie ist Routing möglich in SPAs?
+#### Wie ist Routing möglich in SPAs?
 
 Natürlich ist dann Server-side Routing nicht mehr möglich, deswegen verwenden SPAs Client-Side Routing. Die JavaScript-Datei hat alle Seiten einer Webseite mittels eines Templates in JS (z.B. JSX für React-Applikationen). Wenn Routing erforderlich ist, wird dies nur scheinhaft durchgeführt mittels JavaScript. Es wird am Client selbst das DOM so manipuliert, dass es wie eine neue Webseite aussieht.
 
-### Werden dann nicht die JS-Dateien enorm groß?
+#### Werden dann nicht die JS-Dateien enorm groß?
 
 Kurzgefasst: Ja. Die JavaScript-Dateien werden natürlich ziemlich groß, weil sie viel mehr Last übernehmen. Das bedeutet auch, dass ein Webserver größere Dateien schicken muss und der Browser auch größere Dateien erhalten muss, was natürlich zu einer Netzwerklatenz führt.
 
@@ -99,11 +99,11 @@ Aber ist es dann noch ein SPA? Und sind wir dann nicht zurück zum Wasserfall-Pr
 
 Nicht ganz. Durch Code-Splitting wird nicht jede einzelne Seite getrennt, sondern jede Komponente. Das bedeutet, wenn Komponenten seitenübergreifend gleich bleiben, dann gehen sie in den Cache. Nur der neue Content von Seiten wird neu geladen.
 
-![Diagramm mit einer Zeitachse: home.js, nav-bar.js und footer.js werden zuerst geladen und gecached ("1 mal angefragt, und gecached"), danach admin.js und grid.js, zuletzt about.js — ein gestrichelter Pfeil zeigt, dass footer.js "Vom Cache genommen" wird](./code-splitting.png)
+![Diagramm mit einer Zeitachse: home.js, nav-bar.js und footer.js werden zuerst geladen und gecached ("1 mal angefragt, und gecached"), danach admin.js und grid.js, zuletzt about.js, ein gestrichelter Pfeil zeigt, dass footer.js "Vom Cache genommen" wird](./code-splitting.png)
 
 Das Problem jetzt ist, wenn sich etwas ändert, sieht der Kunde noch nichts, weil alles gecached ist. Bei jedem Update würde der Kunde nichts Neues sehen. Als Lösung dazu bekommt jede einzelne JS-Datei einen neuen Namen nach jedem Build basierend auf TimeStamps (z.B. grid.hash123.js wird umbenannt auf grid.hash456.js). Dadurch ist bekannt, welche Dateien im Cache veraltet sind und welche nicht.
 
-# Einführung in React
+## Einführung in React
 
 > In diesem Abschnitt werden wir einen ersten Blick auf React werfen, ein JavaScript-Framework, das sich großer Beliebtheit erfreut. Wir werden uns die Gründe für die Verwendung von React ansehen, einen kurzen Überblick über seine Geschichte geben und die Hauptmerkmale dieses mächtigen Tools erläutern.
 
@@ -114,35 +114,35 @@ Unterpunkte:
 
 React ist eine essenzielle Technologie, die in einer Vielzahl von Anwendungsfällen eine Rolle spielt, von Single-Page-Webanwendungen bis hin zu komplexen Unternehmenssystemen.
 
-## Was ist React?
+### Was ist React?
 
 React ist eine leistungsstarke JavaScript-Bibliothek, die ursprünglich von Facebook entwickelt wurde und heute von einer breiten Community von Entwicklern unterstützt wird. Es ermöglicht das Erstellen von Web-Anwendungen durch den Einsatz von modularen Code-Einheiten, bekannt als "Komponenten". Diese Komponenten sind die Bausteine einer React-Anwendung und repräsentieren sowohl UI-Elemente als auch Logik.
 
-### Geschichte von React
+#### Geschichte von React
 
 React wurde 2013 von Facebook als Reaktion auf die Bedürfnisse schneller, komplexer und interaktiver Benutzeroberflächen veröffentlicht. Facebook selbst war eines der ersten großen Projekte, die React nutzten, gefolgt von Instagram im Jahr 2014. Die rasante Annahme von React ist zum Teil auf seine Fähigkeit zurückzuführen, Entwicklern ein höheres Maß an Flexibilität und Effizienz zu bieten, insbesondere in großen Anwendungen.
 
-## Warum React?
+### Warum React?
 
 React bietet zahlreiche Vorteile, die es zu einer attraktiven Wahl für viele Projekte machen.
 
-### Leistung
+#### Leistung
 
 React verwendet ein virtuelles DOM, um Änderungen an der Benutzeroberfläche effizient zu verwalten. Dies minimiert die Anzahl der erforderlichen DOM-Manipulationen und erhöht somit die Leistung.
 
 Mehr über das Virtuelle DOM kommt später.
 
-### Flexibilität und Modularität
+#### Flexibilität und Modularität
 
 Dank seines komponentenbasierten Ansatzes können Entwickler Code wiederverwenden und dadurch Entwicklungszeit und -aufwand reduzieren. Komponenten können isoliert entwickelt und getestet werden, was auch die Wartbarkeit des Codes verbessert.
 
-### Starkes Ökosystem
+#### Starkes Ökosystem
 
 React ist mehr als nur eine Bibliothek; es ist ein ganzes Ökosystem. Zahlreiche Zusatzbibliotheken wie Redux für State-Management und React Router für das Routing in Single-Page-Applications ergänzen die Kernbibliothek. Darüber hinaus gibt es eine Vielzahl von Entwicklerwerkzeugen, Community-Ressourcen und Tutorials, die den Einstieg erleichtern.
 
 React hat eine der aktivsten und engagiertesten Entwicklergemeinschaften. Es gibt zahlreiche Meetups, Konferenzen und Online-Ressourcen, die ständig aktualisiert werden.
 
-### Der Zustand von React heute
+#### Der Zustand von React heute
 
 Seit seiner Einführung hat sich React ständig weiterentwickelt und ist heute eine der meistgenutzten Bibliotheken für die Webentwicklung. Der Zustand von React im aktuellen Software-Ökosystem ist geprägt von kontinuierlichen Verbesserungen, der Aktualisierung bestehender Funktionen und der Einführung neuer Konzepte.
 
@@ -187,7 +187,7 @@ Mehr dazu hier [auf ihrem Blog](https://react.dev/posts/2023/03/22/react-labs-wh
 
 Während React weit verbreitet ist, gibt es andere ähnliche Technologien wie Angular und Vue.js. Jede dieser Technologien hat ihre eigenen Stärken und Schwächen, aber React hat sich durch seine Flexibilität und das starke Community-Engagement abgehoben.
 
-![Liniendiagramm "Ratios over time" aus der State-of-JS-Umfrage: Retention-Werte von 2016 bis 2022 für React, Vue.js, Angular, Preact, Ember, Svelte und weitere Frameworks — React bleibt durchgehend über 80%, Angular fällt auf ca. 43%, Ember auf ca. 17%](./react-vs-angular-vs-vue.png)
+![Liniendiagramm "Ratios over time" aus der State-of-JS-Umfrage: Retention-Werte von 2016 bis 2022 für React, Vue.js, Angular, Preact, Ember, Svelte und weitere Frameworks, React bleibt durchgehend über 80%, Angular fällt auf ca. 43%, Ember auf ca. 17%](./react-vs-angular-vs-vue.png)
 
 #### Community und Ökosystem
 
@@ -197,11 +197,11 @@ Durch die Kombination dieser Faktoren befindet sich React in einer starken Posit
 
 ---
 
-# JavaScript und TypeScript Refresher
+## JavaScript und TypeScript Refresher
 
 Bevor wir uns intensiver mit React befassen, ist es sinnvoll, unser Wissen über JavaScript und TypeScript aufzufrischen. In diesem Abschnitt werden wir die Grundlagen dieser beiden eng verwandten Sprachen durchgehen und ihre jeweiligen Vor- und Nachteile beleuchten.
 
-## Kurze Geschichte von JavaScript
+### Kurze Geschichte von JavaScript
 
 Der erste Webbrowser wurde von Tim Berners-Lee im Jahr 1990 in der Schweiz entwickelt. Jedoch war er noch unbekannt.
 
@@ -224,7 +224,7 @@ Mit der Veröffentlichung von Netscape Navigator wurde Mocha in JavaScript umben
 
 Mit dem Aufstieg des Webs musste dann eine standardisierte JavaScript-Version erstellt werden, sodass nicht jeder Browser seine eigene Script-Art hat. Dafür hat die European Computer Manufacturing Association (ECMA) im Jahr 1997 eine standardisierte Version erstellt.
 
-## Warum TypeScript?
+### Warum TypeScript?
 
 Das Ziel von TypeScript ist es, die Fehler von JavaScript auszubessern. Es ist eine Open-Source-Programmiersprache, die auf JavaScript aufbaut, und aber auch zurück auf JavaScript kompiliert.
 
@@ -236,7 +236,7 @@ Letztendlich ist TypeScript durch die strikteren Regeln wartbarer und skalierbar
 
 Jede JavaScript-Datei ist auch eine TypeScript-Datei. Das bedeutet, dass es möglich ist, jede JavaScript-Bibliothek auch in TypeScript-Projekten zu importieren.
 
-## Relevanz von TypeScript heute
+### Relevanz von TypeScript heute
 
 Heute ist TypeScript eine der beliebtesten und meistbenutzten Programmiersprachen, und es wächst jedes Jahr.
 
@@ -244,9 +244,9 @@ Der Grund, warum TypeScript so relevant ist und weiterhin relevant bleiben wird,
 
 Die Verwendung von TypeScript wird von vielen Bibliotheken und Frontend-Frameworks unterstützt, ohne Probleme. Angular unterstützt beispielsweise nur TypeScript.
 
-# Erstes React Projekt
+## Erstes React Projekt
 
-## Ein erstes Beispiel
+### Ein erstes Beispiel
 
 ```html
 <!DOCTYPE html>
@@ -273,7 +273,7 @@ Die Verwendung von TypeScript wird von vielen Bibliotheken und Frontend-Framewor
 </html>
 ```
 
-## Verwenden von `create-react-app`
+### Verwenden von `create-react-app`
 
 `create-react-app` ist ein CLI-Tool, das von Facebook entwickelt wurde und die Einrichtung eines neuen React-Projekts erheblich erleichtert. Im Gegensatz zur Arbeit mit einem CDN bietet `create-react-app` eine umfangreiche Umgebung mit vielen Features.
 
@@ -282,7 +282,7 @@ Die Verwendung von TypeScript wird von vielen Bibliotheken und Frontend-Framewor
 - Einfaches Hinzufügen von Drittanbieter-Bibliotheken über npm oder yarn
 - Enthält bereits einen Development-Server
 
-### Wie man es verwendet
+#### Wie man es verwendet
 
 Im Terminal:
 
@@ -294,7 +294,7 @@ npm start
 
 Das erstellt ein neues Verzeichnis namens `abk9`, installiert alle nötigen Abhängigkeiten und startet den Development-Server.
 
-## Projektstruktur
+### Projektstruktur
 
 Nachdem Sie `create-react-app` ausgeführt haben, erhalten Sie eine vordefinierte Verzeichnisstruktur.
 
@@ -308,7 +308,7 @@ Im `src`-Ordner finden Sie die Hauptkomponente `App.js`, die Sie als Ausgangspun
 ---
 
 Quellen:
-- [Geschichte von JavaScript](https://launchschool.com/books/javascript/read/introduction)
+- [Geschichte von JavaScript](https://web.archive.org/web/2023/https://launchschool.com/books/javascript/read/introduction) (Original offline, daher über das Internet Archive)
 - [The Weird history of JS](https://www.youtube.com/watch?v=Sh6lK57Cuk4&ab_channel=Fireship)
 - [A Brief History of JavaScript](https://www.youtube.com/watch?v=qKJP93dWn40&ab_channel=freeCodeCamp.org)
 - [Erste Webseite](http://info.cern.ch/hypertext/WWW/TheProject.html)

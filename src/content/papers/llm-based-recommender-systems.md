@@ -33,17 +33,14 @@ pre-generated content caches will be key to practical deployment. Finally, this 
 highlights multimodal dynamic personalisation, e.g. combining adaptive titles and
 thumbnails — as a promising research frontier.
 
-The paper surveys six paradigms of LLM-based recommendation — sequential transformers
+The paper surveys six paradigms of LLM-based recommendation: sequential transformers
 (BERT4Rec), the unified text-to-text paradigm (P5), generative retrieval (GPT4Rec),
 semantic-ID generation (TIGER and LIGER), prompt-based content enrichment (LLM-Rec), and
-dynamic title personalisation — after first grounding them in the classical
+dynamic title personalisation, after first grounding them in the classical
 collaborative-filtering, content-based and graph-based paradigms they extend.
 
-**Why it matters.** Most write-ups of LLMs in recommendation stop at "it works better."
-This one puts the gain and the bill on the same page: a headline Recall@20 improvement of
-up to 44% next to a roughly ten-fold increase in inference cost, plus the privacy and
-carbon consequences that follow from putting a generative model in a hot serving path.
-That framing is what a team actually needs to decide whether to adopt any of these
-methods, and it leads to the concrete architectural recommendation the paper defends —
-hybrid retrieval–generation with pre-generated content caches, rather than generation at
-request time.
+**What I took from it.** I put the cost next to the accuracy gain, because that is the
+part I wanted to know: Recall@20 up by as much as 44%, against roughly ten times the
+inference cost, plus the privacy and carbon consequences of putting a generative model in
+a hot serving path. The recommendation I landed on was to cache the generations rather
+than generate per request.

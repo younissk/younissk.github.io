@@ -7,6 +7,7 @@ import Prose from '../../components/Prose.astro';
 import Tag from '../../components/Tag.astro';
 import ResourceLinks from '../../components/ResourceLinks.astro';
 import ExternalLink from '../../components/ExternalLink.astro';
+import { SITE_URL, PERSON_ID } from '../../consts';
 import {
   formatCount,
   linkCount,
@@ -80,9 +81,26 @@ const siblings = (await getCollection('projects'))
   .filter((other) => other.id !== entry.id && other.data.category === p.category)
   .sort((a, b) => b.data.year - a.data.year)
   .slice(0, 4);
+
+/* SoftwareSourceCode answers "what has this person built". Only public repos
+   get a codeRepository — a private one has no URL anyone can follow. */
+const repoLink = p.private ? null : links.find((l) => l.kind === 'repo')?.url;
+
+const projectSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareSourceCode',
+  name: p.title,
+  description: p.summary,
+  url: new URL(`/projects/${entry.id}/`, SITE_URL).href,
+  dateCreated: String(p.year),
+  author: { '@id': PERSON_ID },
+  keywords: [...p.tags, ...p.stack].join(', '),
+  ...(p.stack.length ? { programmingLanguage: p.stack } : {}),
+  ...(repoLink ? { codeRepository: repoLink } : {}),
+};
 ---
 
-<BaseLayout title={p.title} description={p.summary} ogType="article">
+<BaseLayout title={p.title} description={p.summary} ogType="article" schema={projectSchema}>
   <div class="page-narrow">
     <p class="pt-8 md:pt-10">
       <a class="meta link-quiet" href="/projects/">← All projects</a>

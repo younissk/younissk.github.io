@@ -92,6 +92,17 @@ export default function CommandPalette({ entries }: Props) {
     el?.setSelectionRange(n, n);
   }, [open]);
 
+  /* Freeze the page behind the dialog. Without this the backdrop scrolls under
+     the panel, which reads as the page having jumped when it closes. */
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [open]);
+
   useEffect(() => setActive(0), [query]);
 
   // Keep the highlighted row in view when arrowing past the fold.
@@ -117,6 +128,23 @@ export default function CommandPalette({ entries }: Props) {
       e.preventDefault();
       const hit = results[active];
       if (hit) window.location.href = hit.href;
+    } else if (e.key === 'Tab') {
+      /* Cycle inside the panel. aria-modal tells assistive tech to ignore the
+         background, but it does not stop Tab physically walking onto links
+         behind an opaque backdrop, where the focus ring is invisible. */
+      const focusable = e.currentTarget.querySelectorAll<HTMLElement>(
+        'input, a[href]',
+      );
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     }
   };
 
@@ -137,12 +165,23 @@ export default function CommandPalette({ entries }: Props) {
           value={query}
           placeholder="Search projects, papers, writing…"
           aria-label="Search this site"
+          role="combobox"
+          aria-expanded="true"
+          aria-autocomplete="list"
           aria-controls="cp-results"
           aria-activedescendant={results[active] ? `cp-opt-${active}` : undefined}
           autoComplete="off"
           spellCheck={false}
           onChange={(e) => setQuery(e.target.value)}
         />
+
+        {/* Without a live region a screen reader hears nothing when the result
+            set changes: no count, no empty state, just silence while typing. */}
+        <span role="status" aria-live="polite" className="sr-only">
+          {results.length === 0
+            ? 'No results'
+            : `${results.length} ${results.length === 1 ? 'result' : 'results'}`}
+        </span>
 
         {results.length === 0 ? (
           <p className="cp-empty">No match for “{query.trim()}”.</p>

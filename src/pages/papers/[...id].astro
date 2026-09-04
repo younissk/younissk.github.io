@@ -7,6 +7,7 @@ import EmbeddingSpace from '../../components/EmbeddingSpace';
 import Prose from '../../components/Prose.astro';
 import ExternalLink from '../../components/ExternalLink.astro';
 import Bibtex from '../../components/Bibtex';
+import { SITE_URL, PERSON_ID } from '../../consts';
 
 export async function getStaticPaths() {
   const papers = await getCollection('papers');
@@ -30,12 +31,45 @@ const { title, authors, venue, year, type, pdf, url, doi, bibtex } = entry.data;
 
 const isSelf = (author: string) => /kandah/i.test(author);
 const readable = (value: string) => value.replace(/-/g, ' ');
+
+/* The meta description used to be provenance ("seminar paper, JKU Linz — Seminar
+   Paper (2025). By ..."), which repeated the venue twice, started lowercase and
+   said nothing about the work. The abstract's first sentence says what it is. */
+const abstract = (entry.body ?? '')
+  .replace(/\s+/g, ' ')
+  .trim();
+const firstSentence = abstract.split(/(?<=[.!?])\s/)[0] ?? '';
+const paperDescription =
+  firstSentence.length > 60 ? firstSentence.slice(0, 300) : `${readable(type)}, ${year}. ${abstract.slice(0, 220)}`.trim();
+
+/* ScholarlyArticle is the strongest single signal for "what has this person
+   published". The author list stays accurate here — this is a citation — and
+   the self-authored entry points at the site-wide Person node so a consumer can
+   join the paper to the site. */
+const paperSchema = {
+  '@context': 'https://schema.org',
+  '@type': type === 'thesis' ? 'Thesis' : 'ScholarlyArticle',
+  headline: title,
+  name: title,
+  abstract: abstract.slice(0, 1200) || undefined,
+  datePublished: String(year),
+  inLanguage: 'en',
+  url: new URL(`/papers/${entry.id}/`, SITE_URL).href,
+  author: authors.map((a) =>
+    isSelf(a) ? { '@id': PERSON_ID } : { '@type': 'Person', name: a },
+  ),
+  publisher: { '@type': 'Organization', name: venue },
+  ...(pdf ? { encoding: { '@type': 'MediaObject', contentUrl: new URL(pdf, SITE_URL).href, encodingFormat: 'application/pdf' } } : {}),
+  ...(doi ? { identifier: `https://doi.org/${doi}` } : {}),
+  ...(url ? { sameAs: url } : {}),
+};
 ---
 
 <BaseLayout
   title={title}
-  description={`${readable(type)}, ${venue} (${year}). By ${authors.join(', ')}.`}
+  description={paperDescription}
   ogType="article"
+  schema={paperSchema}
 >
   <div class="page-narrow">
     <PageHeader eyebrow={readable(type)} title={title} meta={[String(year), venue]}>
