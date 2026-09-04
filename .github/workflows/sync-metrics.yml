@@ -71,4 +71,10 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src/data/metrics.json docs
           git commit -m "chore(metrics): sync platform download and star counts"
-          git push
+          for attempt in 1 2 3; do
+            if git push; then exit 0; fi
+            echo "Push rejected (attempt $attempt) — rebasing onto origin/main."
+            git pull --rebase --autostash origin main
+          done
+          echo "::error::Could not push after 3 attempts."
+          exit 1

@@ -5,7 +5,7 @@
   <channel>
     <title>Youniss — Writing</title>
     <link>https://youniss.dev/writing/</link>
-    <description>Applied AI engineer. Production RAG, LLM document extraction, and agent infrastructure in safety-critical and document-heavy domains.</description>
+    <description>Applied AI engineer. I work on retrieval and document extraction, mostly for people who cannot send their documents to somebody else’s API.</description>
     <language>en</language>
     <copyright>© 2026 Youniss</copyright>
     <lastBuildDate>Sun, 28 Sep 2025 00:00:00 GMT</lastBuildDate>
@@ -32,7 +32,7 @@
       <link>https://youniss.dev/writing/solve-sudoku-with-logic/</link>
       <guid isPermaLink="true">https://youniss.dev/writing/solve-sudoku-with-logic/</guid>
       <pubDate>Wed, 15 Nov 2023 00:00:00 GMT</pubDate>
-      <description>Encoding a 4x4 Sudoku as a propositional formula — cell, row, column and 2x2 constraints — and letting the limboole SAT checker solve it.</description>
+      <description>Encoding a 4x4 Sudoku as a propositional formula: cell, row, column and 2x2 constraints, then letting the limboole SAT checker solve it.</description>
       <dc:creator>Youniss</dc:creator>
       <dc:language>en</dc:language>
       <category domain="https://youniss.dev/writing/tags/logic/">logic</category>

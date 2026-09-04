@@ -16,7 +16,8 @@ import PageHeader from '../../components/PageHeader.astro';
 import ExternalLink from '../../components/ExternalLink.astro';
 import Prose from '../../components/Prose.astro';
 import { getCollection, render } from 'astro:content';
-import { VIDEOS } from '../../lib/videos';
+import { VIDEOS, formatDuration } from '../../lib/videos';
+import { SITE_URL, PERSON_ID } from '../../consts';
 import type { VideoRecord } from '../../lib/videos';
 
 export function getStaticPaths() {
@@ -27,17 +28,6 @@ export function getStaticPaths() {
 }
 
 const { video } = Astro.props as { video: VideoRecord };
-
-/** "PT1H2M3S" → "1:02:03"; "PT12M34S" → "12:34". */
-function formatDuration(iso: string | null): string | null {
-  if (!iso) return null;
-  const m = /^P(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/.exec(iso);
-  if (!m) return null;
-  const [days, hours, minutes, seconds] = m.slice(1).map((v) => Number(v ?? 0) || 0);
-  const h = days * 24 + hours;
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return h > 0 ? `${h}:${pad(minutes)}:${pad(seconds)}` : `${minutes}:${pad(seconds)}`;
-}
 
 function isoDate(value: string): string | null {
   const t = Date.parse(value);
@@ -94,9 +84,45 @@ const notes = extras?.data.notes?.trim();
 const hasBody = Boolean(extras?.body?.trim());
 const Body = extras && hasBody ? (await render(extras)).Content : null;
 
+/* Truncate on a word boundary. Slicing at a fixed 160 cut mid-word, so search
+   results ended on fragments like "easy-to-u". */
+function clamp(text: string, limit = 155): string {
+  const flat = text.replace(/\s+/g, ' ').trim();
+  if (flat.length <= limit) return flat;
+  const cut = flat.slice(0, limit);
+  const space = cut.lastIndexOf(' ');
+  return `${(space > 60 ? cut.slice(0, space) : cut).replace(/[,;:.\-—]+$/, '')}…`;
+}
+
 const summary = description
-  ? description.replace(/\s+/g, ' ').slice(0, 160).trim()
-  : `Watch “${video.title}” — part of the video archive on youniss.dev.`;
+  ? clamp(description)
+  : `Watch “${video.title}”, part of the video archive on youniss.dev.`;
+
+/* VideoObject: every field here is already computed above for the page itself.
+   Without it these 27 pages carried no content schema at all, only the Person
+   node that sits on every page. */
+const videoSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'VideoObject',
+  name: video.title,
+  description: description || video.title,
+  uploadDate: video.publishedAt || undefined,
+  duration: video.duration || undefined,
+  thumbnailUrl: poster ? new URL(poster.url, SITE_URL).href : undefined,
+  embedUrl: `https://www.youtube-nocookie.com/embed/${video.id}`,
+  url: new URL(`/videos/${video.id}/`, SITE_URL).href,
+  author: { '@id': PERSON_ID },
+  creator: { '@id': PERSON_ID },
+  ...(video.viewCount != null
+    ? {
+        interactionStatistic: {
+          '@type': 'InteractionCounter',
+          interactionType: 'https://schema.org/WatchAction',
+          userInteractionCount: video.viewCount,
+        },
+      }
+    : {}),
+};
 ---
 
 <BaseLayout
@@ -105,6 +131,7 @@ const summary = description
   ogImage={poster?.url}
   ogType="article"
   publishedTime={video.publishedAt || undefined}
+  schema={videoSchema}
 >
   <div class="page">
     <PageHeader eyebrow="Video" title={video.title} meta={meta}>

@@ -31,7 +31,9 @@ the licence above:
   G. Filomeno and F. Spiessberger (JKU Linz). Cite it, do not relicense it.
 - Third-party logos, screenshots of other people's products, and any quoted
   material remain the property of their respective owners.
-- `public/cv.pdf` is a personal document. Read it, do not repurpose it.
+- `public/thumbs/*.jpg` are YouTube video thumbnails, kept locally so the pages
+  do not hotlink. They are frames of my own videos, but treat them as part of
+  the videos rather than as site content.
 
 ---
 

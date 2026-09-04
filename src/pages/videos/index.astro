@@ -1,0 +1,61 @@
+---
+/**
+ * The video archive.
+ *
+ * Every video page links back here, and until this file existed that link was a
+ * 404 on 27 pages. The Library page is still the merged view of everything;
+ * this is the one-medium list, which is also what a search engine or a model
+ * needs when it wants "the videos" rather than "the site".
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { VIDEOS, videoHref, formatDuration } from '../../lib/videos';
+
+const videos = [...VIDEOS].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+
+const totalViews = videos.reduce((sum, v) => sum + (v.viewCount ?? 0), 0);
+const nf = new Intl.NumberFormat('en-US');
+
+const meta = [
+  `${videos.length} videos`,
+  ...(totalViews > 0 ? [`${nf.format(totalViews)} views`] : []),
+];
+---
+
+<BaseLayout
+  title="Videos"
+  description={`The full video archive: ${videos.length} videos on machine learning, retrieval, fine-tuning and building things that ship.`}
+>
+  <div class="page">
+    <PageHeader eyebrow="Archive" title="Videos" meta={meta} />
+
+    <section class="section">
+      <ul class="row-list">
+        {
+          videos.map((v) => {
+            const duration = formatDuration(v.duration);
+            const date = v.publishedAt.slice(0, 10);
+            return (
+              <li class="row">
+                <h2 class="row-title text-base">
+                  <a class="link-quiet" href={videoHref(v.id)}>{v.title}</a>
+                </h2>
+
+                <ul class="meta-row mt-1.5">
+                  <li><time datetime={date} class="tabular">{date}</time></li>
+                  {duration && <li class="tabular">{duration}</li>}
+                  {v.viewCount != null && <li class="tabular">{nf.format(v.viewCount)} views</li>}
+                </ul>
+              </li>
+            );
+          })
+        }
+      </ul>
+
+      <p class="meta mt-6">
+        Also in the <a class="link" href="/library/">Library</a>, mixed in with the writing and the
+        papers.
+      </p>
+    </section>
+  </div>
+</BaseLayout>

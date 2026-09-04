@@ -1,5 +1,5 @@
 ---
-title: TempBench — temporal reasoning in audio language models
+title: TempBench, temporal reasoning in audio language models
 repoName: TempBench-Temporal-LALM-Reasoning-benchmark
 summary: Benchmark of seven synthetic task families testing whether audio-language models handle trivial questions about event order and timing.
 year: 2026

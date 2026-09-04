@@ -31,15 +31,14 @@ support reproducibility, we provide a structured codebase with very simple, clea
 Overall, our findings indicate that the dual-encoder baseline remains stronger under modest data
 and compute.
 
-## Why it matters
+## What came of it
 
-The idea was worth testing: if you render an embedding as an image, can a Vision Transformer learn
-the audio–text matching that a dual encoder normally does? The answer here is no, at this scale.
-The visual proxy lost to the baseline on every metric.
+The idea was worth testing: if I rendered an embedding as an image, could a Vision Transformer
+learn the audio–text matching that a dual encoder normally does? At this scale, no. The visual
+proxy lost to the baseline on every metric.
 
-I am publishing it as a negative result because it is one. The interesting part is not the score,
-it is that the question is now answered for anyone else who has the same idea, along with a
-codebase they can run to check the claim.
+I am publishing it as a negative result because it is one. The score is not the point. The point
+is that the question is answered now, and there is a codebase anyone can run to check it.
 
 Supervised by Dr. Shah Nawaz at the Institute of Computational Perception. The related DCASE 2025
 work is in [the Task 6 technical report](/papers/dcase-2025-language-based-audio-retrieval/), and

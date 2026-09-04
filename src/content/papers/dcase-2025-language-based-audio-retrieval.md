@@ -43,12 +43,7 @@ The submission placed **5th** in DCASE 2025 Task 6, and the report is hosted on 
 official DCASE website. Work was carried out as students at Johannes Kepler University,
 Linz.
 
-**Why it matters.** The prevailing way to win audio-retrieval benchmarks is to bolt on
-more machinery — knowledge distillation from an ensemble of pretrained models, synthetic
-caption generation, model soups. This system beats the official baseline by going the
-other way: one model, no ensemble, no synthetic captions, with the gains coming from
-deliberate architectural choices (which layers to unfreeze, how to pool segments, how to
-pool tokens) and a systematic encoder-pairing sweep that showed architecture compatibility
-between the audio and text side matters more than extra data or loss engineering. That is
-a cheaper, more reproducible, and more transferable result than a bigger ensemble, and it
-was validated in open competition against the field.
+**What we did.** One model. No ensemble, no distillation, no synthetic captions. The
+gains came from which layers we unfroze and how we pooled, plus a sweep over encoder
+pairings which showed that pairing the audio and text encoders well mattered more than
+adding data or engineering the loss. We placed 5th.

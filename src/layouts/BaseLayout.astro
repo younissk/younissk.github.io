@@ -17,6 +17,10 @@ interface Props {
   /** Passed through to Head — use 'article' on posts. */
   ogType?: 'website' | 'article';
   publishedTime?: string;
+  /** Document language. The German post needs its own, not the site default. */
+  lang?: string;
+  /** Extra JSON-LD for this page, forwarded to Head. */
+  schema?: Record<string, unknown> | Record<string, unknown>[];
   /** Extra classes on <main>, e.g. for a full-bleed hero page. */
   mainClass?: string;
   /**
@@ -36,6 +40,8 @@ const {
   noindex,
   ogType,
   publishedTime,
+  schema,
+  lang = 'en',
   mainClass,
   bare = false,
 } = Astro.props;
@@ -44,7 +50,7 @@ const searchEntries = await buildSearchIndex();
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
 
     <Head
@@ -54,6 +60,7 @@ const searchEntries = await buildSearchIndex();
       noindex={noindex}
       ogType={ogType}
       publishedTime={publishedTime}
+      schema={schema}
     />
   </head>
 

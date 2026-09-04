@@ -1,0 +1,75 @@
+# Youniss
+
+> Applied AI engineer. I work on retrieval that has to stay current and on
+> agents whose behaviour has to be checkable rather than trusted. BSc in
+> Artificial Intelligence from JKU, with a thesis on audio-text retrieval that
+> reports a negative result. I publish the things that did not work as well as
+> the things that did, I make videos explaining machine learning, and I ship
+> small tools end to end rather than stopping at a notebook.
+
+This site is static HTML. No page needs JavaScript to be read, nothing is
+behind a paywall or a login, and there is no tracking of any kind.
+Content is CC BY 4.0; code is MIT.
+
+## Pages
+
+- [Projects](https://youniss.dev/projects/): the full archive, filterable by category and stack
+- [Library](https://youniss.dev/library/): writing, papers and videos in one list, newest first
+- [Writing](https://youniss.dev/writing/): posts only
+- [Papers](https://youniss.dev/papers/): publications only, each with an abstract and BibTeX
+- [Videos](https://youniss.dev/videos/): the video archive
+- [Now](https://youniss.dev/now/): what I am working on, studying and building at the moment
+- [Uses](https://youniss.dev/uses/): the languages, frameworks and infrastructure I actually work in
+- [Contact](https://youniss.dev/contact/): a form, which is the only reliable channel
+
+## Papers
+
+- [Enhancing Language-Based Audio Retrieval with Partial Fine-Tuning and Attention Pooling](https://youniss.dev/papers/dcase-2025-language-based-audio-retrieval/): DCASE 2025 Challenge — Technical Report (Task 6: Language-Based Audio Retrieval), 2025.
+- [LLM-Based Recommender Systems](https://youniss.dev/papers/llm-based-recommender-systems/): JKU Linz — Seminar Paper, 2025.
+- [Vision-Mediated Learning for Audio–Text Retrieval](https://youniss.dev/papers/vision-mediated-audio-text-retrieval/): Bachelor Thesis — Institute of Computational Perception, Johannes Kepler University Linz, 2025.
+
+## Projects
+
+- [nanoBeard](https://youniss.dev/projects/nanobeard/): A small pirate-themed GPT trained from scratch on a piratized TinyStories corpus and then SFT-tuned, with a versioned training codebase.
+- [PaperNavigator](https://youniss.dev/projects/papernavigator/): Academic paper discovery tool that profiles a research question, snowballs through citations, filters with an LLM and generates a report.
+- [TempBench, temporal reasoning in audio language models](https://youniss.dev/projects/tempbench-temporal-lalm-reasoning-benchmark/): Benchmark of seven synthetic task families testing whether audio-language models handle trivial questions about event order and timing.
+- [Tython](https://youniss.dev/projects/tython/): A statically typed, deliberately opinionated toy language with its own parser, standard library and Python interop.
+- [DISCO](https://youniss.dev/projects/disco-v01/): CLIP-based classifier for detecting implicit suggestive imagery, trained on a hand-labelled fashion dataset and published on Hugging Face.
+- [Embed2Image contrastive retrieval](https://youniss.dev/projects/embed2image-contrastive-retrieval/): Audio-text retrieval experiments on Clotho comparing a PaSST+RoBERTa baseline against a pseudo-image ViT encoder head.
+- [Falcon-Twig](https://youniss.dev/projects/falcon-twig/): Fine-tuning run for Falcon H1 7B on tool calling that underperformed the base instruct model, written up in a post.
+- [Gaussian elimination game](https://youniss.dev/projects/gaussian-elimination-game/): Browser exercise that walks through Gaussian elimination one row operation at a time.
+- [JKU Exam Practice](https://youniss.dev/projects/jku-exam-practice/): Web app where JKU students add, share and drill each other's exam questions, with LaTeX rendering, timed tests and an XP indicator.
+- [Privacy Journal](https://youniss.dev/projects/privacy-journal-web/): Journalling app that stores every entry in the user's own private GitHub repo, with Whisper voice-note transcription.
+- [Shopify Search](https://youniss.dev/projects/shopify-search/): Product discovery engine that scrapes thousands of Shopify storefronts and serves embedding-based search over the aggregate catalogue.
+- [Tool Calling SFT Mix](https://youniss.dev/projects/tool-calling-mix/): Supervised fine-tuning dataset for tool use, unifying several public tool-calling corpora plus deliberate no-call examples under one schema.
+- [p5.js Sketches](https://youniss.dev/projects/p5-projects/): Collection of generative and simulation sketches, particle systems, Mandelbrot set, Maurer roses, self-avoiding walks, cloth waves.
+
+## Writing
+
+- [Falcon Twig: a tool-calling fine-tune that lost to the base model](https://youniss.dev/writing/falcon-twig/): I fine-tuned Falcon-H1-7B-Instruct on a tool-calling mix with QLoRA and re-ran BFCL. It scored 24.50% live accuracy against the base model's 67.21%.
+- [Solve sudoku using propositional Logic](https://youniss.dev/writing/solve-sudoku-with-logic/): Encoding a 4x4 Sudoku as a propositional formula: cell, row, column and 2x2 constraints, then letting the limboole SAT checker solve it.
+- [React für Nicht-Web-Entwickler](https://youniss.dev/writing/grundlagen-react/) (German): Workshop-Einstieg in React für Entwickler ohne Web-Hintergrund: von der statischen Webseite über Web 2.0 und Single-Page-Applications bis zum ersten React-Projekt.
+
+## Optional
+
+Video archive, 27 entries, newest first:
+
+- [I Built an AI that Runs on your Phone (no servers)](https://youniss.dev/videos/TMi4chYVcSY/) — 2026-06-27
+- [I Built My Own LLM Completely From Scratch (for pirates)](https://youniss.dev/videos/coDs1LWmAdI/) — 2026-05-17
+- [I Built My Own Programming Language](https://youniss.dev/videos/XGINo_KUqBg/) — 2026-04-29
+- [I Made The Most Accurate AI Research Assistant For Science](https://youniss.dev/videos/PSqLmpM0Gu4/) — 2026-04-23
+- [Retrieval Augmented Generation Explained in 3 Minutes (No Fluff)](https://youniss.dev/videos/XNtWpyxMuwQ/) — 2026-02-19
+- [how long term agent memory works](https://youniss.dev/videos/wnUqElQcGZ4/) — 2026-02-12
+- [Query Expansion: The RAG Technique Everyone's Missing](https://youniss.dev/videos/So3Xw-3FCH8/) — 2026-02-10
+- [Knowledge Graph RAG explained in 5min](https://youniss.dev/videos/SjPmlJQPz7E/) — 2026-02-09
+- [Protein Hydrolysis and Cleavage Overview | Bioanalytics](https://youniss.dev/videos/NmrEGofWIgg/) — 2026-01-31
+- [Protein Separation (Electrophoresis and SDS PAGE) | Bioanalytics](https://youniss.dev/videos/BWsEjPwJ3Go/) — 2026-01-27
+- [Chromatography clearly explained | Bioanalytics](https://youniss.dev/videos/tu87ErxqUF0/) — 2026-01-23
+- [Protein Purification Basics (Clearly explained) | Bioanalytics](https://youniss.dev/videos/3rQrdkFbDSg/) — 2026-01-20
+- [Market Basket Analysis and Association Rules](https://youniss.dev/videos/ChXkBq2LCRQ/) — 2026-01-15
+- [Predictive Rule learning clearly explained (Data Mining)](https://youniss.dev/videos/BALIM--Jz0Q/) — 2026-01-08
+- [What is Subgroup Discovery? Data Mining Explained](https://youniss.dev/videos/MTP9DAS95cs/) — 2026-01-01
+- [...and 12 more](https://youniss.dev/videos/)
+
+- [RSS feed](https://youniss.dev/rss.xml) for the written work
+- [Sitemap](https://youniss.dev/sitemap-index.xml) for everything

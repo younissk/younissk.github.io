@@ -276,8 +276,13 @@
     size();
 
     if (reduced.matches) {
-      /* One frozen frame: run the race to completion without painting it. */
-      for (let i = 0; i < 6000; i++) for (const w of walkers) step(w);
+      /* One frozen frame: run the race to completion without painting it.
+         Scaled to the grid rather than a flat 6000. On a phone the grid is
+         about 400 cells, and 6000 iterations there meant tens of milliseconds
+         of blocked main thread on load — imposed on exactly the visitors who
+         asked for less work. Two passes over the grid fills it just as well. */
+      const preroll = Math.max(400, cols * rows * 2);
+      for (let i = 0; i < preroll; i++) for (const w of walkers) step(w);
       draw();
     } else {
       start();

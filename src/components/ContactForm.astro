@@ -57,18 +57,18 @@ const configured = CONTACT_ENDPOINT.trim().length > 0;
         */}
         <input type="checkbox" name="botcheck" class="hp" tabindex="-1" aria-hidden="true" />
 
-        <div class="field">
+        <div class="form-row">
           <label for="cf-name">Name</label>
           <input id="cf-name" name="name" type="text" required autocomplete="name" />
         </div>
 
-        <div class="field">
+        <div class="form-row">
           <label for="cf-email">Your e-mail</label>
           <input id="cf-email" name="email" type="email" required autocomplete="email" />
           <p class="hint">So I can reply. Nothing else happens with it.</p>
         </div>
 
-        <div class="field">
+        <div class="form-row">
           <label for="cf-message">Message</label>
           <textarea id="cf-message" name="message" rows="6" required />
         </div>
@@ -102,7 +102,11 @@ const configured = CONTACT_ENDPOINT.trim().length > 0;
     max-width: 34rem;
   }
 
-  .field {
+  /* Named form-row, not field: `.field` is the GLOBAL input class, so using it
+     on the wrapper made every label-and-input group inherit input styling —
+     a stray white border round each group, and a 15px font size the inputs then
+     picked up through `font: inherit`, which is what made iOS zoom on focus. */
+  .form-row {
     display: grid;
     gap: 0.4rem;
   }
@@ -123,6 +127,8 @@ const configured = CONTACT_ENDPOINT.trim().length > 0;
     border: 2px solid var(--c-border-strong);
     border-radius: 0;
     font: inherit;
+    /* Explicit, not inherited: under 16px iOS Safari zooms on focus. */
+    font-size: 1rem;
     transition: border-color 120ms ease;
   }
 

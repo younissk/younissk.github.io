@@ -29,3 +29,14 @@ export const VIDEOS = videosData as unknown as VideoRecord[];
 export function videoHref(id: string): string {
   return `/videos/${id}/`;
 }
+
+/** "PT1H2M3S" → "1:02:03"; "PT12M34S" → "12:34". */
+export function formatDuration(iso: string | null): string | null {
+  if (!iso) return null;
+  const m = /^P(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/.exec(iso);
+  if (!m) return null;
+  const [days, hours, minutes, seconds] = m.slice(1).map((v) => Number(v ?? 0) || 0);
+  const h = days * 24 + hours;
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return h > 0 ? `${h}:${pad(minutes)}:${pad(seconds)}` : `${minutes}:${pad(seconds)}`;
+}

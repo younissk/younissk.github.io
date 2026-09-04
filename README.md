@@ -1,14 +1,15 @@
 # youniss.dev
 
-Personal site of Youniss Kandah — work case studies, the full project archive,
-papers, videos, tools and a small blog.
+Personal site of Youniss: the full project archive, papers, videos and a small
+blog.
 
 Astro 7 · Tailwind CSS 4 (CSS-first, no config file) · MDX · published by GitHub
 Pages from committed HTML.
 
 **Built for longevity.** The finished site is committed to `docs/` and served
-directly — no CI, no build step, no third-party service anywhere in the publish
-path. If this toolchain stops working, the HTML still does. Read
+directly — no CI, no build step, no third-party service in the *serving* path.
+(Two scheduled Actions do rebuild and push `docs/`; if they break, the last good
+build keeps serving.) If this toolchain stops working, the HTML still does. Read
 [SUCCESSION.md](SUCCESSION.md) before changing how it deploys.
 
 ## Run it
@@ -18,7 +19,6 @@ npm install      # once
 npm run dev      # http://localhost:4321
 npm run build    # regenerates docs/ — COMMIT the result, it is the published site
 npm run preview  # serve the built site
-npx astro check  # typecheck .astro / .ts
 ```
 
 Node 22.12+ is required (see `engines` in `package.json`).
@@ -41,21 +41,17 @@ public/
   assets/covers/       post cover images
 ```
 
-`DESIGN.md` conventions — tokens, component props, class names — are the
-contract every page follows. Read it before adding a page.
-
 ### Content collections
 
 | Collection | Lives in                | One entry is                                  |
 | ---------- | ----------------------- | --------------------------------------------- |
-| `work`     | `src/content/work/`     | a role or engagement, written up as a case study |
+| `work`     | `src/content/work/`     | a case study — **unpublished**: all entries are `draft: true` and no route renders them |
 | `projects` | `src/content/projects/` | one repository in the archive                 |
 | `posts`    | `src/content/posts/`    | a blog post                                   |
 | `papers`   | `src/content/papers/`   | a report, thesis or publication               |
-| `tools`    | `src/content/tools/`    | something usable, hosted here or elsewhere    |
 | `videos`   | `src/content/videos/`   | extras for one YouTube video, keyed by video ID |
 
-All six load `**/*.{md,mdx}` via the `glob` loader. The entry **id is the
+All five load `**/*.{md,mdx}` via the `glob` loader. The entry **id is the
 filename** — Astro 5+ has no `entry.slug`, use `entry.id`. Schemas are in
 `src/content.config.ts`; add a field there before using it in frontmatter, or
 the build fails loudly (which is the point).
@@ -104,7 +100,7 @@ git add -A && git commit -m "..." && git push
 That is the entire deploy. A change to `src/` that is not followed by a rebuild
 changes nothing anyone can see.
 
-Two files in `docs/` are load-bearing and both come from `public/`:
+Three things in `docs/` are load-bearing. Two come from `public/`:
 
 - **`.nojekyll`** — without it GitHub runs Jekyll, which skips folders beginning
   with `_`, and every stylesheet and script lives in `docs/_astro/`. Delete it
@@ -113,10 +109,14 @@ Two files in `docs/` are load-bearing and both come from `public/`:
   `https://younissk.github.io/` instead. Nothing else breaks; every internal
   link is root-relative.
 
-No security-header file: GitHub Pages does not support custom headers. It serves
-HTTPS with HSTS on the apex domain, which covers the part that matters for a
-site with no forms, no cookies and no third-party requests.
+And one that does not:
 
-Path-proxying a hosted tool under `/tools/*` is not possible here either — that
-needed a rewrite layer. Existing tools link out to their own subdomains instead;
-new ones get built into this repo as real routes.
+- **`thumbs/`** — the YouTube thumbnails. Its source is `public/thumbs/`, which
+  is tracked precisely so a rebuild cannot wipe it. `npm run sync:youtube`
+  downloads each thumbnail once and rewrites `videos.json` to point at
+  `/thumbs/...`, so nothing re-fetches them afterwards.
+
+No security-header file: GitHub Pages does not support custom headers. It serves
+HTTPS with HSTS on the apex domain. The site sets no cookies and loads nothing
+from a third party; the one outbound request is the contact form POSTing to
+Web3Forms when someone submits it. See SUCCESSION.md for why that trade exists.

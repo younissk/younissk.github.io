@@ -34,6 +34,23 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # The sync script treats missing credentials as "fresh clone, skip quietly"
+      # and exits 0. That is right on a laptop and wrong here: in a scheduled job
+      # an absent secret means a rotated or deleted key, and a green run that did
+      # nothing looks exactly like a green run with no new videos. Fail loudly.
+      - name: Require credentials
+        env:
+          YT_API_KEY: ${{ secrets.YT_API_KEY }}
+          YT_CHANNEL_ID: ${{ secrets.YT_CHANNEL_ID }}
+        run: |
+          missing=
+          [ -z "$YT_API_KEY" ]     && missing="$missing YT_API_KEY"
+          [ -z "$YT_CHANNEL_ID" ]  && missing="$missing YT_CHANNEL_ID"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing repository secret(s):$missing"
+            exit 1
+          fi
+
       - name: Sync videos
         env:
           YT_API_KEY: ${{ secrets.YT_API_KEY }}
@@ -50,14 +67,26 @@ jobs:
       - name: Rebuild the site
         run: npm run build
 
+      # public/thumbs is staged explicitly. It is real source, not build output:
+      # the script downloads each thumbnail once and videos.json then points at
+      # /thumbs/... forever. Leaving it untracked is what used to make the weekly
+      # metrics job rebuild a docs/ with no thumbnails and commit 81 deletions.
       - name: Commit if changed
         run: |
-          if git diff --quiet -- src/data/videos.json; then
-            echo "No change to src/data/videos.json — nothing to commit."
+          if git diff --quiet -- src/data/videos.json public/thumbs; then
+            echo "No change to the video data — nothing to commit."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/data/videos.json docs
+          git add src/data/videos.json public/thumbs docs
           git commit -m "chore(videos): sync YouTube feed"
-          git push
+          # Another job (or a person) may have pushed since checkout. Rebase onto
+          # whatever landed and try again rather than failing and losing the sync.
+          for attempt in 1 2 3; do
+            if git push; then exit 0; fi
+            echo "Push rejected (attempt $attempt) — rebasing onto origin/main."
+            git pull --rebase --autostash origin main
+          done
+          echo "::error::Could not push after 3 attempts."
+          exit 1

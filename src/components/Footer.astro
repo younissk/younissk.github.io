@@ -4,6 +4,23 @@ import { AUTHOR, NAV, RSS_PATH, SITE_TITLE } from '../consts';
 
 const year = new Date().getFullYear();
 
+/**
+ * Every page on the site, not just the three in the main nav.
+ *
+ * /now/ and /uses/ used to have zero inbound links from anywhere — reachable
+ * only through the sitemap and the command palette, which a crawler without
+ * JavaScript never sees. The footer renders on all 72 non-landing pages, so
+ * listing them here is enough to make them part of the site again.
+ */
+const FOOTER_LINKS = [
+  ...NAV,
+  { label: 'Writing', href: '/writing/' },
+  { label: 'Papers', href: '/papers/' },
+  { label: 'Videos', href: '/videos/' },
+  { label: 'Now', href: '/now/' },
+  { label: 'Uses', href: '/uses/' },
+];
+
 ---
 
 <footer class="mt-auto border-t border-border">
@@ -15,18 +32,20 @@ const year = new Date().getFullYear();
           <a class="link text-lg font-medium" href="/contact/">Send me a message</a>
         </p>
         <p class="mt-2 max-w-text text-sm text-ink-muted">
-          {AUTHOR.role}. Open to interesting problems in applied AI.
+          {AUTHOR.role}. Message me if you have something interesting.
         </p>
       </div>
 
       <div class="grid grid-cols-2 gap-8 sm:gap-12">
         <nav aria-label="Footer">
           <p class="label">Pages</p>
-          <ul class="mt-2 space-y-1.5 text-sm">
+          <ul class="mt-1 text-sm">
             {
-              NAV.map((item) => (
+              FOOTER_LINKS.map((item) => (
                 <li>
-                  <a class="link-quiet text-ink-muted" href={item.href}>
+                  {/* inline-block + vertical padding so the tap target clears
+                      24px; a bare inline link here measured 17px tall. */}
+                  <a class="link-quiet inline-block py-1 text-ink-muted" href={item.href}>
                     {item.label}
                   </a>
                 </li>
@@ -38,8 +57,8 @@ const year = new Date().getFullYear();
         <nav aria-label="Elsewhere">
           <p class="label">Elsewhere</p>
           <SocialLinks variant="list" class="mt-2 text-sm" />
-          <p class="mt-3 text-sm">
-            <a class="link-quiet text-ink-muted" href={RSS_PATH}>RSS</a>
+          <p class="mt-2 text-sm">
+            <a class="link-quiet inline-block py-1 text-ink-muted" href={RSS_PATH}>RSS</a>
           </p>
         </nav>
       </div>

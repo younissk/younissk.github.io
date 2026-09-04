@@ -81,14 +81,36 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
       window.dispatchEvent(
         new CustomEvent('open-command-palette', { detail: { query } }),
       );
-      /* The palette owns the input from here; clear this one so returning to
-         the page does not show a stale query. */
+      /* The palette owns the input from here, and it focuses its own field on
+         open, so focus moves by itself. Clear this one so returning to the page
+         does not show a stale query. Deliberately no blur(): before the island
+         hydrates nothing is listening, and blurring would leave a box that
+         cannot be typed into. */
       box.value = '';
-      box.blur();
     };
 
-    box.addEventListener('focus', () => openWith(''));
+    /* Open on intent, never on focus.
+     *
+     * A focus listener here meant Tab alone opened the palette. Tabbing
+     * backwards from a nav link fired it while focus was thrown elsewhere, so
+     * the dialog was open with focus outside it and its Escape handler could
+     * never run: a modal that keyboard users could not dismiss. Typing, a
+     * deliberate click, and Enter or Down are all real intent. Tab is not, and
+     * now passes straight through to the links below. */
     box.addEventListener('input', () => openWith(box.value));
+
+    box.addEventListener('mousedown', (event) => {
+      /* Stop the box taking focus, so the palette's own field keeps it. */
+      event.preventDefault();
+      openWith('');
+    });
+
+    box.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === 'ArrowDown') {
+        event.preventDefault();
+        openWith('');
+      }
+    });
   })();
 </script>
 
