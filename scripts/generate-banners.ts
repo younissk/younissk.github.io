@@ -25,12 +25,48 @@ import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
+const ART_DIR = resolve(HERE, 'art');
 const FONT_DIR = resolve(HERE, 'fonts');
 const OUT_DIR = resolve(HERE, '..', 'public', 'banners');
 
 /** 3:1, matching the aspect the project cards render at. */
 const WIDTH = 1200;
 const HEIGHT = 400;
+
+/** Inline an image so satori never reaches the network. */
+const dataUri = (buf: Buffer, mime = 'image/png') =>
+  `data:${mime};base64,${buf.toString('base64')}`;
+
+/**
+ * A black-on-white logo, turned into white-on-transparent.
+ *
+ * The JKU wordmark ships as greyscale on white. Negating it alone would leave a
+ * black plate around the glyph; instead the negated image becomes the alpha
+ * channel of a solid white one, so only the letterforms survive. Pure
+ * monochrome, so the inversion is exact — the same trick the site header uses
+ * on the square-Kufic avatar.
+ */
+async function whiteOnTransparent(file: string): Promise<Buffer> {
+  const src = sharp(resolve(ART_DIR, file));
+  const { width, height } = await src.metadata();
+  const alpha = await sharp(resolve(ART_DIR, file)).greyscale().negate().toColourspace('b-w').toBuffer();
+  return sharp({
+    create: { width: width!, height: height!, channels: 3, background: '#ffffff' },
+  })
+    .joinChannel(alpha, { raw: undefined })
+    .png()
+    .toBuffer();
+}
+
+/** Pixel art has to be resampled nearest-neighbour or it turns to mush. */
+async function pixelUpscale(file: string, scale: number): Promise<Buffer> {
+  const src = sharp(resolve(ART_DIR, file));
+  const { width, height } = await src.metadata();
+  return src
+    .resize({ width: width! * scale, height: height! * scale, kernel: 'nearest' })
+    .png()
+    .toBuffer();
+}
 
 type Node = Record<string, unknown>;
 const box = (style: Record<string, unknown>, children?: unknown): Node => ({
@@ -191,14 +227,85 @@ function shopifySearch(): Node {
 }
 
 /* -------------------------------------------------------------------------
-   The JKU work — TempBench, embed2image, the exam simulator.
-   A shared institutional plate so the three read as one body of work.
-
-   Deliberately NOT the university's logo: that is their trademark, and putting
-   it on a personal site implies an endorsement nobody gave. The name set as
-   type states the same fact and claims nothing.
+   nanoBeard
+   Taken from the project's own site rather than its README banner: the
+   parchment ground, the brown ink and the actual pixel ship sprites it uses
+   for its model classes. Sloop, frigate and galleon are the real assets,
+   upscaled nearest-neighbour so they stay pixels.
    ------------------------------------------------------------------------- */
-function jku(label: string, accent: string): Node {
+function nanoBeard(ships: { sloop: string; frigate: string; galleon: string }): Node {
+  const BG = '#EAD7CE';
+  const INK = '#2b1d12';
+  const MUTED = '#6b5844';
+
+  const ship = (src: string, w: number, h: number, bottom: number, left: number) =>
+    box({
+      position: 'absolute',
+      left: `${left}px`,
+      bottom: `${bottom}px`,
+      width: `${w}px`,
+      height: `${h}px`,
+    }, {
+      type: 'img',
+      props: { src, width: w, height: h, style: { width: `${w}px`, height: `${h}px` } },
+    });
+
+  /* A pixel swell: stepped blocks rather than a curve. */
+  const wave = (y: number, opacity: number) =>
+    box(
+      { position: 'absolute', left: '0px', bottom: `${y}px`, width: '1200px', height: '10px' },
+      Array.from({ length: 40 }, (_, i) =>
+        box({
+          position: 'absolute',
+          left: `${i * 30}px`,
+          bottom: `${(i % 3) * 5}px`,
+          width: '30px',
+          height: '10px',
+          backgroundColor: MUTED,
+          opacity,
+        }),
+      ),
+    );
+
+  return box(
+    {
+      width: '100%',
+      height: '100%',
+      backgroundColor: BG,
+      position: 'relative',
+      overflow: 'hidden',
+    },
+    [
+      wave(56, 0.18),
+      wave(30, 0.28),
+      box({
+        position: 'absolute',
+        left: '0px',
+        bottom: '0px',
+        width: '1200px',
+        height: '34px',
+        backgroundColor: INK,
+        opacity: 0.82,
+      }),
+      ship(ships.frigate, 300, 190, 78, 90),
+      ship(ships.galleon, 220, 220, 66, 470),
+      ship(ships.sloop, 160, 140, 84, 800),
+      ship(ships.frigate, 120, 76, 96, 1010),
+    ],
+  );
+}
+
+/* -------------------------------------------------------------------------
+   The JKU work — TempBench, embed2image, the exam simulator.
+
+   Uses the university's own marks, at Youniss's explicit direction. I had
+   drawn a typographic stand-in instead, on the grounds that a trademark on a
+   personal site can imply an endorsement nobody gave; he owns that call and
+   made it. The wordmark is greyscale so it inverts exactly for a dark ground;
+   the institute logo is two-colour and would invert into the wrong colours, so
+   it sits on its own white plate the way brand guidelines normally require.
+   ------------------------------------------------------------------------- */
+function jku(wordmark: string, institute: string | null, accent: string): Node {
   const GROUND = '#0b0b0d';
 
   return box(
@@ -206,14 +313,12 @@ function jku(label: string, accent: string): Node {
       width: '100%',
       height: '100%',
       backgroundColor: GROUND,
-      flexDirection: 'column',
-      justifyContent: 'center',
-      padding: '0 70px',
+      alignItems: 'center',
+      padding: '0 78px',
       position: 'relative',
       overflow: 'hidden',
     },
     [
-      /* A quiet field of rules, echoing the grid the site draws elsewhere. */
       box(
         { position: 'absolute', top: '0px', left: '0px', width: '1200px', height: '400px' },
         Array.from({ length: 24 }, (_, i) =>
@@ -224,44 +329,40 @@ function jku(label: string, accent: string): Node {
             width: '1px',
             height: '400px',
             backgroundColor: accent,
-            opacity: 0.14,
+            opacity: 0.12,
           }),
         ),
       ),
-      box(
-        {
-          fontFamily: 'Inter',
-          fontSize: '96px',
-          fontWeight: 700,
-          color: accent,
-          letterSpacing: '-0.03em',
-          lineHeight: 1,
-        },
-        'JKU',
-      ),
-      box(
-        {
-          fontFamily: 'Inter',
-          fontSize: '26px',
-          fontWeight: 400,
-          color: '#e8e8ea',
-          opacity: 0.72,
-          marginTop: '18px',
-          letterSpacing: '0.02em',
-        },
-        label,
-      ),
+      box({ width: '360px', height: '180px' }, {
+        type: 'img',
+        props: { src: wordmark, width: 360, height: 180, style: { width: '360px', height: '180px' } },
+      }),
+      ...(institute
+        ? [
+            box({
+              width: '2px',
+              height: '150px',
+              backgroundColor: accent,
+              opacity: 0.5,
+              marginLeft: '54px',
+              marginRight: '54px',
+            }),
+            box(
+              {
+                backgroundColor: '#ffffff',
+                padding: '22px 26px',
+                borderRadius: '2px',
+              },
+              {
+                type: 'img',
+                props: { src: institute, width: 340, height: 92, style: { width: '340px', height: '92px' } },
+              },
+            ),
+          ]
+        : []),
     ],
   );
 }
-
-const BANNERS: Array<{ name: string; node: Node }> = [
-  { name: 'papernavigator', node: paperNavigator() },
-  { name: 'shopify-search', node: shopifySearch() },
-  { name: 'tempbench-temporal-lalm-reasoning-benchmark', node: jku('Institute of Computational Perception', '#7dd3fc') },
-  { name: 'embed2image-contrastive-retrieval', node: jku('Institute of Computational Perception', '#c4b5fd') },
-  { name: 'jku-exam-practice', node: jku('Exam simulator', '#ffe400') },
-];
 
 async function main(): Promise<void> {
   const fonts = [
@@ -269,21 +370,37 @@ async function main(): Promise<void> {
     { name: 'Inter', data: readFileSync(join(FONT_DIR, 'Inter-700.ttf')), weight: 700 as const, style: 'normal' as const },
   ];
 
+  /* Every asset is inlined as a data URI, so satori makes no network call and
+     the generator works with no connection. */
+  const wordmark = dataUri(await whiteOnTransparent('jku.jpg'));
+  const institute = dataUri(readFileSync(resolve(ART_DIR, 'jku-cp.png')));
+  const ships = {
+    sloop: dataUri(await pixelUpscale('sloop.png', 10)),
+    frigate: dataUri(await pixelUpscale('frigate.png', 10)),
+    galleon: dataUri(await pixelUpscale('galleon.png', 11)),
+  };
+
+  const banners: Array<{ name: string; node: Node }> = [
+    { name: 'nanobeard', node: nanoBeard(ships) },
+    { name: 'papernavigator', node: paperNavigator() },
+    { name: 'shopify-search', node: shopifySearch() },
+    { name: 'tempbench-temporal-lalm-reasoning-benchmark', node: jku(wordmark, institute, '#7dd3fc') },
+    { name: 'embed2image-contrastive-retrieval', node: jku(wordmark, institute, '#c4b5fd') },
+    { name: 'jku-exam-practice', node: jku(wordmark, null, '#ffe400') },
+  ];
+
   mkdirSync(OUT_DIR, { recursive: true });
 
-  for (const { name, node } of BANNERS) {
+  for (const { name, node } of banners) {
     const svg = await satori(node as never, { width: WIDTH, height: HEIGHT, fonts });
     const png = new Resvg(svg, { fitTo: { mode: 'width', value: WIDTH } }).render().asPng();
-    const out = join(OUT_DIR, `${name}.webp`);
-    await sharp(png).webp({ quality: 86 }).toFile(out);
+    await sharp(png).webp({ quality: 88 }).toFile(join(OUT_DIR, `${name}.webp`));
 
-    /* satori writes nothing else, but an older PNG from a previous run would
-       shadow the webp in the lookup. */
     const stalePng = join(OUT_DIR, `${name}.png`);
     if (existsSync(stalePng)) unlinkSync(stalePng);
   }
 
-  console.log(`banners: wrote ${BANNERS.length} at ${WIDTH}x${HEIGHT} to public/banners/`);
+  console.log(`banners: wrote ${banners.length} at ${WIDTH}x${HEIGHT} to public/banners/`);
 }
 
 main().catch((error) => {
