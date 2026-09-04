@@ -7,6 +7,7 @@ import ProjectIndex, {
   type Metrics,
   type ProjectRow,
 } from '../../components/ProjectIndex';
+import { markFor } from '../../lib/mark';
 import metricsData from '../../data/metrics.json';
 import { PROJECT_CATEGORIES } from '../../content.config';
 import { AUTHOR } from '../../consts';
@@ -48,6 +49,12 @@ const projects: ProjectRow[] = entries
     hasBody: (entry.body ?? '').trim().length > 0,
     private: entry.data.private,
     featured: entry.data.featured,
+    /* Deterministic from the slug, computed here so the island ships no
+       generator code. */
+    mark: (() => {
+      const { path, cols, rows } = markFor(entry.id, 14, 5);
+      return { path, cols, rows };
+    })(),
   }))
   .sort((a, b) => b.year - a.year || a.title.localeCompare(b.title));
 

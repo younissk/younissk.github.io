@@ -10,6 +10,7 @@
  * link cannot nest inside a link.
  */
 import Tag from '../../components/Tag.astro';
+import Mark from '../../components/Mark.astro';
 import { readingTimeLabel } from './_reading-time';
 import { isoDate, languageName, shortDate, tagSlug, type Post } from './_post-utils';
 
@@ -22,37 +23,48 @@ interface Props {
 }
 
 const { post, headingLevel: Heading = 'h2', activeTagSlug } = Astro.props;
-const { title, description, date, tags, lang } = post.data;
+const { title, description, date, tags, lang, hero } = post.data;
+const href = `/writing/${post.id}/`;
 ---
 
 <li class="row">
-  <a class="block" href={`/writing/${post.id}/`}>
-    <ul class="meta-row">
-      <li>
-        <time datetime={isoDate(date)}>{shortDate(date)}</time>
-      </li>
-      <li>{readingTimeLabel(post.body)}</li>
-      {lang !== 'en' && <li lang={lang}>{languageName(lang)}</li>}
-    </ul>
+  {/* The post's own hero where it has one, otherwise the generated mark. */}
+  <span class="row-media">
+    {hero ? (
+      <img src={hero} alt="" width="320" height="180" loading="lazy" decoding="async" />
+    ) : (
+      <Mark seed={href} kind="post" />
+    )}
+  </span>
 
-    <Heading class="row-title mt-1.5">{title}</Heading>
-    <p class="row-desc mt-1 max-w-text">{description}</p>
-  </a>
+  <div class="row-main">
+    <a class="block" href={href}>
+      <span class="kind" data-kind="post">post</span>
+      <Heading class="row-title mt-1">{title}</Heading>
+      <p class="row-desc mt-1.5">{description}</p>
+    </a>
 
-  {
-    tags.length > 0 && (
-      <ul class="tag-row mt-2.5">
-        {tags.map((tag) => (
-          <li>
-            <Tag
-              href={`/writing/tags/${tagSlug(tag)}/`}
-              active={tagSlug(tag) === activeTagSlug}
-            >
-              {tag}
-            </Tag>
-          </li>
-        ))}
-      </ul>
-    )
-  }
+    {
+      tags.length > 0 && (
+        <ul class="tag-row mt-2.5">
+          {tags.map((tag) => (
+            <li>
+              <Tag
+                href={`/writing/tags/${tagSlug(tag)}/`}
+                active={tagSlug(tag) === activeTagSlug}
+              >
+                {tag}
+              </Tag>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+
+  <p class="row-rail">
+    <time datetime={isoDate(date)}>{shortDate(date)}</time>
+    <span>{readingTimeLabel(post.body)}</span>
+    {lang !== 'en' && <span lang={lang}>{languageName(lang)}</span>}
+  </p>
 </li>

@@ -4,21 +4,18 @@
  *
  * Linked from every post and every tag page, and from the RSS channel link.
  * All of those were 404s until this file existed.
+ *
+ * Rows come from _PostRow so this page and the tag pages stay identical. It
+ * used to carry its own copy of the markup, which then did not match when the
+ * row became a grid.
  */
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
-import Tag from '../../components/Tag.astro';
+import PostRow from './_PostRow.astro';
+import { getPosts } from './_post-utils';
 import { RSS_PATH } from '../../consts';
 
-const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
-  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
-);
-
-/** Reading time from the real body, not a guess. */
-function minutes(body: string): number {
-  return Math.max(1, Math.round(body.trim().split(/\s+/).length / 220));
-}
+const posts = await getPosts();
 ---
 
 <BaseLayout
@@ -30,32 +27,7 @@ function minutes(body: string): number {
 
     <section class="section">
       <ul class="row-list">
-        {
-          posts.map((p) => {
-            const date = new Date(p.data.date).toISOString().slice(0, 10);
-            return (
-              <li class="row">
-                <h2 class="row-title text-base">
-                  <a class="link-quiet" href={`/writing/${p.id}/`}>{p.data.title}</a>
-                </h2>
-
-                <ul class="meta-row mt-1.5">
-                  <li><time datetime={date} class="tabular">{date}</time></li>
-                  <li>{minutes(p.body ?? '')} min read</li>
-                  {p.data.lang === 'de' && <li>Deutsch</li>}
-                </ul>
-
-                {p.data.tags.length > 0 && (
-                  <ul class="tag-row mt-2.5">
-                    {p.data.tags.map((t) => (
-                      <li><Tag>{t}</Tag></li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            );
-          })
-        }
+        {posts.map((post) => <PostRow post={post} />)}
       </ul>
 
       <p class="meta mt-6">

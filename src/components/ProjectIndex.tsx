@@ -82,6 +82,10 @@ export interface ProjectRow {
   hasBody: boolean;
   private: boolean;
   featured: boolean;
+  /* Precomputed on the server: an SVG path for this project's generated mark.
+     The walk is deterministic from the slug, so it never changes, and doing it
+     at build time keeps it out of the island's bundle. See src/lib/mark.ts. */
+  mark: { path: string; cols: number; rows: number };
 }
 
 type Sort = 'newest' | 'oldest' | 'alpha';
@@ -445,6 +449,20 @@ export default function ProjectIndex({ projects, categories, metrics = {} }: Pro
         <ul className="card-list">
           {visible.map((p) => (
             <li key={p.id} className="pcard">
+              {/* A banner, so a wall of thirteen cards is not thirteen
+                  identical blocks of text. Nothing here has a screenshot, so
+                  each project draws its own frozen self-avoiding walk — the
+                  same simulation that runs behind the landing page. */}
+              <a className="pcard-mark" href={`/projects/${p.id}/`} tabIndex={-1} aria-hidden="true">
+                <svg
+                  viewBox={`-0.5 -0.5 ${p.mark.cols} ${p.mark.rows}`}
+                  preserveAspectRatio="xMidYMid slice"
+                  focusable="false"
+                >
+                  <path d={p.mark.path} />
+                </svg>
+              </a>
+
               <div className="pcard-head">
                 <a className="pcard-title" href={`/projects/${p.id}/`}>
                   {p.title}

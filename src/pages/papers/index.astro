@@ -9,6 +9,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
+import Mark from '../../components/Mark.astro';
 
 const papers = (await getCollection('papers')).sort((a, b) => b.data.year - a.data.year);
 ---
@@ -25,17 +26,16 @@ const papers = (await getCollection('papers')).sort((a, b) => b.data.year - a.da
         {
           papers.map((p) => (
             <li class="row">
-              <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                <h2 class="row-title min-w-0 text-base">
+              <span class="row-media">
+                <Mark seed={`/papers/${p.id}/`} kind="paper" />
+              </span>
+
+              <div class="row-main">
+                <span class="kind" data-kind="paper">{p.data.type.replace(/-/g, ' ')}</span>
+                <h2 class="row-title mt-1">
                   <a class="link-quiet" href={`/papers/${p.id}/`}>{p.data.title}</a>
                 </h2>
-                <span class="tag shrink-0">{p.data.type.replace(/-/g, ' ')}</span>
-              </div>
-
-              <ul class="meta-row mt-1.5">
-                <li><time datetime={String(p.data.year)} class="tabular">{p.data.year}</time></li>
-                <li>{p.data.venue}</li>
-              </ul>
+                <p class="meta mt-1.5">{p.data.venue}</p>
 
               {/* Deliberately no author list here. The full name belongs on the
                   paper's own page, where a citation needs to be accurate, not
@@ -43,6 +43,11 @@ const papers = (await getCollection('papers')).sort((a, b) => b.data.year - a.da
               {p.data.authors.length > 1 && (
                 <p class="meta mt-1.5">With {p.data.authors.length - 1} co-authors.</p>
               )}
+              </div>
+
+              <p class="row-rail">
+                <time datetime={String(p.data.year)}>{p.data.year}</time>
+              </p>
             </li>
           ))
         }

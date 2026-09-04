@@ -15,6 +15,7 @@ import { getCollection, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import Tag from '../components/Tag.astro';
+import Mark from '../components/Mark.astro';
 import { VIDEOS, videoHref, formatDuration } from '../lib/videos';
 
 const [posts, papers] = await Promise.all([
@@ -32,6 +33,8 @@ interface Row {
   tags: readonly string[];
   /** Local thumbnail, for the videos. */
   thumb?: string | null;
+  /** Long-form source line, shown under the title rather than in the rail. */
+  venue?: string;
 }
 
 /** Reading time from the real body, not a guess. */
@@ -57,7 +60,11 @@ const rows: Row[] = [
   ...papers.map((e) => ({
     href: `/papers/${e.id}/`,
     title: e.data.title,
-    detail: e.data.venue,
+    /* Short enough for the rail. The full venue goes under the title — set
+       nowrap in a rail it grew the column until the heading collapsed to one
+       word per line. */
+    detail: e.data.type.replace(/-/g, ' '),
+    venue: e.data.venue,
     kind: 'paper' as const,
     year: e.data.year,
     date: `${e.data.year}-01-01`,
@@ -106,7 +113,9 @@ const meta = [
               {r.thumb ? (
                 <img class="row-media" src={r.thumb} alt="" width="320" height="180" loading="lazy" decoding="async" />
               ) : (
-                <span class="row-media row-media-blank" aria-hidden="true" />
+                <span class="row-media">
+                  <Mark seed={r.href} kind={r.kind} />
+                </span>
               )}
 
               <div class="row-main">
@@ -116,6 +125,8 @@ const meta = [
                     {r.title}
                   </a>
                 </h2>
+
+                {r.venue && <p class="meta mt-1.5">{r.venue}</p>}
 
                 {r.tags.length > 0 && (
                   <ul class="tag-row mt-2.5">

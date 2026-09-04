@@ -1,0 +1,62 @@
+---
+/**
+ * The generated mark for one entry. See src/lib/mark.ts for why it exists.
+ *
+ * Decorative by definition: it carries no information the surrounding text
+ * does not already give, so it is hidden from assistive technology.
+ */
+import { markFor } from '../lib/mark';
+
+interface Props {
+  /** Stable seed. The slug, so the mark never changes for an entry. */
+  seed: string;
+  /** Tints the stroke. Falls back to the accent. */
+  kind?: 'post' | 'paper' | 'video' | 'project' | null;
+  class?: string;
+}
+
+const { seed, kind = null, class: className } = Astro.props;
+const { path, cols, rows } = markFor(seed);
+
+/* Half a cell of padding all round, so the stroke is never clipped. */
+const viewBox = `-0.5 -0.5 ${cols} ${rows}`;
+---
+
+<svg
+  class:list={['mark', className]}
+  data-kind={kind}
+  viewBox={viewBox}
+  preserveAspectRatio="xMidYMid slice"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path d={path} />
+</svg>
+
+<style>
+  .mark {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: var(--c-surface-2);
+    /* The site's square grid, showing through under the walk. */
+    background-image:
+      linear-gradient(var(--c-border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--c-border) 1px, transparent 1px);
+    background-size: 14px 14px, 14px 14px;
+  }
+
+  .mark path {
+    fill: none;
+    stroke: var(--c-accent);
+    stroke-width: 0.34;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+    vector-effect: non-scaling-stroke;
+    stroke-width: 3px;
+  }
+
+  .mark[data-kind='post'] path { stroke: var(--c-kind-post); }
+  .mark[data-kind='paper'] path { stroke: var(--c-kind-paper); }
+  .mark[data-kind='video'] path { stroke: var(--c-kind-video); }
+</style>
