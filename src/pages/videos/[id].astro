@@ -18,6 +18,7 @@ import Prose from '../../components/Prose.astro';
 import { getCollection, render } from 'astro:content';
 import { VIDEOS, formatDuration } from '../../lib/videos';
 import { SITE_URL, PERSON_ID } from '../../consts';
+import { projectsForVideo } from '../../lib/relations';
 import type { VideoRecord } from '../../lib/videos';
 
 export function getStaticPaths() {
@@ -70,6 +71,10 @@ const meta = [date, duration, views].filter((v): v is string => Boolean(v));
 const poster = video.thumbnails.high ?? video.thumbnails.medium ?? video.thumbnails.default;
 const description = video.description.trim();
 const tokens = description ? tokenize(description) : [];
+
+/* Which project this video is about, derived from the links Youniss already
+   put in the description. See src/lib/relations.ts. */
+const relatedProjects = projectsForVideo(video, await getCollection('projects'));
 
 // Optional hand-written extras for this video id.
 // Astro's glob loader slugifies entry ids, which lowercases them — but YouTube
@@ -182,6 +187,32 @@ const videoSchema = {
       <p class="meta mt-2">
         Click to play — the player is only loaded from youtube-nocookie.com once you do.
       </p>
+
+      {/* Back to the thing the video is about. */}
+      {
+        relatedProjects.length > 0 && (
+          <section class="section">
+            <div class="section-head">
+              <h2 class="label">{relatedProjects.length === 1 ? 'The project' : 'Projects'}</h2>
+            </div>
+            <ul class="row-list mt-5">
+              {relatedProjects.map((project: any) => (
+                <li class="row">
+                  <div class="row-main">
+                    <span class="kind" data-kind="paper">project</span>
+                    <h3 class="row-title mt-1">
+                      <a class="link-quiet" href={`/projects/${project.id}/`}>
+                        {project.data.title}
+                      </a>
+                    </h3>
+                    <p class="row-desc mt-1.5">{project.data.summary}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
 
       {
         tokens.length > 0 && (

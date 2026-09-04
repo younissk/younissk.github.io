@@ -8,6 +8,9 @@ import Tag from '../../components/Tag.astro';
 import { readingTimeLabel } from './_reading-time';
 import { getPosts, isoDate, languageName, longDate, tagSlug, type Post } from './_post-utils';
 import { SITE_URL, PERSON_ID } from '../../consts';
+import RelatedVideos from '../../components/RelatedVideos.astro';
+import { projectsForPost, videosForProject } from '../../lib/relations';
+import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
   const posts = await getPosts();
@@ -32,6 +35,17 @@ interface Props {
 const { post, newer, older } = Astro.props;
 const { title, description, date, tags, lang, hero, links } = post.data;
 const { Content } = await render(post);
+
+/* The project this write-up is about, and the video about that project — so a
+   post, its code and its video are one thing with three doors rather than three
+   pages that never mention each other. */
+const allProjects = await getCollection('projects');
+const relatedProjects = projectsForPost(post, allProjects);
+const relatedVideos = [
+  ...new Map(
+    relatedProjects.flatMap((project) => videosForProject(project)).map((v) => [v.id, v]),
+  ).values(),
+].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 
 const postSchema = {
   '@context': 'https://schema.org',
@@ -92,6 +106,42 @@ const postSchema = {
         )
       }
       <Prose><Content /></Prose>
+
+      {
+        relatedProjects.length > 0 && (
+          <section class="section">
+            <div class="section-head">
+              <h2 class="label">{relatedProjects.length === 1 ? 'The project' : 'Projects'}</h2>
+            </div>
+            <ul class="row-list mt-5">
+              {relatedProjects.map((project: any) => (
+                <li class="row">
+                  <div class="row-main">
+                    <span class="kind" data-kind="paper">project</span>
+                    <h3 class="row-title mt-1">
+                      <a class="link-quiet" href={`/projects/${project.id}/`}>
+                        {project.data.title}
+                      </a>
+                    </h3>
+                    <p class="row-desc mt-1.5">{project.data.summary}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
+        relatedVideos.length > 0 && (
+          <section class="section">
+            <div class="section-head">
+              <h2 class="label">Watch</h2>
+            </div>
+            <RelatedVideos videos={relatedVideos} class="mt-5" />
+          </section>
+        )
+      }
     </article>
 
     {

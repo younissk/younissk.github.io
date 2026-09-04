@@ -8,6 +8,8 @@ import Tag from '../../components/Tag.astro';
 import ResourceLinks from '../../components/ResourceLinks.astro';
 import ExternalLink from '../../components/ExternalLink.astro';
 import { SITE_URL, PERSON_ID } from '../../consts';
+import RelatedVideos from '../../components/RelatedVideos.astro';
+import { videosForProject, postsForProject, paperIdsForProject } from '../../lib/relations';
 import {
   formatCount,
   linkCount,
@@ -82,6 +84,18 @@ const siblings = (await getCollection('projects'))
   .sort((a, b) => b.data.year - a.data.year)
   .slice(0, 4);
 
+/* Everything else on the site that is about this project. Derived, not typed
+   out: see src/lib/relations.ts. */
+const relatedVideos = videosForProject(entry);
+const relatedPosts = postsForProject(
+  entry,
+  await getCollection('posts', ({ data }) => !data.draft),
+);
+const relatedPaperIds = paperIdsForProject(entry);
+const relatedPapers = (await getCollection('papers')).filter((paper) =>
+  relatedPaperIds.includes(paper.id),
+);
+
 /* SoftwareSourceCode answers "what has this person built". Only public repos
    get a codeRepository — a private one has no URL anyone can follow. */
 const repoLink = p.private ? null : links.find((l) => l.kind === 'repo')?.url;
@@ -126,6 +140,56 @@ const projectSchema = {
         <Prose>
           <Content />
         </Prose>
+
+        {/* The video, the write-up and the paper about this project. They
+            existed as separate pages with nothing pointing between them. */}
+        {
+          relatedVideos.length > 0 && (
+            <div class="section">
+              <div class="section-head">
+                <h2 class="label">{relatedVideos.length === 1 ? 'Watch' : 'Watch'}</h2>
+                <p class="meta">
+                  {relatedVideos.length} video{relatedVideos.length === 1 ? '' : 's'}
+                </p>
+              </div>
+              <RelatedVideos videos={relatedVideos} class="mt-5" />
+            </div>
+          )
+        }
+
+        {
+          (relatedPosts.length > 0 || relatedPapers.length > 0) && (
+            <div class="section">
+              <div class="section-head">
+                <h2 class="label">Read</h2>
+              </div>
+              <ul class="row-list mt-5">
+                {relatedPosts.map((post) => (
+                  <li class="row">
+                    <div class="row-main">
+                      <span class="kind" data-kind="post">write-up</span>
+                      <h3 class="row-title mt-1">
+                        <a class="link-quiet" href={`/writing/${post.id}/`}>{post.data.title}</a>
+                      </h3>
+                      <p class="row-desc mt-1.5">{post.data.description}</p>
+                    </div>
+                  </li>
+                ))}
+                {relatedPapers.map((paper) => (
+                  <li class="row">
+                    <div class="row-main">
+                      <span class="kind" data-kind="paper">paper</span>
+                      <h3 class="row-title mt-1">
+                        <a class="link-quiet" href={`/papers/${paper.id}/`}>{paper.data.title}</a>
+                      </h3>
+                      <p class="meta mt-1.5">{paper.data.venue}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
       </section>
 
       <aside class="detail-rail" id="details">
