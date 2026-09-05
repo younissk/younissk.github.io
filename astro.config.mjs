@@ -110,6 +110,69 @@ const LASTMOD = (() => {
 export default defineConfig({
   site: 'https://youniss.dev',
 
+  /**
+   * Redirects from the Docusaurus site this replaced.
+   *
+   * Search Console for the year to Sep 2026 says 89% of impressions and 72% of
+   * clicks landed on URLs that this migration deleted: /posts/*, /docs/* and
+   * the hashed /assets/files/*.pdf paths. Every one of them 404s. That is a
+   * year of accumulated ranking pointed at a dead end.
+   *
+   * GitHub Pages cannot issue a 301, so with a static build Astro emits a small
+   * HTML page carrying a meta refresh and a canonical link. Weaker and slower
+   * than a real redirect, and still far better than a 404 — the canonical is
+   * what actually passes the signal on.
+   *
+   * The PDFs are NOT redirected. A .pdf URL that answers with HTML is broken for
+   * anyone who follows it, so those three files are restored byte-for-byte at
+   * their old hashed paths under public/assets/files/ instead. The Falcon Twig
+   * report alone was 3,180 impressions, 43% of the year.
+   */
+  redirects: {
+    // The posts, in impression order.
+    '/posts/falcon-fine-tuning': '/writing/falcon-twig/',
+    '/posts/falcon-fine-tuning/': '/writing/falcon-twig/',
+    '/posts/dcase-2025-challenge': '/papers/dcase-2025-language-based-audio-retrieval/',
+    '/posts/dcase-2025-challenge/': '/papers/dcase-2025-language-based-audio-retrieval/',
+    '/posts/shopify-search': '/projects/shopify-search/',
+    '/posts/shopify-search/': '/projects/shopify-search/',
+    '/posts/llm-recommender-systems': '/papers/llm-based-recommender-systems/',
+    '/posts/llm-recommender-systems/': '/papers/llm-based-recommender-systems/',
+
+    // The index and its pagination.
+    '/posts': '/writing/',
+    '/posts/': '/writing/',
+    '/posts/page/2': '/writing/',
+    '/posts/page/2/': '/writing/',
+
+    // Tags that still exist keep their topic; the rest go to the index rather
+    // than to a tag page that would be empty.
+    '/posts/tags/fine-tuning': '/writing/tags/fine-tuning/',
+    '/posts/tags/fine-tuning/': '/writing/tags/fine-tuning/',
+    '/posts/tags/web-dev': '/writing/tags/web-dev/',
+    '/posts/tags/web-dev/': '/writing/tags/web-dev/',
+    '/posts/tags/recommender-systems': '/writing/',
+    '/posts/tags/recommender-systems/': '/writing/',
+    '/posts/tags/multimodal': '/writing/',
+    '/posts/tags/multimodal/': '/writing/',
+    '/posts/tags/construction': '/writing/',
+    '/posts/tags/construction/': '/writing/',
+    '/posts/tags/search-engine': '/writing/',
+    '/posts/tags/search-engine/': '/writing/',
+
+    // The old docs tree has no equivalent; send each to its nearest subject.
+    '/docs/recommender-systems/evaluating-rec-sys': '/papers/llm-based-recommender-systems/',
+    '/docs/recommender-systems/evaluating-rec-sys/': '/papers/llm-based-recommender-systems/',
+    '/docs/category/unsupervised-learning': '/writing/',
+    '/docs/category/unsupervised-learning/': '/writing/',
+
+    /* No entry for '/contact'. GitHub Pages already answers a slashless path
+       for a real directory with its own 301, and declaring the redirect here
+       made Astro treat /contact/ as a redirect target rather than a page — it
+       dropped straight out of the sitemap. Verified live: /contact, /projects
+       and /library all already 301 to their trailing-slash form. */
+  },
+
   // The built site is COMMITTED to git and served directly by GitHub Pages
   // (Settings → Pages → main branch, /docs folder). Nothing in the publish
   // path needs Node, npm or CI — if this toolchain stops working in ten

@@ -1,0 +1,159 @@
+---
+title: "Semantic search across 580,000 Shopify products"
+description: "How I scraped 31,000 Shopify storefronts through their public products.json endpoint and built vector search over the result with pgvector and a 384-dimension embedding model."
+date: 2026-09-05
+tags: [search, embeddings, pgvector, shopify, web-scraping, semantic-search]
+lang: en
+draft: true
+links:
+  - { kind: repo, label: "Code", url: "https://github.com/younissk/shopify-search" }
+  - { kind: video, label: "Video", url: "https://www.youtube.com/watch?v=tqSTP3KyGhc" }
+---
+
+Shopify stores have a search box, and it matches words. Ask one for "something
+warm for a winter hike" and you get nothing, because no product title contains
+those words. The store is full of fleece-lined jackets and it cannot tell you.
+
+That is a vocabulary problem, not a catalogue problem, and vector search is the
+standard answer to it. So I built one across stores rather than inside one:
+31,070 storefronts scraped, about 580,000 products, searchable by meaning.
+
+This is what the pipeline actually looks like.
+
+## Every Shopify store has a public JSON endpoint
+
+The thing that makes this possible at all: Shopify serves a machine-readable
+copy of a store's catalogue at a fixed path.
+
+```
+https://<any-shopify-store>/products.json?page=1
+```
+
+No key, no session, no HTML parsing. You get product titles, descriptions,
+variants, prices, images and tags as JSON. It is paginated, and it is on by
+default, which is why a list of 31,070 domains is enough to start.
+
+Two consequences worth being explicit about. First, this is a documented,
+public endpoint rather than anything circumvented. The store is choosing to
+serve it. Second, that does not make it polite to hammer thirty thousand small
+businesses as fast as your connection allows. The scraper is deliberately slow:
+
+```python
+rate_limit_semaphore: BoundedSemaphore = BoundedSemaphore(2)
+
+def wait_for_rate_limit(self) -> None:
+    self.rate_limit_semaphore.acquire()
+    time.sleep(0.5 + random.random())
+```
+
+Two concurrent requests, and every worker sleeps between half a second and a
+second and a half before it goes again. The jitter is there so that workers
+which start together do not stay synchronised and arrive in a thundering herd.
+Failures retry with exponential backoff through `tenacity` rather than
+immediately, which is the difference between backing off and making the problem
+worse.
+
+Collecting the catalogue took days rather than hours. That is the correct speed.
+
+## The embedding step is smaller than people expect
+
+Every product title becomes a 384-dimension vector from
+`sentence-transformers/all-MiniLM-L6-v2`, through the Hugging Face inference
+API:
+
+```python
+embeddings = client.feature_extraction(
+    [source_sentence],
+    model="sentence-transformers/all-MiniLM-L6-v2",
+)
+```
+
+MiniLM is a small model and that is the point. At 384 dimensions, 580,000
+products is roughly 890MB of raw float32 vectors, small enough to sit in
+Postgres next to the products themselves rather than in a separate vector
+database that has to be kept in sync with them.
+
+Bigger embedding models exist and score better on retrieval benchmarks. For
+product titles, which are short and mostly concrete nouns, the gap narrows a
+lot, and every dimension you add is storage and latency on every query forever.
+
+## Postgres is the whole database
+
+Products and their vectors live in the same Supabase Postgres instance, using
+`pgvector` for similarity. There is no Elasticsearch cluster, no Pinecone, no
+separate index to reconcile.
+
+This matters more than it sounds. The moment vectors live somewhere other than
+the rows they describe, you own a synchronisation problem: a product changes
+price, and now two systems disagree until something reconciles them. Keeping
+both in one transaction removes an entire category of bug that has nothing to do
+with search quality.
+
+Search itself is a Supabase edge function, so the query embedding and the
+similarity lookup happen next to the data instead of round-tripping through the
+application. The client asks for a page of results and gets a cursor back:
+
+```ts
+export interface ProductSearchResponse {
+  items: SearchProduct[];
+  total: number;
+  hasMore: boolean;
+  nextCursor: string | null;
+  sort: ProductSearchSort;
+}
+```
+
+Cursor pagination rather than offsets, because `OFFSET 10000` makes the database
+walk ten thousand rows it will then discard, and that gets worse the further
+someone scrolls.
+
+## What the frontend has to do about a slow query
+
+The uncomfortable part of vector search over half a million rows is that a query
+is not free, and the interface has to be honest about that. There are three
+pieces in the client that exist only because of it:
+
+- **A timeout.** Requests are abandoned after 10 seconds rather than left
+  hanging, with up to three retries.
+- **A cache.** Repeated queries do not go back to the database at all.
+- **A circuit breaker.** After repeated failures the client stops trying for a
+  while instead of retrying into a service that is already struggling.
+
+None of that is search. All of it is what makes search usable when the backend
+is one Postgres instance and the caller is a browser on a phone.
+
+## Would Elasticsearch have been better?
+
+It is the obvious comparison, and the honest answer is that it depends on which
+half of the problem you care about.
+
+Elasticsearch, or any BM25-based engine, is excellent at the query someone types
+when they already know the vocabulary: a brand name, a SKU, an exact phrase.
+Keyword matching is precise, cheap, and easy to reason about. It is also the
+thing every Shopify store already has, and it is what fails on "something warm
+for a winter hike".
+
+Vector search handles the paraphrase and fails in the other direction: ask for
+an exact model number and cosine similarity will cheerfully return you five
+things that are *sort of* like it. It has no concept of an exact match.
+
+For a production storefront the answer is almost always both: keyword retrieval
+and vector retrieval run in parallel, and the result sets are fused. I did not
+build that here. This is a single-strategy system, and the sharp edge is
+exactly where you would predict. It is good at description and bad at
+identifiers.
+
+## What I would change
+
+The embedding covers the product title only. Descriptions, tags and variant
+names are all sitting in the same JSON and none of them are in the vector, which
+means a product whose title is "Model 3B" is effectively invisible to semantic
+search no matter how descriptive its body copy is. Embedding a concatenation of
+title and description is the obvious next move and the one I would do first.
+
+After that, hybrid retrieval, for the reason above.
+
+---
+
+The code is on GitHub, and there is a video walking through it if you would
+rather watch than read.
