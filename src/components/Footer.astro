@@ -69,8 +69,37 @@ const FOOTER_LINKS = [
     >
       <p class="meta">© {year} {SITE_TITLE}</p>
       <p class="meta">
+        {/* A shortcut nobody is told about is a shortcut nobody uses. */}
+        <button type="button" class="kbd-hint" data-vim-open>
+          Press <kbd>?</kbd> for keys
+        </button>
+        <span class="mx-2 text-ink-faint" aria-hidden="true">·</span>
         <a class="link-quiet" href={AUTHOR.repoUrl} rel="noopener">Source on GitHub</a>
       </p>
     </div>
   </div>
 </footer>
+
+<style>
+  .kbd-hint {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .kbd-hint kbd {
+    font-family: var(--font-mono);
+    padding: 0 0.25rem;
+    border: 1px solid var(--c-ink-faint);
+    color: var(--c-ink);
+  }
+
+  .kbd-hint:hover kbd,
+  .kbd-hint:focus-visible kbd {
+    border-color: var(--c-accent);
+    color: var(--c-accent);
+  }
+</style>
