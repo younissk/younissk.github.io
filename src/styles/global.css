@@ -1674,3 +1674,59 @@
     opacity: 1;
   }
 }
+
+/* ===========================================================================
+   KEY HINTS
+   ===========================================================================
+   One keycap treatment, used by the header, the landing page and the ? sheet,
+   so a key looks like the same object wherever it is shown. The site advertises
+   `/` rather than ⌘K because that is the shorter key and the one the vim
+   bindings are built around; ⌘K still works and the sheet still lists it.
+   =========================================================================== */
+@layer components {
+  .keycap {
+    display: inline-grid;
+    place-items: center;
+    min-width: 1.5rem;
+    padding: 0.1rem 0.32rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--c-ink);
+    background-color: var(--c-surface-2);
+    border: 1px solid var(--c-ink-faint);
+    box-shadow: 0 2px 0 0 var(--c-ink-faint);
+  }
+
+  /* A key that is also a button. Same cap, plus a hover the cap can show. */
+  .key-btn {
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .key-btn:hover .keycap,
+  .key-btn:focus-visible .keycap {
+    color: #000;
+    background-color: var(--c-accent);
+    border-color: var(--c-accent);
+    box-shadow: 0 2px 0 0 var(--c-ink);
+  }
+
+  /* Keyboard hints are noise where there is no keyboard. Matches the rule the
+     search trigger already uses. */
+  .key-hint {
+    display: none;
+  }
+
+  @media (hover: hover) and (min-width: 48rem) {
+    .key-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+  }
+}

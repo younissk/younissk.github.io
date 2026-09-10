@@ -55,7 +55,7 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
         autocomplete="off"
         spellcheck="false"
       />
-      <kbd class="landing-search-kbd">⌘K</kbd>
+      <kbd class="landing-search-kbd keycap">/</kbd>
     </div>
 
     <nav class="landing-nav" aria-label="Sections">
@@ -72,6 +72,18 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
 
   <div class="landing-foot">
     <SocialLinks />
+
+    {/* The site is keyboard-drivable and nothing said so. Hidden where there is
+        no keyboard, same rule as the header. */}
+    <button
+      type="button"
+      class="key-btn key-hint landing-keys"
+      data-vim-open
+      aria-label="Keyboard shortcuts"
+    >
+      <kbd class="keycap">?</kbd>
+      <span>shortcuts</span>
+    </button>
   </div>
 </BaseLayout>
 
@@ -237,18 +249,40 @@ import { AUTHOR, NAV, SITE_DESCRIPTION } from '../consts';
 
   .landing-search-kbd {
     flex-shrink: 0;
-    padding: 0 0.3rem;
-    font-family: var(--font-mono);
-    font-size: var(--text-meta);
-    color: var(--c-ink-faint);
   }
 
   .landing-foot {
     grid-row: 3;
     position: relative;
     align-self: end;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
     width: 100%;
     max-width: 54rem;
+  }
+
+  /* The profiles nav stretches to the full row on its own, which pushed the
+     shortcut hint onto a second line. Size it to its icons and let the hint
+     take the far end. */
+  .landing-foot > :global(nav) {
+    flex: 0 0 auto;
+  }
+
+  .landing-keys {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--c-ink-faint);
+  }
+
+  .landing-keys:hover,
+  .landing-keys:focus-visible {
+    color: var(--c-accent);
   }
 
   .landing-nav {

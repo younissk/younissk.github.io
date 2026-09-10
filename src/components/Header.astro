@@ -50,9 +50,24 @@ const isActive = (href: string) =>
 
       {/* Discoverability: nobody guesses a shortcut that is never shown.
           Hidden on touch, where there is no ⌘K to press. */}
+      {/* Advertises `/` rather than ⌘K: it is the shorter key and the one the
+          vim bindings are built around. ⌘K still works and the ? sheet lists
+          both. */}
       <button type="button" class="cp-trigger ml-1" data-open-palette aria-label="Search this site">
         <span>Search</span>
-        <kbd>⌘K</kbd>
+        <kbd class="keycap">/</kbd>
+      </button>
+
+      {/* The way in to every other shortcut. Same pointer-and-desktop rule as
+          the search trigger: a key hint is noise where there is no keyboard. */}
+      <button
+        type="button"
+        class="key-btn key-hint ml-2"
+        data-vim-open
+        aria-label="Keyboard shortcuts"
+        title="Keyboard shortcuts"
+      >
+        <kbd class="keycap">?</kbd>
       </button>
 
 
