@@ -8,7 +8,7 @@
     "forks": 0
   },
   "https://github.com/younissk/PaperNavigator": {
-    "stars": 2,
+    "stars": 1,
     "forks": 2
   },
   "https://github.com/younissk/TempBench-Temporal-LALM-Reasoning-benchmark": {
@@ -32,8 +32,8 @@
     "forks": 0
   },
   "https://github.com/younissk/nanoBeard": {
-    "stars": 99,
-    "forks": 8
+    "stars": 102,
+    "forks": 9
   },
   "https://github.com/younissk/p5-projects": {
     "stars": 0,
@@ -60,13 +60,13 @@
     "forks": 3
   },
   "https://huggingface.co/datasets/younissk/audio-text-embed-to-images": {
-    "downloads": 2360,
-    "downloadsMonth": 7,
+    "downloads": 2361,
+    "downloadsMonth": 3,
     "likes": 0
   },
   "https://huggingface.co/datasets/younissk/tool-calling-mix": {
-    "downloads": 2235,
-    "downloadsMonth": 175,
+    "downloads": 2274,
+    "downloadsMonth": 186,
     "likes": 4
   },
   "https://huggingface.co/younissk/DISCO-v0.1": {
@@ -75,18 +75,18 @@
     "likes": 0
   },
   "https://huggingface.co/younissk/Falcon-Twig-7B": {
-    "downloads": 97,
-    "downloadsMonth": 1,
+    "downloads": 98,
+    "downloadsMonth": 2,
     "likes": 0
   },
   "https://huggingface.co/younissk/nanoBeard-frigate-125M-GGUF": {
     "downloads": 435,
-    "downloadsMonth": 23,
+    "downloadsMonth": 13,
     "likes": 0
   },
   "https://huggingface.co/younissk/nanoBeard-frigate-360M-GGUF": {
-    "downloads": 1328,
-    "downloadsMonth": 63,
+    "downloads": 1336,
+    "downloadsMonth": 57,
     "likes": 4
   },
   "https://huggingface.co/younissk/nanoBeard-galleon-34M": {
@@ -95,19 +95,19 @@
     "likes": 0
   },
   "https://huggingface.co/younissk/nanoBeard-galleon-34M-GGUF": {
-    "downloads": 576,
-    "downloadsMonth": 30,
+    "downloads": 579,
+    "downloadsMonth": 15,
     "likes": 1
   },
   "https://huggingface.co/younissk/nanoBeard-sloop-14M": {
-    "downloads": 3426,
-    "downloadsMonth": 51,
-    "likes": 6
+    "downloads": 3437,
+    "downloadsMonth": 33,
+    "likes": 7
   },
   "https://huggingface.co/younissk/nanoBeard-sloop-14M-GGUF": {
-    "downloads": 515,
-    "downloadsMonth": 28,
+    "downloads": 520,
+    "downloadsMonth": 18,
     "likes": 0
   },
-  "syncedAt": "2026-09-07"
+  "syncedAt": "2026-09-14"
 }
