@@ -9,7 +9,7 @@
   },
   "https://github.com/younissk/PaperNavigator": {
     "stars": 1,
-    "forks": 2
+    "forks": 1
   },
   "https://github.com/younissk/TempBench-Temporal-LALM-Reasoning-benchmark": {
     "stars": 0,
@@ -32,7 +32,7 @@
     "forks": 0
   },
   "https://github.com/younissk/nanoBeard": {
-    "stars": 105,
+    "stars": 106,
     "forks": 13
   },
   "https://github.com/younissk/p5-projects": {
@@ -65,8 +65,8 @@
     "likes": 0
   },
   "https://huggingface.co/datasets/younissk/tool-calling-mix": {
-    "downloads": 2482,
-    "downloadsMonth": 284,
+    "downloads": 2605,
+    "downloadsMonth": 375,
     "likes": 4
   },
   "https://huggingface.co/younissk/DISCO-v0.1": {
@@ -75,18 +75,18 @@
     "likes": 0
   },
   "https://huggingface.co/younissk/Falcon-Twig-7B": {
-    "downloads": 99,
-    "downloadsMonth": 3,
+    "downloads": 100,
+    "downloadsMonth": 4,
     "likes": 0
   },
   "https://huggingface.co/younissk/nanoBeard-frigate-125M-GGUF": {
-    "downloads": 443,
-    "downloadsMonth": 17,
+    "downloads": 460,
+    "downloadsMonth": 27,
     "likes": 0
   },
   "https://huggingface.co/younissk/nanoBeard-frigate-360M-GGUF": {
-    "downloads": 1386,
-    "downloadsMonth": 73,
+    "downloads": 1409,
+    "downloadsMonth": 81,
     "likes": 5
   },
   "https://huggingface.co/younissk/nanoBeard-galleon-34M": {
@@ -95,19 +95,19 @@
     "likes": 0
   },
   "https://huggingface.co/younissk/nanoBeard-galleon-34M-GGUF": {
-    "downloads": 597,
-    "downloadsMonth": 22,
+    "downloads": 607,
+    "downloadsMonth": 31,
     "likes": 1
   },
   "https://huggingface.co/younissk/nanoBeard-sloop-14M": {
-    "downloads": 3465,
-    "downloadsMonth": 51,
+    "downloads": 3478,
+    "downloadsMonth": 53,
     "likes": 7
   },
   "https://huggingface.co/younissk/nanoBeard-sloop-14M-GGUF": {
-    "downloads": 534,
-    "downloadsMonth": 23,
+    "downloads": 543,
+    "downloadsMonth": 28,
     "likes": 0
   },
-  "syncedAt": "2026-09-28"
+  "syncedAt": "2026-10-05"
 }
