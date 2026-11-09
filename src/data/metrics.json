@@ -60,13 +60,13 @@
     "forks": 3
   },
   "https://huggingface.co/datasets/younissk/audio-text-embed-to-images": {
-    "downloads": 2390,
-    "downloadsMonth": 19,
+    "downloads": 2396,
+    "downloadsMonth": 25,
     "likes": 0
   },
   "https://huggingface.co/datasets/younissk/tool-calling-mix": {
-    "downloads": 2812,
-    "downloadsMonth": 215,
+    "downloads": 2884,
+    "downloadsMonth": 237,
     "likes": 4
   },
   "https://huggingface.co/younissk/DISCO-v0.1": {
@@ -75,18 +75,18 @@
     "likes": 0
   },
   "https://huggingface.co/younissk/Falcon-Twig-7B": {
-    "downloads": 107,
+    "downloads": 109,
     "downloadsMonth": 7,
     "likes": 0
   },
   "https://huggingface.co/younissk/nanoBeard-frigate-125M-GGUF": {
-    "downloads": 508,
-    "downloadsMonth": 48,
+    "downloads": 511,
+    "downloadsMonth": 36,
     "likes": 0
   },
   "https://huggingface.co/younissk/nanoBeard-frigate-360M-GGUF": {
-    "downloads": 1460,
-    "downloadsMonth": 53,
+    "downloads": 1469,
+    "downloadsMonth": 45,
     "likes": 6
   },
   "https://huggingface.co/younissk/nanoBeard-galleon-34M": {
@@ -95,19 +95,19 @@
     "likes": 0
   },
   "https://huggingface.co/younissk/nanoBeard-galleon-34M-GGUF": {
-    "downloads": 624,
-    "downloadsMonth": 17,
+    "downloads": 628,
+    "downloadsMonth": 15,
     "likes": 1
   },
   "https://huggingface.co/younissk/nanoBeard-sloop-14M": {
-    "downloads": 3535,
-    "downloadsMonth": 63,
+    "downloads": 3540,
+    "downloadsMonth": 55,
     "likes": 8
   },
   "https://huggingface.co/younissk/nanoBeard-sloop-14M-GGUF": {
-    "downloads": 575,
-    "downloadsMonth": 32,
+    "downloads": 579,
+    "downloadsMonth": 22,
     "likes": 0
   },
-  "syncedAt": "2026-11-02"
+  "syncedAt": "2026-11-09"
 }
